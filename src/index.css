@@ -1,0 +1,100 @@
+@import "tailwindcss";
+
+@theme {
+  --color-monza-red: #D90429;
+  --color-monza-red-dark: #8D0000;
+
+  /* Primary Background - Deepest Black */
+  --color-carbon-950: #050505;
+  --color-carbon-900: #0a0a0a;
+  --color-carbon-800: #141414;
+  --color-carbon-700: #1f1f1f;
+
+  --color-white: #ffffff;
+  --color-gray-100: #f3f4f6;
+  --color-gray-400: #9ca3af;
+
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+
+  /* Z-Index Layers */
+  --z-negative: -1;
+  --z-base: 0;
+  --z-content: 10;
+  --z-navbar: 50;
+  --z-overlay: 100;
+  --z-modal: 999;
+}
+
+:root {
+  font-family: var(--font-sans);
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: dark;
+  background-color: var(--color-carbon-950);
+  color: var(--color-white);
+
+  /* Lenis Scroll Setup */
+  html.lenis {
+    height: auto;
+  }
+
+  .lenis.lenis-smooth {
+    scroll-behavior: auto;
+  }
+
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+
+  .lenis.lenis-scrolling iframe {
+    pointer-events: none;
+  }
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background: radial-gradient(circle at 50% 0%, rgba(220, 38, 38, 0.15) 0%, rgba(5, 5, 5, 0) 50%), #050505;
+  background-attachment: scroll;
+  overflow-x: hidden;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Layering Protection */
+#root {
+  position: relative;
+  z-index: var(--z-base);
+  width: 100%;
+}
+
+/* Cuberto-style Typography defaults */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  letter-spacing: -0.03em;
+}
+
+/* Utilities */
+.text-balance {
+  text-wrap: balance;
+}
+
+.clip-image {
+  clip-path: inset(0 0 0 0);
+}
+
+/* Custom Selection */
+::selection {
+  background-color: var(--color-monza-red);
+  color: white;
+}
