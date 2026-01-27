@@ -110,7 +110,7 @@ function CategoryReel() {
 
     // Logic for Robust Infinite Scroll
     const totalItems = displayCollections.length;
-    const loopSets = 7; // Reduced from 21 to 7 to improve performance while maintaining infinite feel
+    const loopSets = 3; // Significantly reduced to improve scroll performance
     const centerSetIndex = 3; // The 4th set is the center (0-indexed)
     const setWidth = totalItems * ITEM_WIDTH;
     const centerOffset = setWidth * centerSetIndex;

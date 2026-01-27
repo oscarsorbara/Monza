@@ -78,7 +78,7 @@ export function AppointmentSection() {
                             <Clock className="w-4 h-4" />
                             <span>Service Center</span>
                         </div>
-                        <h2 className="text-5xl md:text-6xl font-black italic tracking-tighter text-white mb-6">
+                        <h2 className="text-4xl md:text-6xl font-black italic tracking-tighter text-white mb-6">
                             AGENDA TU <br /> INSTALACIÓN
                         </h2>
                         <p className="text-gray-400 text-lg mb-8 leading-relaxed">

@@ -171,7 +171,7 @@ export function VehicleSelector({ className }: VehicleSelectorProps) {
     return (
         <motion.div
             // Removed overflow-hidden to allow dropdowns to pop out
-            className={clsx("w-full bg-carbon-900/80 backdrop-blur-md border-b border-white/10 z-[40] pt-[64px] md:pt-[80px] shadow-2xl", className)}
+            className={clsx("w-full bg-carbon-950/40 backdrop-blur-md border-b border-white/10 z-[40] pt-[72px] md:pt-[90px] shadow-2xl", className)}
         >
             <div className="container mx-auto px-4">
                 <AnimatePresence mode="wait">

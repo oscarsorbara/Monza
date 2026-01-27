@@ -58,7 +58,18 @@ function App() {
   return (
     <Router>
       <SmoothScroll>
-        <div className="min-h-screen text-white flex flex-col font-sans selection:bg-monza-red selection:text-white">
+        {/* Global Fixed Background */}
+        <div
+          className="fixed inset-0 z-0 pointer-events-none"
+          style={{
+            backgroundImage: `
+              radial-gradient(circle at 50% 0%, rgba(220, 38, 38, 0.45) 0%, transparent 80%), 
+              radial-gradient(circle at 50% 100%, rgba(220, 38, 38, 0.6) 0%, transparent 60%)
+            `
+          }}
+        />
+
+        <div className="min-h-screen relative z-10 text-white flex flex-col font-sans selection:bg-monza-red selection:text-white">
           <AnimatedRoutes />
         </div>
       </SmoothScroll>
