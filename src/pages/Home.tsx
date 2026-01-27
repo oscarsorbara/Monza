@@ -1,4 +1,4 @@
-import { useRef, useMemo, useEffect } from 'react';
+import { useRef, useMemo, useLayoutEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Button } from '@/components/ui/Button';
@@ -9,7 +9,7 @@ import { VehicleSelector } from '@/components/vehicle/VehicleSelector';
 import { AppointmentSection } from '@/components/service/AppointmentSection';
 // import heroBg from '@/assets/hero-audi.jpg';
 // Reverting to high-quality RS6 style image as requested, but from Unsplash for 4K resolution
-const heroBg = "https://images.unsplash.com/photo-1614207289658-00aead9c0d12?q=80&w=2600&auto=format&fit=crop"; // High-res Audi RS6 Avantish look
+const heroBg = "https://images.unsplash.com/photo-1606152421811-aa6d887a192e?q=80&w=2600&auto=format&fit=crop"; // High-res Audi RS6 Avantish look
 
 // ... (imports remain same, added WavyBackground)
 
@@ -59,7 +59,7 @@ function HeroSection() {
                             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                             className="inline-block text-sm md:text-base font-bold tracking-[0.2em] uppercase text-monza-red"
                         >
-                            Est. 2024 — Performance Parts
+                            Est. 2026 — Performance Parts
                         </motion.span>
                     </motion.div>
                 </div>
@@ -106,27 +106,46 @@ function CategoryReel() {
     const { collections } = useProduct();
     const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-    // Create a very long list of items to simulate infinite scroll without complex JS
-    const displayCollections = useMemo(() => {
+    // Prepare content: 3 identical sets of items for true infinite scroll simulation
+    const sets = useMemo(() => {
         if (collections.length === 0) return [];
-        // Repeat 20 times for a very long scroll
-        return new Array(20).fill(collections).flat();
+
+        // Ensure one "logical set" is at least 1.5 screen widths wide
+        const minSetWidth = typeof window !== 'undefined' ? window.innerWidth * 1.5 : 2000;
+        const itemsWidth = collections.length * 320;
+        const repeatsPerSet = Math.ceil(minSetWidth / (itemsWidth || 1));
+
+        const singleSet = new Array(repeatsPerSet || 1).fill(collections).flat();
+
+        // Return 3 sets: [Prev] [Current] [Next]
+        return [...singleSet, ...singleSet, ...singleSet];
     }, [collections]);
 
-    // Scroll to middle on mount to allow scrolling left immediately
-    // Using simple useEffect without complex logic
-    useEffect(() => {
-        // Short timeout to ensure layout is ready
-        const timer = setTimeout(() => {
-            if (scrollContainerRef.current && displayCollections.length > 0) {
-                const middleIndex = Math.floor(displayCollections.length / 2);
-                const cardWidth = 320;
-                const initialScroll = middleIndex * cardWidth - (window.innerWidth / 2) + (cardWidth / 2);
-                scrollContainerRef.current.scrollLeft = initialScroll;
-            }
-        }, 100);
-        return () => clearTimeout(timer);
-    }, [displayCollections.length]);
+    // Handle Infinite Scroll Teleportation
+    const handleScroll = () => {
+        if (!scrollContainerRef.current) return;
+        const container = scrollContainerRef.current;
+
+        const totalWidth = container.scrollWidth;
+        const oneThird = totalWidth / 3;
+
+        // Teleport logic
+        if (container.scrollLeft < 50) {
+            container.scrollLeft += oneThird;
+        }
+        else if (container.scrollLeft >= oneThird * 2) {
+            container.scrollLeft -= oneThird;
+        }
+    };
+
+    // Initial positioning: Start in the middle set
+    useLayoutEffect(() => {
+        if (scrollContainerRef.current && sets.length > 0) {
+            const totalWidth = scrollContainerRef.current.scrollWidth;
+            const oneThird = totalWidth / 3;
+            scrollContainerRef.current.scrollLeft = oneThird;
+        }
+    }, [sets.length]);
 
     const scroll = (direction: 'left' | 'right') => {
         if (!scrollContainerRef.current) return;
@@ -168,10 +187,11 @@ function CategoryReel() {
 
             <div
                 ref={scrollContainerRef}
+                onScroll={handleScroll}
                 className="flex gap-8 px-6 overflow-x-auto scrollbar-hide snap-x snap-mandatory"
                 style={{ scrollBehavior: 'smooth', WebkitOverflowScrolling: 'touch' }}
             >
-                {displayCollections.map((cat, i) => (
+                {sets.map((cat, i) => (
                     <Link
                         key={`${cat.id}-${i}`}
                         to={`/catalog?category=${cat.id}`}
