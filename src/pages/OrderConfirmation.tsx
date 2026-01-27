@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { CheckCircle, Home, ShoppingBag, Calendar, Printer } from 'lucide-react';
 import Confetti from 'react-confetti';
 import { orderManager, type Order } from '@/lib/orders';
+import { BookingModal } from '@/components/service/BookingModal';
 
 export default function OrderConfirmation() {
     const navigate = useNavigate();
@@ -12,6 +13,7 @@ export default function OrderConfirmation() {
     const orderId = searchParams.get('orderId');
     const [orderData, setOrderData] = useState<Order | null>(null);
     const [windowSize, setWindowSize] = useState({ width: window.innerWidth, height: window.innerHeight });
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     useEffect(() => {
         if (!orderId) {
@@ -28,6 +30,10 @@ export default function OrderConfirmation() {
         const order = orderManager.getOrder(orderId);
         if (order) {
             setOrderData(order);
+            // Mark purchase as confirmed for the session
+            localStorage.setItem('monza_purchase_confirmed', 'true');
+            // Show booking invitation after a short delay
+            setTimeout(() => setIsModalOpen(true), 1500);
         } else {
             // Order not found?
             navigate('/');
@@ -119,6 +125,11 @@ export default function OrderConfirmation() {
                     </button>
                 </div>
             </motion.div>
+
+            <BookingModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+            />
         </div>
     );
 }
