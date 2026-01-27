@@ -136,23 +136,28 @@ function CategoryReel() {
 
         const totalWidth = container.scrollWidth;
         const oneThird = totalWidth / 3;
+        const scrollLeft = container.scrollLeft;
 
-        // Teleport logic
-        if (container.scrollLeft < 50) {
+        // Threshold for seamless teleportation
+        if (scrollLeft < 10) {
             container.scrollLeft += oneThird;
         }
-        else if (container.scrollLeft >= oneThird * 2) {
+        else if (scrollLeft >= (oneThird * 2) - 10) {
             container.scrollLeft -= oneThird;
         }
     };
 
-    // Initial positioning: Start in the middle set
     useLayoutEffect(() => {
-        if (scrollContainerRef.current && sets.length > 0) {
-            const totalWidth = scrollContainerRef.current.scrollWidth;
-            const oneThird = totalWidth / 3;
-            scrollContainerRef.current.scrollLeft = oneThird;
-        }
+        const resetPosition = () => {
+            if (scrollContainerRef.current && sets.length > 0) {
+                const totalWidth = scrollContainerRef.current.scrollWidth;
+                const oneThird = totalWidth / 3;
+                scrollContainerRef.current.scrollLeft = oneThird;
+            }
+        };
+
+        const frame = requestAnimationFrame(resetPosition);
+        return () => cancelAnimationFrame(frame);
     }, [sets.length]);
 
     const scroll = (direction: 'left' | 'right') => {
