@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, useLocation, Outlet } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { Navbar } from '@/components/layout/Navbar';
+import { Footer } from '@/components/layout/Footer';
 import Home from '@/pages/Home';
 import Account from '@/pages/Account';
 import Catalog from '@/pages/Catalog';
@@ -22,7 +23,10 @@ function PublicLayout() {
     <>
       <Navbar />
       <CartNotification />
-      <Outlet />
+      <div className="flex-grow">
+        <Outlet />
+      </div>
+      <Footer />
     </>
   );
 }
