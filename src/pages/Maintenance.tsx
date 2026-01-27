@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useVehicle } from '@/context/VehicleContext';
+// Maintenance.tsx is deprecated. See Contact.tsx
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { ProductCard } from '@/components/product/ProductCard';

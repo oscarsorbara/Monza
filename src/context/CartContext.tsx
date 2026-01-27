@@ -10,6 +10,9 @@ interface CartContextType {
     clearCart: () => void;
     cartTotal: number;
     itemCount: number;
+    lastAddedItem: Product | null;
+    showNotification: boolean;
+    closeNotification: () => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -18,6 +21,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     const [items, setItems] = useState<CartItem[]>(() => {
         return storage.get<CartItem[]>('monza_cart', []);
     });
+
+    const [lastAddedItem, setLastAddedItem] = useState<Product | null>(null);
+    const [showNotification, setShowNotification] = useState(false);
 
     useEffect(() => {
         storage.set('monza_cart', items);
@@ -35,6 +41,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
             }
             return [...prev, { ...product, quantity, vehicleId }];
         });
+
+        // Trigger Notification
+        setLastAddedItem(product);
+        setShowNotification(true);
     };
 
     const removeFromCart = (productId: string) => {
@@ -53,6 +63,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
     const clearCart = () => setItems([]);
 
+    const closeNotification = () => setShowNotification(false);
+
     const cartTotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
 
@@ -64,7 +76,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
             updateQuantity,
             clearCart,
             cartTotal,
-            itemCount
+            itemCount,
+            lastAddedItem,
+            showNotification,
+            closeNotification
         }}>
             {children}
         </CartContext.Provider>

@@ -5,7 +5,7 @@ import Home from '@/pages/Home';
 import Account from '@/pages/Account';
 import Catalog from '@/pages/Catalog';
 import ProductDetail from '@/pages/ProductDetail';
-import Maintenance from '@/pages/Maintenance';
+import Contact from '@/pages/Contact'; // Replaces Maintenance
 import Cart from '@/pages/Cart';
 import Checkout from '@/pages/Checkout';
 import OrderConfirmation from '@/pages/OrderConfirmation';
@@ -15,10 +15,13 @@ import Register from '@/pages/Register';
 import SmoothScroll from '@/components/layout/SmoothScroll';
 import PageTransition from '@/components/layout/PageTransition';
 
+import { CartNotification } from '@/components/cart/CartNotification';
+
 function PublicLayout() {
   return (
     <>
       <Navbar />
+      <CartNotification />
       <Outlet />
     </>
   );
@@ -41,7 +44,7 @@ function AnimatedRoutes() {
           <Route path="/account" element={<PageTransition><Account /></PageTransition>} />
           <Route path="/catalog" element={<PageTransition><Catalog /></PageTransition>} />
           <Route path="/product/:id" element={<PageTransition><ProductDetail /></PageTransition>} />
-          <Route path="/maintenance" element={<PageTransition><Maintenance /></PageTransition>} />
+          <Route path="/maintenance" element={<PageTransition><Contact /></PageTransition>} />
           <Route path="/cart" element={<PageTransition><Cart /></PageTransition>} />
         </Route>
 
@@ -63,8 +66,8 @@ function App() {
           className="fixed inset-0 z-0 pointer-events-none"
           style={{
             backgroundImage: `
-              radial-gradient(circle at 50% 0%, rgba(220, 38, 38, 0.3) 0%, transparent 80%), 
-              radial-gradient(circle at 50% 100%, rgba(220, 38, 38, 0.25) 0%, transparent 60%)
+              radial-gradient(circle at 50% 0%, rgba(220, 38, 38, 0.15) 0%, transparent 80%), 
+              radial-gradient(circle at 50% 100%, rgba(220, 38, 38, 0.1) 0%, transparent 60%)
             `
           }}
         />

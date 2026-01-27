@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/Button';
 import { useCart } from '@/context/CartContext';
 import { useVehicle } from '@/context/VehicleContext';
 import { checkCompatibility } from '@/lib/compatibility';
-import { useToast } from '@/context/ToastContext';
 import { Check, AlertTriangle, Info, Plus } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ProductGallery } from '@/components/product/ProductGallery';
@@ -17,7 +16,6 @@ export default function ProductDetail() {
     const product = products.find(p => p.id === id || (id && p.id.endsWith(`/${id}`)));
     const { addToCart } = useCart();
     const { currentVehicle } = useVehicle();
-    const { addToast } = useToast();
 
     if (!product) return <div className="pt-32 text-center text-2xl font-bold">Producto no encontrado</div>;
 
@@ -26,7 +24,7 @@ export default function ProductDetail() {
 
     const handleAddToCart = () => {
         addToCart(product, 1, currentVehicle?.id);
-        addToast(`Agregado al carrito: ${product.name}`, 'success');
+        // Toast replaced by CartNotification component
     };
 
     return (

@@ -2,7 +2,6 @@ import type { Product } from '@/types';
 import { checkCompatibility } from '@/lib/compatibility';
 import { useVehicle } from '@/context/VehicleContext';
 import { useCart } from '@/context/CartContext';
-import { useToast } from '@/context/ToastContext';
 import { Button } from '@/components/ui/Button';
 import { Star, CheckCircle, XCircle } from 'lucide-react';
 import clsx from 'clsx';
@@ -17,7 +16,6 @@ interface ProductCardProps {
 export function ProductCard({ product }: ProductCardProps) {
     const { currentVehicle } = useVehicle();
     const { addToCart } = useCart();
-    const { addToast } = useToast();
 
     const status = checkCompatibility(product, currentVehicle);
 
@@ -80,7 +78,7 @@ export function ProductCard({ product }: ProductCardProps) {
                         size="sm"
                         onClick={() => {
                             addToCart(product, 1, currentVehicle?.id);
-                            addToast(`Added ${product.name} to cart`, 'success');
+                            // Toast replaced by CartNotification component
                         }}
                         disabled={isIncompatible && false} // Allow adding but maybe warn? For now allow.
                         variant={isIncompatible ? 'secondary' : 'primary'}

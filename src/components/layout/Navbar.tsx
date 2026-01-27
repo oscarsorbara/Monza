@@ -60,7 +60,7 @@ export function Navbar() {
                         : "bg-black/20 border-white/5 backdrop-blur-sm"
                 )}>
                     <Link to="/catalog" className="text-sm font-medium hover:text-monza-red transition-colors uppercase tracking-widest">Catálogo</Link>
-                    <Link to="/maintenance" className="text-sm font-medium hover:text-monza-red transition-colors uppercase tracking-widest">Mantenimiento</Link>
+                    <Link to="/maintenance" className="text-sm font-medium hover:text-monza-red transition-colors uppercase tracking-widest">Contacto</Link>
 
 
 
@@ -124,7 +124,7 @@ export function Navbar() {
                                 <div className="h-px bg-white/5 w-full" />
                                 <Link to="/catalog" className="text-3xl font-bold italic hover:text-monza-red transition-colors uppercase tracking-tight" onClick={() => setIsMenuOpen(false)}>Catálogo</Link>
                                 <div className="h-px bg-white/5 w-full" />
-                                <Link to="/maintenance" className="text-3xl font-bold italic hover:text-monza-red transition-colors uppercase tracking-tight" onClick={() => setIsMenuOpen(false)}>Mantenimiento</Link>
+                                <Link to="/maintenance" className="text-3xl font-bold italic hover:text-monza-red transition-colors uppercase tracking-tight" onClick={() => setIsMenuOpen(false)}>Contacto</Link>
                                 <div className="h-px bg-white/5 w-full" />
                                 <Link to="/cart" className="text-3xl font-bold italic hover:text-monza-red transition-colors uppercase tracking-tight flex items-center justify-between" onClick={() => setIsMenuOpen(false)}>
                                     Carrito

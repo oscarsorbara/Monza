@@ -106,7 +106,7 @@ function CategoryReel() {
         ? collections
         : [];
 
-    const ITEM_WIDTH = 432; // 400px w + 32px gap
+    const ITEM_WIDTH = 312; // 280px w + 32px gap
 
     // Logic for Robust Infinite Scroll
     const totalItems = displayCollections.length;
@@ -203,21 +203,26 @@ function CategoryReel() {
                 {extendedCategories.map((cat, i) => (
                     <Link
                         key={`${cat.id}-${i}`}
-                        to={`/catalog?collection=${cat.handle}`}
-                        className="group relative w-[400px] h-[500px] flex-shrink-0 overflow-hidden rounded-none border border-white/5"
+                        to={`/catalog?category=${cat.id}`}
+                        className="group relative w-[280px] h-[400px] flex-shrink-0 rounded-xl overflow-hidden cursor-pointer"
                     >
                         <div className="absolute inset-0 bg-carbon-800 transition-transform duration-700 group-hover:scale-95" />
-                        <img
-                            src={cat.image}
-                            alt={cat.name}
-                            loading="lazy"
-                            className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700"
-                            onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&q=80'; }}
-                        />
+
+                        {/* Image */}
+                        <div className="absolute inset-0 transition-transform duration-700 group-hover:scale-110">
+                            <img
+                                src={cat.image}
+                                alt={cat.name}
+                                loading="lazy"
+                                className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-700"
+                                onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&q=80'; }}
+                            />
+                        </div>
+
                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80" />
 
-                        <div className="absolute bottom-0 left-0 p-8 w-full">
-                            <h3 className="text-4xl font-bold italic text-white mb-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">{cat.name}</h3>
+                        <div className="absolute bottom-0 left-0 p-8 w-full z-10">
+                            <h3 className="text-3xl font-bold italic text-white mb-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">{cat.name}</h3>
                             <p className="text-gray-400 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100 line-clamp-2">{cat.description}</p>
 
                             <div className="mt-4 pt-4 border-t border-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-200">
@@ -229,7 +234,7 @@ function CategoryReel() {
                     </Link>
                 ))}
             </div>
-        </section>
+        </section >
     );
 }
 
