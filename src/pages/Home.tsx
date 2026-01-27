@@ -1,4 +1,4 @@
-import { useRef, useMemo } from 'react';
+import { useRef, useMemo, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Button } from '@/components/ui/Button';
@@ -8,7 +8,8 @@ import { ProductCard } from '@/components/product/ProductCard';
 import { VehicleSelector } from '@/components/vehicle/VehicleSelector';
 import { AppointmentSection } from '@/components/service/AppointmentSection';
 // import heroBg from '@/assets/hero-audi.jpg';
-const heroBg = "https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?q=80&w=2669&auto=format&fit=crop"; // 4k Audi R8 URL
+// Reverting to high-quality RS6 style image as requested, but from Unsplash for 4K resolution
+const heroBg = "https://images.unsplash.com/photo-1614207289658-00aead9c0d12?q=80&w=2600&auto=format&fit=crop"; // High-res Audi RS6 Avantish look
 
 // ... (imports remain same, added WavyBackground)
 
@@ -101,73 +102,108 @@ function HeroSection() {
     );
 }
 
-const Marquee = ({ children }: { children: React.ReactNode }) => {
-    return (
-        <div className="relative flex overflow-hidden group w-full select-none">
-            <div className="flex shrink-0 animate-marquee gap-8 group-hover:[animation-play-state:paused] min-w-full justify-around items-center">
-                {children}
-            </div>
-            <div className="flex shrink-0 animate-marquee gap-8 group-hover:[animation-play-state:paused] min-w-full justify-around items-center aria-hidden ml-8">
-                {children}
-            </div>
-        </div>
-    );
-};
-
 function CategoryReel() {
     const { collections } = useProduct();
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
 
+    // Create a very long list of items to simulate infinite scroll without complex JS
     const displayCollections = useMemo(() => {
         if (collections.length === 0) return [];
-        return collections;
+        // Repeat 20 times for a very long scroll
+        return new Array(20).fill(collections).flat();
     }, [collections]);
+
+    // Scroll to middle on mount to allow scrolling left immediately
+    // Using simple useEffect without complex logic
+    useEffect(() => {
+        // Short timeout to ensure layout is ready
+        const timer = setTimeout(() => {
+            if (scrollContainerRef.current && displayCollections.length > 0) {
+                const middleIndex = Math.floor(displayCollections.length / 2);
+                const cardWidth = 320;
+                const initialScroll = middleIndex * cardWidth - (window.innerWidth / 2) + (cardWidth / 2);
+                scrollContainerRef.current.scrollLeft = initialScroll;
+            }
+        }, 100);
+        return () => clearTimeout(timer);
+    }, [displayCollections.length]);
+
+    const scroll = (direction: 'left' | 'right') => {
+        if (!scrollContainerRef.current) return;
+        const scrollAmount = 320;
+        const current = scrollContainerRef.current.scrollLeft;
+
+        scrollContainerRef.current.scrollTo({
+            left: direction === 'left' ? current - scrollAmount : current + scrollAmount,
+            behavior: 'smooth'
+        });
+    };
 
     if (collections.length === 0) return null;
 
     return (
         <section className="py-32 border-b border-white/5 relative z-10 overflow-hidden">
-            <div className="container mx-auto px-6 mb-12">
+            <div className="container mx-auto px-6 mb-12 flex justify-between items-end">
                 <h2 className="text-4xl md:text-6xl font-bold italic tracking-tighter text-white">
                     COLECCIONES
                 </h2>
+
+                <div className="flex items-center gap-4">
+                    <button
+                        onClick={() => scroll('left')}
+                        className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center text-white hover:bg-white hover:text-black transition-all"
+                        aria-label="Scroll left"
+                    >
+                        <ArrowRight size={24} className="rotate-180" />
+                    </button>
+                    <button
+                        onClick={() => scroll('right')}
+                        className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center text-white hover:bg-white hover:text-black transition-all"
+                        aria-label="Scroll right"
+                    >
+                        <ArrowRight size={24} />
+                    </button>
+                </div>
             </div>
 
-            <div className="w-full">
-                <Marquee>
-                    {displayCollections.map((cat) => (
-                        <Link
-                            key={cat.id}
-                            to={`/catalog?category=${cat.id}`}
-                            className="group/card relative w-[320px] h-[480px] flex-shrink-0 rounded-xl overflow-hidden cursor-pointer"
-                        >
-                            <div className="absolute inset-0 bg-carbon-800" />
+            <div
+                ref={scrollContainerRef}
+                className="flex gap-8 px-6 overflow-x-auto scrollbar-hide snap-x snap-mandatory"
+                style={{ scrollBehavior: 'smooth', WebkitOverflowScrolling: 'touch' }}
+            >
+                {displayCollections.map((cat, i) => (
+                    <Link
+                        key={`${cat.id}-${i}`}
+                        to={`/catalog?category=${cat.id}`}
+                        className="group relative w-[280px] h-[400px] flex-shrink-0 rounded-xl overflow-hidden cursor-pointer snap-center"
+                    >
+                        <div className="absolute inset-0 bg-carbon-800 transition-transform duration-700 group-hover:scale-95" />
 
-                            {/* Image */}
-                            <div className="absolute inset-0 transition-transform duration-700 group-hover/card:scale-110">
-                                <img
-                                    src={cat.image}
-                                    alt={cat.name}
-                                    loading="lazy"
-                                    className="w-full h-full object-cover opacity-90 group-hover/card:opacity-100 transition-opacity duration-700"
-                                    onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&q=80'; }}
-                                />
+                        {/* Image */}
+                        <div className="absolute inset-0 transition-transform duration-700 group-hover:scale-110">
+                            <img
+                                src={cat.image}
+                                alt={cat.name}
+                                loading="lazy"
+                                className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-700"
+                                onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&q=80'; }}
+                            />
+                        </div>
+
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80" />
+
+                        <div className="absolute bottom-0 left-0 p-8 w-full z-10">
+                            <h3 className="text-3xl font-bold italic text-white mb-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">{cat.name}</h3>
+                            <p className="text-gray-400 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100 line-clamp-2">{cat.description}</p>
+
+                            <div className="mt-4 pt-4 border-t border-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-200">
+                                <span className="text-monza-red font-bold uppercase text-xs tracking-wider flex items-center gap-2">
+                                    Explorar <ArrowRight size={14} />
+                                </span>
                             </div>
-
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
-
-                            <div className="absolute bottom-0 left-0 p-8 w-full z-10">
-                                <h3 className="text-3xl font-bold italic text-white mb-2 translate-y-4 group-hover/card:translate-y-0 transition-transform duration-500">{cat.name}</h3>
-                                <p className="text-gray-400 text-sm opacity-0 group-hover/card:opacity-100 transition-opacity duration-500 delay-100 line-clamp-2">{cat.description}</p>
-
-                                <div className="mt-4 pt-4 border-t border-white/20 opacity-0 group-hover/card:opacity-100 transition-opacity duration-500 delay-200">
-                                    <span className="text-monza-red font-bold uppercase text-xs tracking-wider flex items-center gap-2">
-                                        Explorar <ArrowRight size={14} />
-                                    </span>
-                                </div>
-                            </div>
-                        </Link>
-                    ))}
-                </Marquee>
+                        </div>
+                    </Link>
+                ))}
             </div>
         </section>
     );
