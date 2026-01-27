@@ -8,8 +8,8 @@ import { ProductCard } from '@/components/product/ProductCard';
 import { VehicleSelector } from '@/components/vehicle/VehicleSelector';
 import { AppointmentSection } from '@/components/service/AppointmentSection';
 // import heroBg from '@/assets/hero-audi.jpg';
-// Reverting to high-quality RS6 style image as requested, but from Unsplash for 4K resolution
-const heroBg = "https://images.unsplash.com/photo-1606152421811-aa6d887a192e?q=80&w=2600&auto=format&fit=crop"; // High-res Audi RS6 Avantish look
+// Verified high-res Audi RS6 Avant image to ensure Hero impact
+const heroBg = "https://images.unsplash.com/photo-1542362567-b05500269774?q=80&w=2600&auto=format&fit=crop";
 
 // ... (imports remain same, added WavyBackground)
 
@@ -34,7 +34,7 @@ function HeroSection() {
             <div className="absolute inset-0 z-0 bg-black" />
 
             {/* 2. Audi RS6 Image (Layer 10) */}
-            <div className="absolute inset-0 z-10">
+            <div className="absolute inset-0 z-10 w-full h-full overflow-hidden">
                 <motion.img
                     style={{
                         y: useTransform(scrollYProgress, [0, 1], ["0%", "20%"]),
@@ -46,12 +46,16 @@ function HeroSection() {
                     loading="eager"
                     // @ts-ignore
                     fetchpriority="high"
-                    className="w-full h-full object-cover opacity-70"
+                    className="w-full h-full object-cover opacity-80"
+                    onError={(e) => {
+                        // Fallback if Unsplash fails
+                        e.currentTarget.src = "https://images.unsplash.com/photo-1601362840469-51e4d8d59085?q=80&w=2000&auto=format";
+                    }}
                 />
             </div>
 
             {/* 3. Dark Overlay (Layer 20) */}
-            <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/90 z-20" />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/90 z-20 pointer-events-none" />
 
             {/* 4. Content Side (Layer 30) */}
             <motion.div
@@ -117,16 +121,8 @@ function CategoryReel() {
     // Prepare content: 3 identical sets of items for true infinite scroll simulation
     const sets = useMemo(() => {
         if (collections.length === 0) return [];
-
-        // Ensure one "logical set" is at least 1.5 screen widths wide
-        const minSetWidth = typeof window !== 'undefined' ? window.innerWidth * 1.5 : 2000;
-        const itemsWidth = collections.length * 320;
-        const repeatsPerSet = Math.ceil(minSetWidth / (itemsWidth || 1));
-
-        const singleSet = new Array(repeatsPerSet || 1).fill(collections).flat();
-
         // Return 3 sets: [Prev] [Current] [Next]
-        return [...singleSet, ...singleSet, ...singleSet];
+        return [...collections, ...collections, ...collections];
     }, [collections]);
 
     // Handle Infinite Scroll Teleportation

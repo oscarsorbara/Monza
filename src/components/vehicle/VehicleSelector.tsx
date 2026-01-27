@@ -170,8 +170,8 @@ export function VehicleSelector({ className }: VehicleSelectorProps) {
     // --- UI: Sticky Bar / Expandable ---
     return (
         <motion.div
-            // Removed overflow-hidden to allow dropdowns to pop out
-            className={clsx("w-full bg-carbon-950/40 backdrop-blur-md border-b border-white/10 z-[40] pt-[72px] md:pt-[90px] shadow-2xl", className)}
+            // Removed backdrop-blur-md to improve scroll performance (GPU heavy)
+            className={clsx("w-full bg-carbon-950/95 border-b border-white/10 z-[40] pt-[72px] md:pt-[90px] shadow-2xl", className)}
         >
             <div className="container mx-auto px-4">
                 <AnimatePresence mode="wait">
