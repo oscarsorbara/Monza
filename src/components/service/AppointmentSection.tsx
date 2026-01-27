@@ -64,7 +64,7 @@ export function AppointmentSection() {
     };
 
     return (
-        <section className="py-32 bg-transparent px-6 border-t border-white/5 relative overflow-hidden">
+        <section className="py-20 md:py-32 bg-transparent px-4 md:px-6 border-t border-white/5 relative overflow-hidden">
             {/* Background Decoration */}
             {/* Background Decoration - Optimized */}
             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-b from-monza-red/5 to-transparent rounded-full pointer-events-none opacity-50" />
@@ -113,13 +113,13 @@ export function AppointmentSection() {
                     </div>
 
                     {/* Booking Form */}
-                    <div className="bg-carbon-900 border border-white/10 rounded-3xl p-8 relative shadow-2xl shadow-black/50">
+                    <div className="bg-carbon-900 border border-white/10 rounded-3xl p-6 md:p-8 relative shadow-2xl shadow-black/50">
                         <form onSubmit={handleSubmit} className="space-y-8">
 
                             {/* Personal Details */}
                             <div className="space-y-4">
                                 <h3 className="text-white font-bold text-lg border-b border-white/10 pb-2">1. Tus Datos</h3>
-                                <div className="grid grid-cols-2 gap-4">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div className="space-y-2">
                                         <label className="text-xs text-gray-500 uppercase font-bold">Nombre Completo</label>
                                         <input

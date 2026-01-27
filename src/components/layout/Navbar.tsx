@@ -88,37 +88,58 @@ export function Navbar() {
                 </div>
             </div>
 
-            {/* Mobile Menu */}
+            {/* Mobile Menu - Side Drawer */}
             <AnimatePresence>
                 {isMenuOpen && (
-                    <motion.div
-                        initial={{ opacity: 0, y: -20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -20 }}
-                        transition={{ duration: 0.2 }}
-                        className="md:hidden fixed inset-0 bg-carbon-950 z-[100] flex flex-col items-center justify-center space-y-8 pointer-events-auto"
-                        style={{
-                            background: 'radial-gradient(circle at 100% 0%, rgba(220,38,38,0.1) 0%, transparent 50%), #050505'
-                        }}
-                    >
-                        <Button variant="ghost" size="icon" onClick={() => setIsMenuOpen(false)} className="absolute top-6 right-6 text-white hover:bg-white/10">
-                            <X className="h-8 w-8" />
-                        </Button>
+                    <>
+                        {/* Backdrop */}
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setIsMenuOpen(false)}
+                            className="md:hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[90]"
+                        />
 
-                        <div className="flex flex-col items-center gap-6">
-                            <Link to="/" className="text-4xl font-black italic hover:text-monza-red transition-colors uppercase tracking-tighter" onClick={() => setIsMenuOpen(false)}>Inicio</Link>
-                            <Link to="/catalog" className="text-4xl font-black italic hover:text-monza-red transition-colors uppercase tracking-tighter" onClick={() => setIsMenuOpen(false)}>Catálogo</Link>
-                            <Link to="/maintenance" className="text-4xl font-black italic hover:text-monza-red transition-colors uppercase tracking-tighter" onClick={() => setIsMenuOpen(false)}>Mantenimiento</Link>
-                            <Link to="/cart" className="text-4xl font-black italic hover:text-monza-red transition-colors uppercase tracking-tighter" onClick={() => setIsMenuOpen(false)}>
-                                Carrito <span className="text-monza-red">({itemCount})</span>
-                            </Link>
+                        {/* Drawer */}
+                        <motion.div
+                            initial={{ x: "100%" }}
+                            animate={{ x: 0 }}
+                            exit={{ x: "100%" }}
+                            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                            className="md:hidden fixed inset-y-0 right-0 w-[80%] max-w-sm bg-carbon-950 border-l border-white/10 z-[100] shadow-2xl flex flex-col p-8 pointer-events-auto"
+                            style={{
+                                backgroundImage: 'linear-gradient(to bottom, rgba(220,38,38,0.05), transparent)'
+                            }}
+                        >
+                            <div className="flex justify-between items-center mb-12">
+                                <span className="text-sm font-bold uppercase tracking-widest text-gray-500">Menú</span>
+                                <Button variant="ghost" size="icon" onClick={() => setIsMenuOpen(false)} className="text-white hover:bg-white/10 rounded-full">
+                                    <X className="h-6 w-6" />
+                                </Button>
+                            </div>
 
-                            <Link to="/account" onClick={() => setIsMenuOpen(false)} className="mt-8 flex items-center gap-2 text-gray-400 font-medium border border-white/10 px-6 py-3 rounded-full hover:bg-white/5 transition-colors">
-                                <User className="w-5 h-5" />
-                                <span>Mi Cuenta</span>
-                            </Link>
-                        </div>
-                    </motion.div>
+                            <div className="flex flex-col gap-8 flex-1">
+                                <Link to="/" className="text-3xl font-bold italic hover:text-monza-red transition-colors uppercase tracking-tight" onClick={() => setIsMenuOpen(false)}>Inicio</Link>
+                                <div className="h-px bg-white/5 w-full" />
+                                <Link to="/catalog" className="text-3xl font-bold italic hover:text-monza-red transition-colors uppercase tracking-tight" onClick={() => setIsMenuOpen(false)}>Catálogo</Link>
+                                <div className="h-px bg-white/5 w-full" />
+                                <Link to="/maintenance" className="text-3xl font-bold italic hover:text-monza-red transition-colors uppercase tracking-tight" onClick={() => setIsMenuOpen(false)}>Mantenimiento</Link>
+                                <div className="h-px bg-white/5 w-full" />
+                                <Link to="/cart" className="text-3xl font-bold italic hover:text-monza-red transition-colors uppercase tracking-tight flex items-center justify-between" onClick={() => setIsMenuOpen(false)}>
+                                    Carrito
+                                    {itemCount > 0 && <span className="bg-monza-red text-white text-xs font-bold px-2 py-1 rounded-full">{itemCount}</span>}
+                                </Link>
+                            </div>
+
+                            <div className="mt-auto">
+                                <Link to="/account" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 text-white font-medium bg-white/5 border border-white/10 px-6 py-4 rounded-xl hover:bg-white/10 transition-colors w-full justify-center">
+                                    <User className="w-5 h-5" />
+                                    <span>Mi Cuenta</span>
+                                </Link>
+                            </div>
+                        </motion.div>
+                    </>
                 )}
             </AnimatePresence>
         </nav>

@@ -63,8 +63,8 @@ function App() {
           className="fixed inset-0 z-0 pointer-events-none"
           style={{
             backgroundImage: `
-              radial-gradient(circle at 50% 0%, rgba(220, 38, 38, 0.45) 0%, transparent 80%), 
-              radial-gradient(circle at 50% 100%, rgba(220, 38, 38, 0.6) 0%, transparent 60%)
+              radial-gradient(circle at 50% 0%, rgba(220, 38, 38, 0.3) 0%, transparent 80%), 
+              radial-gradient(circle at 50% 100%, rgba(220, 38, 38, 0.25) 0%, transparent 60%)
             `
           }}
         />
