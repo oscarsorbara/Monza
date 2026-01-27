@@ -9,7 +9,8 @@ import { VehicleSelector } from '@/components/vehicle/VehicleSelector';
 import { AppointmentSection } from '@/components/service/AppointmentSection';
 // import heroBg from '@/assets/hero-audi.jpg';
 // Using local high-res Hero image to ensure 100% reliability and fix 404 issues
-const heroBg = "/hero-bg.png";
+const heroBg = "/hero-audi.png";
+
 
 
 // ... (imports remain same, added WavyBackground)
