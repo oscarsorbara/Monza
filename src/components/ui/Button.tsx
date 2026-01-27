@@ -1,9 +1,9 @@
 import { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-import clsx from 'clsx';
+import { cn } from '@/lib/utils';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-    variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
+    variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'custom';
     size?: 'sm' | 'md' | 'lg' | 'icon';
     children: React.ReactNode;
 }
@@ -37,6 +37,7 @@ export function Button({
         secondary: "bg-carbon-800 text-white hover:bg-carbon-700",
         outline: "border border-white/20 text-white hover:bg-white hover:text-black hover:border-transparent backdrop-blur-sm",
         ghost: "hover:bg-white/10 text-white",
+        custom: "", // Allows full override via className
     };
 
     const sizes = {
@@ -49,7 +50,7 @@ export function Button({
     return (
         <motion.button
             ref={ref}
-            className={clsx(baseStyles, variants[variant], sizes[size], className)}
+            className={cn(baseStyles, variants[variant], sizes[size], className)}
             onMouseMove={handleMouseMove}
             onMouseLeave={reset}
             animate={{ x: position.x, y: position.y }}

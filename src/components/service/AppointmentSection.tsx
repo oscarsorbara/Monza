@@ -159,7 +159,7 @@ export function AppointmentSection() {
                                     </p>
 
                                     <Link to="/cart">
-                                        <Button size="lg" className="w-full bg-monza-red hover:bg-red-600 text-white font-black italic tracking-widest h-16 shadow-xl shadow-monza-red/20">
+                                        <Button variant="custom" size="lg" className="w-full bg-monza-red hover:bg-red-600 text-white font-black italic tracking-widest h-16 shadow-xl shadow-monza-red/20 transition-all">
                                             FINALIZAR COMPRA <ShoppingBag className="ml-2" size={20} />
                                         </Button>
                                     </Link>
