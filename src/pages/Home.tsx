@@ -26,10 +26,15 @@ function HeroSection() {
     const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
     return (
-        <section ref={ref} className="relative flex-1 flex flex-col items-center justify-center overflow-hidden min-h-[85vh]">
-            {/* Background Video/Image Parallax */}
-            <div className="absolute inset-0 z-0">
-                <div className="absolute inset-0 bg-black/50 z-10" />
+        <section
+            ref={ref}
+            className="relative w-full h-screen min-h-[600px] flex flex-col items-center justify-center overflow-hidden bg-black"
+        >
+            {/* 1. Underlying Base Background (Layer 0) */}
+            <div className="absolute inset-0 z-0 bg-black" />
+
+            {/* 2. Audi RS6 Image (Layer 10) */}
+            <div className="absolute inset-0 z-10">
                 <motion.img
                     style={{
                         y: useTransform(scrollYProgress, [0, 1], ["0%", "20%"]),
@@ -37,18 +42,21 @@ function HeroSection() {
                         willChange: "transform"
                     }}
                     src={heroBg}
-                    alt="Audi R8 Showcase"
+                    alt="Audi RS6 Avant"
                     loading="eager"
                     // @ts-ignore
                     fetchpriority="high"
-                    className="w-full h-full object-cover shadow-2xl"
+                    className="w-full h-full object-cover opacity-70"
                 />
             </div>
 
-            {/* Visual Centering Container */}
+            {/* 3. Dark Overlay (Layer 20) */}
+            <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/90 z-20" />
+
+            {/* 4. Content Side (Layer 30) */}
             <motion.div
-                style={{ y: yText, opacity, willChange: "transform, opacity" }}
-                className="relative z-20 text-center max-w-5xl px-4 flex flex-col items-center"
+                style={{ y: yText, opacity }}
+                className="relative z-30 text-center max-w-5xl px-4 flex flex-col items-center"
             >
                 {/* Upper Balance - Span */}
                 <div className="mb-6">
@@ -188,8 +196,11 @@ function CategoryReel() {
             <div
                 ref={scrollContainerRef}
                 onScroll={handleScroll}
-                className="flex gap-8 px-6 overflow-x-auto scrollbar-hide snap-x snap-mandatory"
-                style={{ scrollBehavior: 'smooth', WebkitOverflowScrolling: 'touch' }}
+                className="flex gap-8 px-6 overflow-x-auto scrollbar-hide"
+                style={{
+                    WebkitOverflowScrolling: 'touch',
+                    scrollBehavior: 'auto' // Use 'auto' for teleportation script to work instantly
+                }}
             >
                 {sets.map((cat, i) => (
                     <Link
