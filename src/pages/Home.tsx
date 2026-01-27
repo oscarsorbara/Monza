@@ -8,8 +8,9 @@ import { ProductCard } from '@/components/product/ProductCard';
 import { VehicleSelector } from '@/components/vehicle/VehicleSelector';
 import { AppointmentSection } from '@/components/service/AppointmentSection';
 // import heroBg from '@/assets/hero-audi.jpg';
-// Verified high-res Audi RS6 Avant image to ensure Hero impact
-const heroBg = "https://images.unsplash.com/photo-1542362567-b05500269774?q=80&w=2600&auto=format&fit=crop";
+// Using local high-res Hero image to ensure 100% reliability and fix 404 issues
+const heroBg = "/hero-bg.png";
+
 
 // ... (imports remain same, added WavyBackground)
 
@@ -33,24 +34,15 @@ function HeroSection() {
             {/* 1. Underlying Base Background (Layer 0) */}
             <div className="absolute inset-0 z-0 bg-black" />
 
-            {/* 2. Audi RS6 Image (Layer 10) */}
+            {/* 2. Audi RS6 Image (Layer 10) - Using basic img to ensure instant load/visibility */}
             <div className="absolute inset-0 z-10 w-full h-full overflow-hidden">
-                <motion.img
-                    style={{
-                        y: useTransform(scrollYProgress, [0, 1], ["0%", "20%"]),
-                        scale: 1.1,
-                        willChange: "transform"
-                    }}
+                <img
                     src={heroBg}
                     alt="Audi RS6 Avant"
                     loading="eager"
                     // @ts-ignore
                     fetchpriority="high"
                     className="w-full h-full object-cover opacity-80"
-                    onError={(e) => {
-                        // Fallback if Unsplash fails
-                        e.currentTarget.src = "https://images.unsplash.com/photo-1601362840469-51e4d8d59085?q=80&w=2000&auto=format";
-                    }}
                 />
             </div>
 
@@ -59,7 +51,10 @@ function HeroSection() {
 
             {/* 4. Content Side (Layer 30) */}
             <motion.div
-                style={{ y: yText, opacity }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 1 }}
+                style={{ y: yText }}
                 className="relative z-30 text-center max-w-5xl px-4 flex flex-col items-center"
             >
                 {/* Upper Balance - Span */}
