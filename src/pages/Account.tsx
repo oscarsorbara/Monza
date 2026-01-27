@@ -18,7 +18,7 @@ export default function Account() {
 
     if (!user) {
         return (
-            <div className="min-h-screen bg-carbon-950 flex flex-col items-center justify-center p-8 text-center">
+            <div className="min-h-screen flex flex-col items-center justify-center p-8 text-center">
                 <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mb-6">
                     <Package className="w-10 h-10 text-gray-400" />
                 </div>
@@ -42,7 +42,7 @@ export default function Account() {
     const appointments = getAppointmentHistory(user.id);
 
     return (
-        <div className="bg-carbon-950 min-h-screen py-12 px-6 pt-[120px]">
+        <div className="min-h-screen py-12 px-6 pt-[120px]">
             <div className="max-w-6xl mx-auto">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6">
                     <div>

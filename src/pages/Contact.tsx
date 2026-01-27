@@ -31,7 +31,7 @@ export default function Contact() {
     };
 
     return (
-        <div className="min-h-screen bg-carbon-950 pt-32 pb-20">
+        <div className="min-h-screen pt-32 pb-20">
             {/* Header / Hero */}
             <div className="relative h-[40vh] min-h-[400px] mb-20 flex items-center justify-center overflow-hidden">
                 <div className="absolute inset-0 z-0">
@@ -40,7 +40,7 @@ export default function Contact() {
                         alt="Contact Monza"
                         className="w-full h-full object-cover opacity-50"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-b from-carbon-950/20 via-carbon-950/60 to-carbon-950" />
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/60 to-transparent" />
                 </div>
 
                 <div className="relative z-10 text-center px-6">

@@ -32,7 +32,7 @@ export default function Register() {
 
     if (isSuccess) {
         return (
-            <div className="min-h-screen bg-black flex items-center justify-center p-6 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-monza-red/10 via-black to-black">
+            <div className="min-h-screen flex items-center justify-center p-6">
                 <div className="w-full max-w-md bg-carbon-900/50 backdrop-blur-xl border border-white/10 p-8 rounded-2xl shadow-2xl text-center">
                     <h2 className="text-2xl font-black italic text-white uppercase mb-4">¡Casi listo!</h2>
                     <p className="text-gray-400 mb-6">Hemos enviado un email de confirmación a <strong>{email}</strong>.<br />Por favor confirma tu cuenta para poder iniciar sesión.</p>
@@ -43,7 +43,7 @@ export default function Register() {
     }
 
     return (
-        <div className="min-h-screen bg-black flex items-center justify-center p-6 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-monza-red/10 via-black to-black">
+        <div className="min-h-screen flex items-center justify-center p-6">
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}

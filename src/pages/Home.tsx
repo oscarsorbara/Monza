@@ -101,65 +101,18 @@ function CategoryReel() {
     const { collections } = useProduct();
     const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-    // Filter out collections without images if needed, or use placeholders
-    const displayCollections = collections.length > 0
-        ? collections
-        : [];
-
-    const ITEM_WIDTH = 312; // 280px w + 32px gap
-
-    // Logic for Robust Infinite Scroll
-    const totalItems = displayCollections.length;
-    const loopSets = 3; // Significantly reduced to improve scroll performance
-    const centerSetIndex = 3; // The 4th set is the center (0-indexed)
-    const setWidth = totalItems * ITEM_WIDTH;
-    const centerOffset = setWidth * centerSetIndex;
-
-    // Create the massive array of items repeated
-    const extendedCategories = useMemo(() => {
-        return new Array(loopSets).fill(displayCollections).flat();
-    }, [displayCollections]);
-
-    // Use a ref to prevent loop logic fighting with programmatic scrolls
-    const isResettingRef = useRef(false);
-
-    // Initial positioning at the center
-    useEffect(() => {
-        if (scrollContainerRef.current && setWidth > 0) {
-            scrollContainerRef.current.scrollLeft = centerOffset;
-        }
-    }, [setWidth, centerOffset, collections.length]);
-
-    const handleScroll = () => {
-        if (!scrollContainerRef.current || setWidth === 0 || isResettingRef.current) return;
-
-        const currentScroll = scrollContainerRef.current.scrollLeft;
-        const distanceFromCenter = currentScroll - centerOffset;
-
-        // If user has scrolled more than 1 full set away from center...
-        if (Math.abs(distanceFromCenter) >= setWidth) {
-            isResettingRef.current = true;
-
-            // "Teleport" back to center maintaining the exact visual phase
-            // (distance % setWidth) gives us the offset within the current set pattern
-            const relativeOffset = distanceFromCenter % setWidth;
-
-            scrollContainerRef.current.style.scrollBehavior = 'auto'; // Instant jump
-            scrollContainerRef.current.scrollLeft = centerOffset + relativeOffset;
-
-            // Restore smooth scrolling in next frame
-            requestAnimationFrame(() => {
-                if (scrollContainerRef.current) {
-                    scrollContainerRef.current.style.scrollBehavior = 'smooth';
-                }
-                isResettingRef.current = false;
-            });
-        }
-    };
+    // Duplicate collections a few times to ensure we have enough content for a nice scroll
+    const displayCollections = useMemo(() => {
+        if (collections.length === 0) return [];
+        // Ensure at least enough items to fill screen width multiple times
+        // If we have few items, repeat them more times
+        const repeats = collections.length < 5 ? 6 : 3;
+        return new Array(repeats).fill(collections).flat();
+    }, [collections]);
 
     const scroll = (direction: 'left' | 'right') => {
         if (!scrollContainerRef.current) return;
-        const scrollAmount = ITEM_WIDTH;
+        const scrollAmount = 320; // Card width + gap
         const current = scrollContainerRef.current.scrollLeft;
 
         scrollContainerRef.current.scrollTo({
@@ -197,14 +150,14 @@ function CategoryReel() {
 
             <div
                 ref={scrollContainerRef}
-                onScroll={handleScroll}
-                className="flex gap-8 px-6 overflow-x-auto scrollbar-hide"
+                className="flex gap-8 px-6 overflow-x-auto scrollbar-hide snap-x snap-mandatory"
+                style={{ scrollBehavior: 'smooth' }}
             >
-                {extendedCategories.map((cat, i) => (
+                {displayCollections.map((cat, i) => (
                     <Link
                         key={`${cat.id}-${i}`}
                         to={`/catalog?category=${cat.id}`}
-                        className="group relative w-[280px] h-[400px] flex-shrink-0 rounded-xl overflow-hidden cursor-pointer"
+                        className="group relative w-[280px] h-[400px] flex-shrink-0 rounded-xl overflow-hidden cursor-pointer snap-center"
                     >
                         <div className="absolute inset-0 bg-carbon-800 transition-transform duration-700 group-hover:scale-95" />
 
@@ -234,7 +187,7 @@ function CategoryReel() {
                     </Link>
                 ))}
             </div>
-        </section >
+        </section>
     );
 }
 
