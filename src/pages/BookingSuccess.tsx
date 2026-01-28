@@ -58,7 +58,6 @@ export default function BookingSuccess() {
     }, [user, currentVehicle]);
 
     return (
-    return (
         <div className="min-h-screen bg-carbon-950 flex flex-col items-center relative overflow-hidden">
             {/* Background Gradient */}
             <div
