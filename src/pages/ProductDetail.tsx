@@ -36,7 +36,7 @@ export default function ProductDetail() {
                 <div className="lg:sticky lg:top-0 lg:h-screen w-full bg-carbon-900 overflow-hidden relative">
                     <div className="w-full h-[60vh] lg:h-full relative">
                         <ProductGallery
-                            images={[product.image, ...product.images]}
+                            images={Array.from(new Set([product.image, ...product.images]))}
                             title={product.name}
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-carbon-950 via-transparent to-transparent lg:hidden pointer-events-none" />
