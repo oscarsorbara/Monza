@@ -66,8 +66,8 @@ export default function Cart() {
     return (
         <div className="min-h-screen bg-carbon-950 pt-32 pb-20 px-6">
             <div className="container mx-auto max-w-6xl">
-                <div className="flex flex-col md:flex-row md:items-baseline gap-4 mb-8">
-                    <h1 className="text-5xl font-black italic tracking-tighter">CARRITO ({items.length})</h1>
+                <div className="flex flex-col md:flex-row md:items-center gap-4 mb-8">
+                    <h1 className="text-3xl font-black italic tracking-tighter">CARRITO ({items.length})</h1>
                     <span className="text-monza-red text-xs font-bold uppercase tracking-widest animate-pulse">
                         Finalizá tu compra para agendar tu turno de instalación
                     </span>
