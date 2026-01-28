@@ -51,8 +51,8 @@ export function AppointmentSection({ unlocked = false }: AppointmentSectionProps
                         <h2 className="text-4xl md:text-6xl font-black italic tracking-tighter text-white mb-6">
                             AGENDA TU <br /> INSTALACIÓN
                         </h2>
-                        <p className="text-gray-400 text-lg mb-8 leading-relaxed">
-                            Nosotros te lo instalamos! Confirmá tu compra y luego reservá tu turno.
+                        <p className="text-gray-400 text-lg mb-8 leading-relaxed uppercase">
+                            NOSOTROS TE LO INSTALAMOS! CONFIRMÁ TU COMPRA Y LUEGO RESERVÁ TU TURNO.
                         </p>
 
                         {/* Premium Image Integration - Flex Grow to Fill */}
@@ -75,8 +75,8 @@ export function AppointmentSection({ unlocked = false }: AppointmentSectionProps
                             />
 
                             <div className="absolute bottom-6 left-6 z-20 pointer-events-none">
-                                <div className="text-white font-bold text-xl italic">Instalación en taller propio</div>
-                                <div className="text-monza-red text-sm font-bold tracking-widest uppercase">Devoto, Caba</div>
+                                <div className="text-white font-bold text-xl italic uppercase">INSTALACIÓN EN TALLER PROPIO</div>
+                                <div className="text-monza-red text-sm font-bold tracking-widest uppercase">DEVOTO, CABA</div>
                             </div>
                         </div>
                     </div>
