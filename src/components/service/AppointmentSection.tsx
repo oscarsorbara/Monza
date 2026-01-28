@@ -46,14 +46,13 @@ export function AppointmentSection({ unlocked = false }: AppointmentSectionProps
                     <div className="flex flex-col h-full">
                         <div className="inline-flex items-center gap-2 text-monza-red font-bold uppercase tracking-widest text-sm mb-4">
                             <Clock className="w-4 h-4" />
-                            <span>Service Center</span>
+                            <span>INSTALACIÓN SEGURA</span>
                         </div>
                         <h2 className="text-4xl md:text-6xl font-black italic tracking-tighter text-white mb-6">
                             AGENDA TU <br /> INSTALACIÓN
                         </h2>
                         <p className="text-gray-400 text-lg mb-8 leading-relaxed">
-                            Nuestros técnicos especializados garantizan una instalación perfecta.
-                            Reserva tu turno y confirma tu compra.
+                            Nosotros te lo instalamos! Confirmá tu compra y luego reservá tu turno.
                         </p>
 
                         {/* Premium Image Integration - Flex Grow to Fill */}
@@ -76,8 +75,8 @@ export function AppointmentSection({ unlocked = false }: AppointmentSectionProps
                             />
 
                             <div className="absolute bottom-6 left-6 z-20 pointer-events-none">
-                                <div className="text-white font-bold text-xl italic">PRECISIÓN ALEMANA</div>
-                                <div className="text-monza-red text-sm font-bold tracking-widest uppercase">Taller Certificado</div>
+                                <div className="text-white font-bold text-xl italic">Instalación en taller propio</div>
+                                <div className="text-monza-red text-sm font-bold tracking-widest uppercase">Devoto, Caba</div>
                             </div>
                         </div>
                     </div>
