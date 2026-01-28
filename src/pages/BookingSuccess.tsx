@@ -23,15 +23,26 @@ export default function BookingSuccess() {
     }, []);
 
     return (
-        <div className="min-h-screen bg-carbon-950 flex flex-col items-center">
+        <div className="min-h-screen bg-carbon-950 flex flex-col items-center relative overflow-hidden">
+            {/* Background Gradient */}
+            <div
+                className="absolute inset-0 z-0 pointer-events-none"
+                style={{
+                    backgroundImage: `
+                        radial-gradient(circle at 50% 0%, rgba(220, 38, 38, 0.15) 0%, transparent 80%), 
+                        radial-gradient(circle at 50% 100%, rgba(220, 38, 38, 0.1) 0%, transparent 60%)
+                    `
+                }}
+            />
+
             {/* Top Logo Bar */}
-            <div className="w-full py-6 px-6 flex justify-center sticky top-0 bg-carbon-950 z-50">
+            <div className="w-full py-6 px-6 flex justify-center sticky top-0 bg-carbon-950/80 backdrop-blur-md z-50">
                 <Link to="/" className="hover:opacity-80 transition-opacity">
                     <img src="/monza-logo.png" alt="Monza" className="h-6 md:h-8 w-auto" />
                 </Link>
             </div>
 
-            <div className="flex-1 w-full max-w-7xl pt-12 pb-20 flex flex-col items-center px-4">
+            <div className="flex-1 w-full max-w-7xl pt-12 pb-20 flex flex-col items-center px-4 relative z-10">
 
                 {/* 1. Header: Gracias por tu compra */}
                 <div className="flex items-center gap-3 mb-4 animate-fade-in-up">
