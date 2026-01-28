@@ -1,7 +1,7 @@
 
 import { useEffect } from 'react';
 import { Button } from '@/components/ui/Button';
-import { CheckCircle, ArrowRight } from 'lucide-react';
+import { CheckCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Cal, { getCalApi } from "@calcom/embed-react";
 
