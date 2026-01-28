@@ -14,9 +14,9 @@ export function getProductId(gid: string): string {
 }
 
 export function formatPrice(amount: number): string {
-    return new Intl.NumberFormat('es-AR', {
-        style: 'decimal',
+    // Force usage of '.' for thousands by formatting as US (which uses commas) and replacing them
+    return amount.toLocaleString('en-US', {
         minimumFractionDigits: 0,
-        maximumFractionDigits: 0,
-    }).format(amount);
+        maximumFractionDigits: 0
+    }).replace(/,/g, '.');
 }

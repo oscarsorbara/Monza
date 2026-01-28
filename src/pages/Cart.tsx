@@ -150,7 +150,7 @@ export default function Cart() {
                                 </div>
                                 <div className="flex justify-between">
                                     <span>Envío</span>
-                                    <span>{shipping === 0 ? 'Gratis' : `$${shipping}`}</span>
+                                    <span>{shipping === 0 ? 'Gratis' : `$${formatPrice(shipping)}`}</span>
                                 </div>
                                 <div className="h-px bg-white/10 my-4" />
                                 <div className="flex justify-between text-2xl font-bold text-white">

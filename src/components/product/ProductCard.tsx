@@ -73,7 +73,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
                 <div className="mt-auto flex items-center justify-between gap-3">
                     <div className="flex flex-col">
-                        <span className="text-2xl font-bold text-white">${formatPrice(product.price)}</span>
+                        <span className="text-lg font-bold text-white">${formatPrice(product.price)}</span>
                     </div>
                     <Button
                         size="sm"
