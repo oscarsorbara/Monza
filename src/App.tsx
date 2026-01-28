@@ -12,6 +12,7 @@ import Checkout from '@/pages/Checkout';
 import OrderConfirmation from '@/pages/OrderConfirmation';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
+import BookingSuccess from '@/pages/BookingSuccess';
 
 import SmoothScroll from '@/components/layout/SmoothScroll';
 import PageTransition from '@/components/layout/PageTransition';
@@ -55,6 +56,7 @@ function AnimatedRoutes() {
         {/* Checkout Routes (No Navbar usually, but keeping for continuity or different layout) */}
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/checkout/success" element={<OrderConfirmation />} />
+        <Route path="/booking-success" element={<BookingSuccess />} />
 
       </Routes>
     </AnimatePresence>

@@ -7,7 +7,11 @@ import { Button } from '@/components/ui/Button';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
-export function AppointmentSection() {
+interface AppointmentSectionProps {
+    unlocked?: boolean;
+}
+
+export function AppointmentSection({ unlocked = false }: AppointmentSectionProps) {
     const { items, cartTotal } = useCart();
     const [isPurchaseConfirmed, setIsPurchaseConfirmed] = useState(false);
 
@@ -33,7 +37,7 @@ export function AppointmentSection() {
 
     const isEmpty = items.length === 0;
     const hasItems = items.length > 0 && !isPurchaseConfirmed;
-    const isConfirmed = isPurchaseConfirmed;
+    const isConfirmed = isPurchaseConfirmed || unlocked;
 
     return (
         <section className="py-20 md:py-32 bg-transparent px-4 md:px-6 border-t border-white/5 relative overflow-hidden">
@@ -179,7 +183,9 @@ export function AppointmentSection() {
                                 <div className="absolute top-0 left-0 w-full h-1 bg-monza-red" />
                                 <div className="p-4 flex items-center gap-3 bg-monza-red/5 border-b border-white/5 mb-4 rounded-t-xl">
                                     <CheckCircle size={18} className="text-monza-red" />
-                                    <span className="text-xs font-bold uppercase tracking-widest text-monza-red">Acceso Garantizado - Post Compra</span>
+                                    <span className="text-xs font-bold uppercase tracking-widest text-monza-red">
+                                        {unlocked ? 'Pago Confirmado - Turno Habilitado' : 'Acceso Garantizado - Post Compra'}
+                                    </span>
                                 </div>
                                 <Cal
                                     calLink="oscar-sorbara-xbmqr9"
