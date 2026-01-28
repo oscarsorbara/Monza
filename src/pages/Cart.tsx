@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/Button';
 import { Minus, Plus, Trash2, ArrowRight, Clock } from 'lucide-react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { formatPrice } from '@/lib/utils';
 
 export default function Cart() {
     const { items, removeFromCart, updateQuantity } = useCart();
@@ -107,7 +108,7 @@ export default function Cart() {
                                     <div className="flex-1">
                                         <h3 className="text-xl font-bold mb-1">{item.name}</h3>
                                         <p className="text-gray-400 text-sm mb-2">{item.category}</p>
-                                        <div className="text-lg font-mono">${item.price.toLocaleString()}</div>
+                                        <div className="text-lg font-mono">${formatPrice(item.price)}</div>
                                     </div>
 
                                     <div className="flex items-center gap-4 bg-carbon-950 rounded-full px-2 py-1 border border-white/10">
@@ -145,7 +146,7 @@ export default function Cart() {
                             <div className="space-y-4 mb-8 text-gray-300">
                                 <div className="flex justify-between">
                                     <span>Subtotal</span>
-                                    <span>${subtotal.toLocaleString()}</span>
+                                    <span>${formatPrice(subtotal)}</span>
                                 </div>
                                 <div className="flex justify-between">
                                     <span>Envío</span>
@@ -154,7 +155,7 @@ export default function Cart() {
                                 <div className="h-px bg-white/10 my-4" />
                                 <div className="flex justify-between text-2xl font-bold text-white">
                                     <span>Total</span>
-                                    <span>${total.toLocaleString()}</span>
+                                    <span>${formatPrice(total)}</span>
                                 </div>
                             </div>
 

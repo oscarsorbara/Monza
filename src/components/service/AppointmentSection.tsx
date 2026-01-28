@@ -1,4 +1,5 @@
 import { Clock, ShoppingBag, ArrowRight, CheckCircle, Info } from 'lucide-react';
+import { formatPrice } from '@/lib/utils';
 import Cal, { getCalApi } from "@calcom/embed-react";
 import { useEffect, useState } from 'react';
 import { useCart } from '@/context/CartContext';
@@ -143,7 +144,7 @@ export function AppointmentSection() {
                                                     <div className="text-gray-500 text-xs">Cantidad: {item.quantity}</div>
                                                 </div>
                                             </div>
-                                            <div className="font-mono text-white">${(item.price * item.quantity).toLocaleString()}</div>
+                                            <div className="font-mono text-white">${formatPrice(item.price * item.quantity)}</div>
                                         </div>
                                     ))}
                                 </div>
@@ -151,7 +152,7 @@ export function AppointmentSection() {
                                 <div className="flex flex-col gap-6">
                                     <div className="flex justify-between items-center bg-carbon-950 p-4 rounded-xl border border-white/5">
                                         <span className="text-gray-400 font-bold uppercase tracking-widest text-xs">Total Parcial</span>
-                                        <span className="text-2xl font-black italic text-monza-red">${cartTotal.toLocaleString()}</span>
+                                        <span className="text-2xl font-black italic text-monza-red">${formatPrice(cartTotal)}</span>
                                     </div>
 
                                     <p className="text-sm text-gray-400 italic text-center">

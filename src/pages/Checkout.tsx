@@ -8,6 +8,7 @@ import { useAuth } from '@/context/AuthContext';
 import { orderManager, type Order } from '@/lib/orders';
 import { PaymentMethodSelector } from '@/components/checkout/PaymentForm';
 import { clsx } from 'clsx';
+import { formatPrice } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Checkout() {
@@ -502,7 +503,7 @@ export default function Checkout() {
                                     <h4 className="font-medium text-sm text-white truncate">{item.name}</h4>
                                     <p className="text-xs text-gray-400 uppercase">{item.category}</p>
                                 </div>
-                                <span className="font-bold text-sm text-white">${(item.price * item.quantity).toLocaleString()}</span>
+                                <span className="font-bold text-sm text-white">${formatPrice(item.price * item.quantity)}</span>
                             </div>
                         ))}
                     </div>
@@ -513,11 +514,11 @@ export default function Checkout() {
                     <div className="space-y-3 text-sm text-gray-300">
                         <div className="flex justify-between">
                             <span>Subtotal</span>
-                            <span className="font-bold text-white">${cartTotal.toLocaleString()}</span>
+                            <span className="font-bold text-white">${formatPrice(cartTotal)}</span>
                         </div>
                         <div className="flex justify-between">
                             <span className="flex items-center gap-1">Envío <span className="text-gray-500 text-xs">(Estándar)</span></span>
-                            <span className="font-bold text-white">{shippingCost === 0 ? 'Gratis' : `$${shippingCost.toLocaleString()}`}</span>
+                            <span className="font-bold text-white">{shippingCost === 0 ? 'Gratis' : `$${formatPrice(shippingCost)}`}</span>
                         </div>
                     </div>
 
@@ -529,7 +530,7 @@ export default function Checkout() {
                         <div className="flex items-baseline gap-2">
                             <span className="text-xs text-gray-400">USD</span>
                             <span className="text-3xl font-black italic tracking-tighter text-white">
-                                ${finalTotal.toLocaleString()}
+                                ${formatPrice(finalTotal)}
                             </span>
                         </div>
                     </div>

@@ -12,3 +12,11 @@ export function getProductId(gid: string): string {
     }
     return gid;
 }
+
+export function formatPrice(amount: number): string {
+    return new Intl.NumberFormat('es-AR', {
+        style: 'decimal',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+    }).format(amount);
+}

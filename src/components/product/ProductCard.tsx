@@ -7,7 +7,7 @@ import { Star, CheckCircle, XCircle } from 'lucide-react';
 import clsx from 'clsx';
 import { Link } from 'react-router-dom';
 
-import { getProductId } from '@/lib/utils';
+import { getProductId, formatPrice } from '@/lib/utils';
 
 interface ProductCardProps {
     product: Product;
@@ -73,7 +73,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
                 <div className="mt-auto flex items-center justify-between gap-3">
                     <div className="flex flex-col">
-                        <span className="text-2xl font-bold text-white">${product.price.toLocaleString('es-AR')}</span>
+                        <span className="text-2xl font-bold text-white">${formatPrice(product.price)}</span>
                     </div>
                     <Button
                         size="sm"

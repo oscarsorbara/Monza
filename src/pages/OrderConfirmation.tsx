@@ -6,6 +6,7 @@ import { CheckCircle, Home, ShoppingBag, Calendar, Printer } from 'lucide-react'
 import Confetti from 'react-confetti';
 import { orderManager, type Order } from '@/lib/orders';
 import { BookingModal } from '@/components/service/BookingModal';
+import { formatPrice } from '@/lib/utils';
 
 export default function OrderConfirmation() {
     const navigate = useNavigate();
@@ -92,7 +93,7 @@ export default function OrderConfirmation() {
                                         <span className="bg-white/10 px-2 py-1 rounded text-xs font-bold font-mono">x{item.quantity}</span>
                                         <span>{item.name}</span>
                                     </div>
-                                    <span className="font-mono text-gray-400">${(item.price * item.quantity).toLocaleString()}</span>
+                                    <span className="font-mono text-gray-400">${formatPrice(item.price * item.quantity)}</span>
                                 </div>
                             ))}
                         </div>
@@ -100,7 +101,7 @@ export default function OrderConfirmation() {
 
                     <div className="flex justify-between items-center pt-4 border-t border-white/5">
                         <span className="font-bold text-lg">Total Pagado</span>
-                        <span className="font-black text-2xl text-monza-red font-mono">${(total).toLocaleString()}</span>
+                        <span className="font-black text-2xl text-monza-red font-mono">${formatPrice(total)}</span>
                     </div>
                 </div>
 

@@ -4,6 +4,7 @@ import { Check, X, ShoppingCart } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/Button';
+import { formatPrice } from '@/lib/utils';
 
 export function CartNotification() {
     const { lastAddedItem, showNotification, closeNotification, cartTotal, itemCount } = useCart();
@@ -58,14 +59,14 @@ export function CartNotification() {
                                 <div className="flex-1 min-w-0">
                                     <h4 className="text-white font-bold leading-tight line-clamp-2 mb-1">{lastAddedItem.name}</h4>
                                     <p className="text-gray-400 text-sm mb-2">{lastAddedItem.brand}</p>
-                                    <div className="text-monza-red font-bold">${lastAddedItem.price.toLocaleString()}</div>
+                                    <div className="text-monza-red font-bold">${formatPrice(lastAddedItem.price)}</div>
                                 </div>
                             </div>
 
                             <div className="mt-4 pt-4 border-t border-white/10 space-y-3">
                                 <div className="flex justify-between items-center text-sm">
                                     <span className="text-gray-400">Total ({itemCount} productos):</span>
-                                    <span className="text-white font-bold">${cartTotal.toLocaleString()}</span>
+                                    <span className="text-white font-bold">${formatPrice(cartTotal)}</span>
                                 </div>
 
                                 <Link to="/cart" onClick={closeNotification}>

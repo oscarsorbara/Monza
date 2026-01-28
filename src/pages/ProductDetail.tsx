@@ -8,6 +8,7 @@ import { Check, AlertTriangle, Info, Plus } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ProductGallery } from '@/components/product/ProductGallery';
 import { InlineVehicleSelector } from '@/components/vehicle/InlineVehicleSelector';
+import { formatPrice } from '@/lib/utils';
 
 export default function ProductDetail() {
     const { id } = useParams();
@@ -65,7 +66,7 @@ export default function ProductDetail() {
                         </h1>
 
                         <div className="text-3xl text-gray-300 font-light mb-8">
-                            ${product.price.toLocaleString()}
+                            ${formatPrice(product.price)}
                         </div>
 
                         {/* Inline Vehicle Selector */}
