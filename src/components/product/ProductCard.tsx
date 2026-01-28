@@ -25,7 +25,8 @@ export function ProductCard({ product }: ProductCardProps) {
     return (
         <div className="bg-carbon-800 border border-carbon-700 rounded-xl overflow-hidden hover:border-carbon-500 transition-all duration-300 group flex flex-col h-full">
             {/* Image Area */}
-            <div className="relative h-48 overflow-hidden bg-white/5">
+            {/* Image Area */}
+            <Link to={`/product/${getProductId(product.id)}`} className="block relative h-48 overflow-hidden bg-white/5">
                 <img
                     src={product.image}
                     alt={product.name}
@@ -37,7 +38,7 @@ export function ProductCard({ product }: ProductCardProps) {
                         Poco Stock
                     </span>
                 )}
-            </div>
+            </Link>
 
             {/* Content */}
             <div className="p-4 flex-1 flex flex-col">
@@ -72,7 +73,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
                 <div className="mt-auto flex items-center justify-between gap-3">
                     <div className="flex flex-col">
-                        <span className="text-2xl font-bold text-white">${product.price}</span>
+                        <span className="text-2xl font-bold text-white">${product.price.toLocaleString('es-AR')}</span>
                     </div>
                     <Button
                         size="sm"
