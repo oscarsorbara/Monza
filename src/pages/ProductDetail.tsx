@@ -105,7 +105,7 @@ export default function ProductDetail() {
                         </AnimatePresence>
 
                         <div
-                            className="prose prose-invert prose-lg text-gray-400 mb-12"
+                            className="prose prose-invert prose-lg text-gray-400 mb-12 [&>p]:mb-6 [&>ul]:mb-6 [&>li]:mb-2"
                             dangerouslySetInnerHTML={{ __html: product.description }}
                         />
 
