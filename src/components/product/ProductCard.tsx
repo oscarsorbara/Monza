@@ -7,7 +7,7 @@ import { Star, CheckCircle, XCircle } from 'lucide-react';
 import clsx from 'clsx';
 import { Link } from 'react-router-dom';
 
-import { getProductId, formatPrice } from '@/lib/utils';
+import { formatPrice } from '@/lib/utils';
 
 interface ProductCardProps {
     product: Product;
@@ -26,7 +26,7 @@ export function ProductCard({ product }: ProductCardProps) {
         <div className="bg-carbon-800 border border-carbon-700 rounded-xl overflow-hidden hover:border-carbon-500 transition-all duration-300 group flex flex-col h-full">
             {/* Image Area */}
             {/* Image Area */}
-            <Link to={`/product/${getProductId(product.id)}`} className="block relative h-48 overflow-hidden bg-white/5">
+            <Link to={`/product/${product.handle}`} className="block relative h-48 overflow-hidden bg-white/5">
                 <img
                     src={product.image}
                     alt={product.name}
@@ -44,7 +44,7 @@ export function ProductCard({ product }: ProductCardProps) {
             <div className="p-4 flex-1 flex flex-col">
                 <div className="mb-2">
                     <span className="text-xs text-gray-400 uppercase tracking-wider">{product.brand}</span>
-                    <Link to={`/product/${getProductId(product.id)}`}>
+                    <Link to={`/product/${product.handle}`}>
                         <h3 className="text-lg font-bold text-white leading-tight hover:text-monza-red transition-colors line-clamp-2">
                             {product.name}
                         </h3>

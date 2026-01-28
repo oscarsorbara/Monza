@@ -75,6 +75,7 @@ export function ProductProvider({ children }: { children: ReactNode }) {
                             return {
                                 id: node.id,
                                 name: node.title,
+                                handle: node.handle,
                                 sku: node.id,
                                 price: parseFloat(node.priceRange.minVariantPrice.amount),
                                 category: node.productType || 'Varios',

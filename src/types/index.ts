@@ -23,6 +23,7 @@ export type CompatibilityStatus = 'EXACT_MATCH' | 'PARTIAL_MATCH' | 'INCOMPATIBL
 export interface Product {
     id: string;
     name: string;
+    handle: string;
     sku: string;
     price: number;
     category: ProductCategory;

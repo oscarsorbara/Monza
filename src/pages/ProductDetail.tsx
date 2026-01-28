@@ -13,8 +13,8 @@ import { formatPrice } from '@/lib/utils';
 export default function ProductDetail() {
     const { id } = useParams();
     const { products } = useProduct();
-    // Simplified ID matching for Shopify GIDs
-    const product = products.find(p => p.id === id || (id && p.id.endsWith(`/${id}`)));
+    // Match by handle (preferred) or ID (fallback)
+    const product = products.find(p => p.handle === id || p.id === id || (id && p.id.endsWith(`/${id}`)));
     const { addToCart } = useCart();
     const { currentVehicle } = useVehicle();
 
