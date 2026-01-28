@@ -59,7 +59,7 @@ export default function Account() {
                     {[
                         { id: 'garage', label: 'Mi Garage', icon: Car },
                         { id: 'orders', label: 'Mis Pedidos', icon: Package },
-                        { id: 'appointments', label: 'Mis Citas', icon: Clock }
+                        { id: 'appointments', label: 'Mis Turnos', icon: Clock }
                     ].map(tab => (
                         <button
                             key={tab.id}

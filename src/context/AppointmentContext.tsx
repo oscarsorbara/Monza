@@ -21,6 +21,7 @@ interface AppointmentContextType {
     createAppointment: (appt: Omit<Appointment, 'id' | 'status'>) => Appointment;
     getAppointmentHistory: (userId?: string) => Appointment[];
     updateAppointmentStatus: (id: string, status: Appointment['status']) => void;
+    claimAppointments: (userId: string) => void;
 }
 
 const AppointmentContext = createContext<AppointmentContextType | undefined>(undefined);
@@ -44,7 +45,7 @@ export function AppointmentProvider({ children }: { children: React.ReactNode })
         const newAppt: Appointment = {
             ...apptData,
             id: 'APT-' + Math.random().toString(36).substr(2, 9).toUpperCase(),
-            status: 'requested',
+            status: 'confirmed', // From Cal.com it's usually confirmed immediately
         };
         save([...appointments, newAppt]);
         return newAppt;
@@ -53,7 +54,7 @@ export function AppointmentProvider({ children }: { children: React.ReactNode })
     const getAppointmentHistory = (userId?: string): Appointment[] => {
         const sessionId = localStorage.getItem('monza_session_id');
         return appointments.filter(a =>
-            (userId && a.userId === userId) || a.sessionId === sessionId
+            (userId && a.userId === userId) || (a.sessionId === sessionId && !a.userId)
         ).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
     };
 
@@ -62,12 +63,23 @@ export function AppointmentProvider({ children }: { children: React.ReactNode })
         save(updated);
     };
 
+    const claimAppointments = (userId: string) => {
+        const sessionId = localStorage.getItem('monza_session_id');
+        if (!sessionId) return;
+
+        const updated = appointments.map(a =>
+            (a.sessionId === sessionId && !a.userId) ? { ...a, userId } : a
+        );
+        save(updated);
+    }
+
     return (
         <AppointmentContext.Provider value={{
             appointments,
             createAppointment,
             getAppointmentHistory,
-            updateAppointmentStatus
+            updateAppointmentStatus,
+            claimAppointments
         }}>
             {children}
         </AppointmentContext.Provider>

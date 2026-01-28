@@ -4,11 +4,46 @@ import { Button } from '@/components/ui/Button';
 import { CheckCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Cal, { getCalApi } from "@calcom/embed-react";
+import { useAuth } from '@/context/AuthContext';
+import { useAppointment } from '@/context/AppointmentContext';
+import { useVehicle } from '@/context/VehicleContext';
 
 export default function BookingSuccess() {
+    const { user } = useAuth();
+    const { createAppointment, claimAppointments } = useAppointment();
+    const { currentVehicle } = useVehicle();
+
     useEffect(() => {
+        // If user logs in/registers and lands here (or is already logged in), claim any pending appointments
+        if (user) {
+            claimAppointments(user.id);
+        }
+
         (async function () {
             const cal = await getCalApi();
+
+            // Listen for successful bookings
+            cal("on", {
+                action: "bookingSuccessful",
+                callback: (e: any) => {
+                    const date = e.detail?.data?.date || new Date().toISOString();
+                    // Create appointment in our system
+                    createAppointment({
+                        userId: user?.id,
+                        sessionId: localStorage.getItem('monza_session_id') || 'unknown',
+                        date: date,
+                        time: new Date(date).toLocaleTimeString(),
+                        serviceType: 'installation',
+                        orderId: 'NEW-ORDER', // Ideally we'd get this from the recent purchase context
+                        vehicleInfo: {
+                            make: currentVehicle?.make || 'Vehículo',
+                            model: currentVehicle?.model || 'Desconocido',
+                            year: currentVehicle?.year || 2024
+                        }
+                    });
+                }
+            });
+
             cal("ui", {
                 theme: "dark",
                 styles: {
@@ -20,8 +55,9 @@ export default function BookingSuccess() {
                 layout: "month_view" // Ensures wide/horizontal layout
             });
         })();
-    }, []);
+    }, [user, currentVehicle]);
 
+    return (
     return (
         <div className="min-h-screen bg-carbon-950 flex flex-col items-center relative overflow-hidden">
             {/* Background Gradient */}
@@ -55,8 +91,8 @@ export default function BookingSuccess() {
                 </div>
 
                 {/* 2. Section Title */}
-                <p className="text-gray-400 text-lg mb-12 animate-fade-in-up delay-100">
-                    Agendá tu turno de instalación
+                <p className="text-gray-400 text-lg mb-12 animate-fade-in-up delay-100 text-center max-w-lg">
+                    Agendá tu turno de instalación. {user ? "Quedará guardado en 'Mis Turnos'" : "Creá una cuenta para guardarlo en tu perfil."}
                 </p>
 
                 {/* 3. Calendar (Horizontal / Wide) */}
@@ -70,8 +106,26 @@ export default function BookingSuccess() {
                     </div>
                 </div>
 
-                {/* 4. Final Button */}
-                <div className="animate-fade-in-up delay-300">
+                {/* 4. Auth & Navigation Actions */}
+                <div className="animate-fade-in-up delay-300 flex flex-col items-center gap-6">
+
+                    {!user && (
+                        <div className="bg-carbon-900/80 border border-white/10 p-6 rounded-2xl flex flex-col md:flex-row items-center gap-6 max-w-2xl text-center md:text-left">
+                            <div>
+                                <h3 className="text-white font-bold uppercase italic text-lg mb-1">Guardá tu turno</h3>
+                                <p className="text-gray-400 text-sm">Creá tu cuenta ahora para ver este turno en la sección "Mis Turnos" y gestionar tus pedidos.</p>
+                            </div>
+                            <div className="flex gap-3">
+                                <Link to="/register">
+                                    <Button className="bg-monza-red text-white uppercase font-bold tracking-widest">Crear Cuenta</Button>
+                                </Link>
+                                <Link to="/login">
+                                    <Button variant="outline" className="border-white/20 hover:bg-white/10 text-white uppercase font-bold tracking-widest">Ingresar</Button>
+                                </Link>
+                            </div>
+                        </div>
+                    )}
+
                     <Link to="/catalog">
                         <Button variant="outline" className="px-8 border-white/20 hover:bg-white/5">
                             Volver al catálogo
