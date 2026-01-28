@@ -104,14 +104,10 @@ export default function ProductDetail() {
                             )}
                         </AnimatePresence>
 
-                        <div className="prose prose-invert prose-lg text-gray-400 mb-12">
-                            <p>{product.description}</p>
-                            <ul>
-                                <li>Ingeniería de precisión</li>
-                                <li>Construcción de materiales compuestos</li>
-                                <li>Garantía de rendimiento</li>
-                            </ul>
-                        </div>
+                        <div
+                            className="prose prose-invert prose-lg text-gray-400 mb-12"
+                            dangerouslySetInnerHTML={{ __html: product.description }}
+                        />
 
                         <div className="flex gap-4 items-center">
                             <Button size="lg" onClick={handleAddToCart} className="flex-1 bg-white text-black hover:bg-gray-200 h-16 text-lg">

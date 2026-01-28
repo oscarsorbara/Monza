@@ -6,6 +6,7 @@ export const PRODUCTS_QUERY = `
           id
           title
           description
+          descriptionHtml
           handle
           images(first: 10) {
             edges {

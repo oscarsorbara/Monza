@@ -80,7 +80,7 @@ export function ProductProvider({ children }: { children: ReactNode }) {
                                 category: node.productType || 'Varios',
                                 image: mainImage,
                                 images: galleryImages,
-                                description: node.description || '',
+                                description: node.descriptionHtml || node.description || '',
                                 stock: node.variants.edges[0]?.node?.availableForSale ? 10 : 0,
                                 rating: 5.0,
                                 reviewsCount: 0,
