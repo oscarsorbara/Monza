@@ -4,6 +4,7 @@ export const PRODUCTS: Product[] = [
     {
         id: 'p1',
         name: 'Pastillas de Freno Cerámicas - Delanteras',
+        handle: 'pastillas-freno-ceramicas-delanteras',
         sku: 'BRK-001',
         price: 185.99,
         category: 'Frenos',
@@ -23,6 +24,7 @@ export const PRODUCTS: Product[] = [
     {
         id: 'p2',
         name: 'Kit de Admisión de Aire Frío',
+        handle: 'kit-admision-aire-frio',
         sku: 'INT-002',
         price: 450.00,
         category: 'Motor',
@@ -42,6 +44,7 @@ export const PRODUCTS: Product[] = [
     {
         id: 'p3',
         name: 'Suspensión Coilover V3',
+        handle: 'suspension-coilover-v3',
         sku: 'SUS-003',
         price: 2850.00,
         category: 'Suspensión',
@@ -59,6 +62,7 @@ export const PRODUCTS: Product[] = [
     {
         id: 'p4',
         name: 'Sistema de Escape Titanio',
+        handle: 'sistema-escape-titanio',
         sku: 'EXH-004',
         price: 4200.00,
         category: 'Escape',
@@ -77,6 +81,7 @@ export const PRODUCTS: Product[] = [
     {
         id: 'p5',
         name: 'Alerón Trasero GT Carbon',
+        handle: 'aleron-trasero-gt-carbon',
         sku: 'AERO-005',
         price: 1200.00,
         category: 'Exterior',
@@ -94,6 +99,7 @@ export const PRODUCTS: Product[] = [
     {
         id: 'p6',
         name: 'Aceite Sintético de Carreras 5W-40',
+        handle: 'aceite-sintetico-carreras-5w40',
         sku: 'OIL-006',
         price: 85.00,
         category: 'Fluidos',
@@ -111,6 +117,7 @@ export const PRODUCTS: Product[] = [
     {
         id: 'p7',
         name: 'Alerón Trasero de Fibra de Carbono Prepreg Estilo PSM para BMW Serie 3 F30 M3 F80 2012–2019',
+        handle: 'aleron-trasero-carbono-psm-bmw-f30',
         sku: 'AERO-F30-PSM',
         price: 1000.00,
         category: 'Alerones',
