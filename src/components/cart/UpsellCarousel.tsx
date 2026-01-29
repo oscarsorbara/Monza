@@ -99,9 +99,9 @@ export function UpsellCarousel() {
             </div>
 
             {/* Header */}
-            <div className={`p-4 flex flex-col md:flex-row justify-between items-center gap-4 border-b ${isExpired ? 'bg-gray-900 border-gray-800' : 'bg-gradient-to-r from-green-600/10 to-transparent border-green-600/20'}`}>
+            <div className={`p-4 flex flex-col md:flex-row justify-between items-center gap-4 border-b ${isExpired ? 'bg-gray-900 border-gray-800' : 'bg-gradient-to-r from-monza-red/10 to-transparent border-monza-red/20'}`}>
                 <div className="flex items-center gap-3">
-                    <div className={`p-2 rounded-full ${isExpired ? 'bg-gray-700 text-gray-400' : 'bg-green-600 text-white animate-pulse'}`}>
+                    <div className={`p-2 rounded-full ${isExpired ? 'bg-gray-700 text-gray-400' : 'bg-monza-red text-white animate-pulse'}`}>
                         {isExpired ? <Clock size={20} /> : <Zap size={20} />}
                     </div>
                     <div>
@@ -109,14 +109,14 @@ export function UpsellCarousel() {
                             {isExpired ? 'Oferta Expirada' : `Descuento Especial - ${(DISCOUNT_PERCENTAGE * 100).toFixed(0)}% OFF`}
                         </h3>
                         {!isExpired && (
-                            <p className="text-xs text-green-500 font-bold">
+                            <p className="text-xs text-monza-red font-bold">
                                 Antes de finalizar tu compra
                             </p>
                         )}
                     </div>
                 </div>
 
-                <div className={`flex items-center gap-2 font-mono text-2xl font-black ${isExpired ? 'text-gray-600' : 'text-green-500'}`}>
+                <div className={`flex items-center gap-2 font-mono text-2xl font-black ${isExpired ? 'text-gray-600' : 'text-monza-red'}`}>
                     <Timer size={24} />
                     <span>{formatTime(timeLeft)}</span>
                 </div>
@@ -131,7 +131,7 @@ export function UpsellCarousel() {
                         <div key={product.id} className="bg-carbon-950 border border-white/5 rounded-xl p-4 flex flex-col group relative overflow-hidden">
                             {/* Discount Badge */}
                             {!isExpired && (
-                                <div className="absolute top-0 right-0 bg-green-600 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg z-10">
+                                <div className="absolute top-0 right-0 bg-monza-red text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg z-10">
                                     -{(DISCOUNT_PERCENTAGE * 100).toFixed(0)}%
                                 </div>
                             )}
@@ -151,7 +151,7 @@ export function UpsellCarousel() {
                                 <p className="text-xs text-gray-500 mb-3">{product.brand}</p>
 
                                 <div className="flex items-end gap-2 mb-4">
-                                    <span className={`text-lg font-bold ${isExpired ? 'text-gray-500' : 'text-green-500'}`}>
+                                    <span className={`text-lg font-bold ${isExpired ? 'text-gray-500' : 'text-monza-red'}`}>
                                         ${formatPrice(discountPrice)}
                                     </span>
                                     <span className="text-xs text-gray-500 line-through mb-1">
@@ -162,7 +162,7 @@ export function UpsellCarousel() {
 
                             <Button
                                 size="sm"
-                                className={`w-full ${isExpired ? 'bg-gray-800 text-gray-500 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700 text-white border-none'}`}
+                                className={`w-full ${isExpired ? 'bg-gray-800 text-gray-500 cursor-not-allowed' : 'bg-monza-red hover:bg-red-700 text-white border-none'}`}
                                 onClick={() => !isExpired && handleAddUpsell(product)}
                                 disabled={isExpired}
                             >
