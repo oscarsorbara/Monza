@@ -33,10 +33,7 @@ export function ProcessAnimation() {
         }
     };
 
-    const cursorTransition = {
-        duration: step === 0 ? 1.2 : 1.5,
-        ease: "easeInOut" as const
-    };
+
 
     return (
         <div className="w-full h-full bg-carbon-900 border border-white/10 rounded-3xl overflow-hidden relative flex flex-col shadow-2xl min-h-[500px]">
@@ -70,15 +67,19 @@ export function ProcessAnimation() {
                             step === 1 ? cursorVariants.step1 :
                                 cursorVariants.step2
                     }
-                    transition={cursorTransition}
+                    transition={{
+                        duration: 1.0,
+                        ease: [0.22, 1, 0.36, 1] // Custom "Human" ease (swift start, slow precise stop)
+                    }}
                 >
                     {/* Inner container for Scale/Click effect - Key forces re-render/animate */}
                     <motion.div
                         key={`cursor-scale-${step}`}
-                        animate={{ scale: [1, 0.9, 1] }} // More subtle pulse
+                        animate={{ scale: [1, 0.9, 1] }}
                         transition={{
-                            delay: step === 0 ? 0.8 : 1.0,
-                            duration: 0.2
+                            delay: 1.2, // Arrive (1.0s) -> Pause (0.2s) -> Click
+                            duration: 0.15,
+                            times: [0, 0.5, 1]
                         }}
                     >
                         {/* High Contrast White Mouse for visibility on Dark BG */}
@@ -92,9 +93,9 @@ export function ProcessAnimation() {
                         key={`cursor-ripple-${step}`}
                         className="w-10 h-10 rounded-full bg-white/20 absolute -top-3 -left-3"
                         initial={{ scale: 0, opacity: 0 }}
-                        animate={{ scale: 2, opacity: [0, 1, 0] }}
+                        animate={{ scale: 1.5, opacity: [0, 0.5, 0] }}
                         transition={{
-                            delay: step === 0 ? 0.8 : 1.0,
+                            delay: 1.2,
                             duration: 0.4,
                             repeat: 0
                         }}
@@ -144,7 +145,7 @@ function CatalogStep() {
                     <div className="pt-2">
                         <motion.div
                             animate={{ scale: [1, 0.95, 1] }}
-                            transition={{ delay: 0.85, duration: 0.2 }}
+                            transition={{ delay: 1.25, duration: 0.2 }}
                             className="w-full h-8 bg-monza-red text-white text-[10px] font-bold uppercase tracking-widest rounded flex items-center justify-center"
                         >
                             Agregar al Carrito
@@ -192,7 +193,7 @@ function CheckoutStep() {
                     </div>
                     <motion.div
                         animate={{ scale: [1, 0.95, 1] }}
-                        transition={{ delay: 1.05, duration: 0.2 }}
+                        transition={{ delay: 1.25, duration: 0.2 }}
                         className="w-full h-10 bg-black text-white text-[10px] font-bold uppercase tracking-widest rounded flex items-center justify-center shadow-lg"
                     >
                         Pagar Ahora
@@ -240,7 +241,7 @@ function BookingStep() {
                                 i === 15 ? "bg-monza-red text-white font-bold" : "bg-white/5 text-gray-400"
                             )}
                             animate={i === 15 ? { scale: [1, 1.2, 1], backgroundColor: ["rgba(255,255,255,0.05)", "#D90429", "#D90429"] } : {}}
-                            transition={i === 15 ? { delay: 1.05, duration: 0.3 } : {}}
+                            transition={i === 15 ? { delay: 1.25, duration: 0.3 } : {}}
                         >
                             {i + 1}
                         </motion.div>
