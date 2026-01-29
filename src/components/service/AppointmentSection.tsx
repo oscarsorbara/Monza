@@ -3,6 +3,10 @@ import Cal, { getCalApi } from "@calcom/embed-react";
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { ProcessAnimation } from './ProcessAnimation';
+import { useNavigate } from 'react-router-dom';
+import { useAppointment } from '@/context/AppointmentContext';
+import { useVehicle } from '@/context/VehicleContext';
+import { useAuth } from '@/context/AuthContext';
 
 interface AppointmentSectionProps {
     unlocked?: boolean;
@@ -10,6 +14,10 @@ interface AppointmentSectionProps {
 
 export function AppointmentSection({ unlocked = false }: AppointmentSectionProps) {
     const [isPurchaseConfirmed, setIsPurchaseConfirmed] = useState(false);
+    const navigate = useNavigate();
+    const { createAppointment } = useAppointment();
+    const { currentVehicle } = useVehicle();
+    const { user } = useAuth(); // Explicitly get user to pass to createAppointment if needed
 
     useEffect(() => {
         // Check if purchase is confirmed in localStorage
@@ -18,6 +26,36 @@ export function AppointmentSection({ unlocked = false }: AppointmentSectionProps
 
         (async function () {
             const cal = await getCalApi();
+
+            // Critical: Listen for booking success HERE to guarantee save
+            cal("on", {
+                action: "bookingSuccessful",
+                callback: async (e: any) => {
+                    const dateStr = e.detail?.data?.date;
+                    const dateObj = dateStr ? new Date(dateStr) : new Date();
+
+                    console.log("Booking confirmed via Cal.com event:", e.detail);
+
+                    // 1. Save Appointment IMMEDIATELY
+                    await createAppointment({
+                        userId: user?.id, // Can be undefined (guest)
+                        sessionId: localStorage.getItem('monza_session_id') || 'unknown',
+                        date: dateStr || new Date().toISOString(),
+                        time: dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                        serviceType: 'installation',
+                        orderId: 'NEW-ORDER', // Ideally link to actual order if available
+                        vehicleInfo: {
+                            make: currentVehicle?.make || 'Vehículo',
+                            model: currentVehicle?.model || 'Desconocido',
+                            year: currentVehicle?.year || 2024
+                        }
+                    });
+
+                    // 2. Force Redirect to Success Page with Params
+                    navigate(`/booking-success?confirmed=true&date=${dateStr}`);
+                }
+            });
+
             cal("ui", {
                 theme: "dark",
                 styles: {
@@ -29,7 +67,7 @@ export function AppointmentSection({ unlocked = false }: AppointmentSectionProps
                 layout: "month_view"
             });
         })();
-    }, []);
+    }, [user, currentVehicle, createAppointment, navigate]);
 
     const isConfirmed = isPurchaseConfirmed || unlocked;
 

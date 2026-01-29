@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { CheckCircle, LogIn, UserPlus, Calendar, Clock, MapPin } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import Cal, { getCalApi } from "@calcom/embed-react";
 import { useAuth } from '@/context/AuthContext';
 import { useAppointment } from '@/context/AppointmentContext';
@@ -19,8 +19,24 @@ export default function BookingSuccess() {
     const { currentVehicle } = useVehicle();
     const [bookingCompleted, setBookingCompleted] = useState(false);
     const [apptDetails, setApptDetails] = useState<AppointmentDetails | null>(null);
+    const [searchParams] = useSearchParams();
 
     useEffect(() => {
+        // Option 1: Handle Redirect from AppointmentSection (URL Params)
+        const confirmedParam = searchParams.get('confirmed');
+        const dateParam = searchParams.get('date');
+
+        if (confirmedParam === 'true') {
+            setBookingCompleted(true);
+            if (dateParam) {
+                const dateObj = new Date(dateParam);
+                setApptDetails({
+                    date: dateObj,
+                    time: dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                });
+            }
+        }
+
         if (user) {
             claimAppointments(user.id);
         }
@@ -28,6 +44,7 @@ export default function BookingSuccess() {
         (async function () {
             const cal = await getCalApi();
 
+            // Option 2: Fallback listener if event happens ON this page
             cal("on", {
                 action: "bookingSuccessful",
                 callback: (e: any) => {
@@ -68,7 +85,7 @@ export default function BookingSuccess() {
                 layout: "month_view"
             });
         })();
-    }, [user, currentVehicle]);
+    }, [user, currentVehicle, searchParams]);
 
     return (
         <div className="min-h-screen bg-carbon-950 flex flex-col items-center relative overflow-hidden">
