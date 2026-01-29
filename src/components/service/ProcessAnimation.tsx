@@ -144,7 +144,7 @@ function CatalogStep() {
                     <div className="pt-2">
                         <motion.div
                             animate={{ scale: [1, 0.95, 1] }}
-                            transition={{ delay: 1.25, duration: 0.2 }}
+                            transition={{ delay: 0.85, duration: 0.2 }}
                             className="w-full h-8 bg-monza-red text-white text-[10px] font-bold uppercase tracking-widest rounded flex items-center justify-center"
                         >
                             Agregar al Carrito
@@ -192,7 +192,7 @@ function CheckoutStep() {
                     </div>
                     <motion.div
                         animate={{ scale: [1, 0.95, 1] }}
-                        transition={{ delay: 1.55, duration: 0.2 }}
+                        transition={{ delay: 1.05, duration: 0.2 }}
                         className="w-full h-10 bg-black text-white text-[10px] font-bold uppercase tracking-widest rounded flex items-center justify-center shadow-lg"
                     >
                         Pagar Ahora
@@ -240,7 +240,7 @@ function BookingStep() {
                                 i === 15 ? "bg-monza-red text-white font-bold" : "bg-white/5 text-gray-400"
                             )}
                             animate={i === 15 ? { scale: [1, 1.2, 1], backgroundColor: ["rgba(255,255,255,0.05)", "#D90429", "#D90429"] } : {}}
-                            transition={i === 15 ? { delay: 1.55, duration: 0.3 } : {}}
+                            transition={i === 15 ? { delay: 1.05, duration: 0.3 } : {}}
                         >
                             {i + 1}
                         </motion.div>
