@@ -93,8 +93,8 @@ export function UpsellCarousel() {
     };
 
     return (
-        <section className={`mb-12 border-2 rounded-3xl overflow-hidden transition-all duration-500 shadow-2xl ${isExpired ? 'border-gray-800 opacity-60 grayscale' : 'border-monza-red bg-carbon-900 border-opacity-100'}`}>
-            <div className={`text-white font-bold text-sm tracking-widest uppercase p-2 text-center ${isExpired ? 'bg-gray-800' : 'bg-green-600'}`}>
+        <section className={`mb-12 border-[3px] rounded-3xl overflow-hidden transition-all duration-500 shadow-2xl ${isExpired ? 'border-gray-800 opacity-60 grayscale' : 'border-monza-red bg-carbon-900 border-opacity-100'}`}>
+            <div className={`text-white font-bold text-sm tracking-widest uppercase p-2 text-center ${isExpired ? 'bg-gray-800' : 'bg-monza-red'}`}>
                 {isExpired ? 'Oferta Finalizada' : 'Oferta Relámpago'}
             </div>
 
