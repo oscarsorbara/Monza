@@ -5,6 +5,7 @@ import { Minus, Plus, Trash2, ArrowRight, Clock } from 'lucide-react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { formatPrice } from '@/lib/utils';
+import { UpsellCarousel } from '@/components/cart/UpsellCarousel';
 
 export default function Cart() {
     const { items, removeFromCart, updateQuantity } = useCart();
@@ -140,10 +141,21 @@ export default function Cart() {
                                 </motion.div>
                             ))}
                         </AnimatePresence>
+
+                        {/* Upsell Carousel */}
+                        <div className="pt-8">
+                            <UpsellCarousel />
+                        </div>
                     </div>
 
                     {/* Summary */}
                     <div className="lg:col-span-1">
+
+                        {/* Upsell Carousel - Visible on Desktop/Large screens mainly or stacked */}
+                        <div className="lg:col-span-3 mb-8">
+                            <UpsellCarousel />
+                        </div>
+
                         <div className="sticky top-32 bg-carbon-900 p-8 rounded-3xl border border-white/5">
                             <h3 className="text-xl font-bold mb-6 uppercase tracking-wider">Resumen de Orden</h3>
 
