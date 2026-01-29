@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/Button';
-import { CheckCircle, LogIn, UserPlus } from 'lucide-react';
+import { CheckCircle, LogIn, UserPlus, Calendar, Clock, MapPin } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Cal, { getCalApi } from "@calcom/embed-react";
 import { useAuth } from '@/context/AuthContext';
@@ -8,14 +8,19 @@ import { useAppointment } from '@/context/AppointmentContext';
 import { useVehicle } from '@/context/VehicleContext';
 import { motion, AnimatePresence } from 'framer-motion';
 
+interface AppointmentDetails {
+    date: Date;
+    time: string;
+}
+
 export default function BookingSuccess() {
     const { user } = useAuth();
     const { createAppointment, claimAppointments } = useAppointment();
     const { currentVehicle } = useVehicle();
     const [bookingCompleted, setBookingCompleted] = useState(false);
+    const [apptDetails, setApptDetails] = useState<AppointmentDetails | null>(null);
 
     useEffect(() => {
-        // If user logs in/registers and lands here (or is already logged in), claim any pending appointments
         if (user) {
             claimAppointments(user.id);
         }
@@ -23,20 +28,26 @@ export default function BookingSuccess() {
         (async function () {
             const cal = await getCalApi();
 
-            // Listen for successful bookings
             cal("on", {
                 action: "bookingSuccessful",
                 callback: (e: any) => {
+                    const dateStr = e.detail?.data?.date || new Date().toISOString();
+                    const dateObj = new Date(dateStr);
+
+                    setApptDetails({
+                        date: dateObj,
+                        time: dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                    });
+
                     setBookingCompleted(true);
-                    const date = e.detail?.data?.date || new Date().toISOString();
-                    // Create appointment in our system
+
                     createAppointment({
                         userId: user?.id,
                         sessionId: localStorage.getItem('monza_session_id') || 'unknown',
-                        date: date,
-                        time: new Date(date).toLocaleTimeString(),
+                        date: dateStr,
+                        time: dateObj.toLocaleTimeString(),
                         serviceType: 'installation',
-                        orderId: 'NEW-ORDER', // Ideally we'd get this from the recent purchase context
+                        orderId: 'NEW-ORDER',
                         vehicleInfo: {
                             make: currentVehicle?.make || 'Vehículo',
                             model: currentVehicle?.model || 'Desconocido',
@@ -90,7 +101,6 @@ export default function BookingSuccess() {
                             exit={{ opacity: 0, y: -20 }}
                             className="w-full flex flex-col items-center"
                         >
-                            {/* 1. Header: Gracias por tu compra */}
                             <div className="flex items-center gap-3 mb-4">
                                 <div className="w-8 h-8 bg-green-500/20 rounded-full flex items-center justify-center">
                                     <CheckCircle className="w-5 h-5 text-green-500" />
@@ -100,12 +110,10 @@ export default function BookingSuccess() {
                                 </h1>
                             </div>
 
-                            {/* 2. Section Title */}
                             <p className="text-gray-400 text-lg mb-12 text-center max-w-lg">
                                 Agendá tu turno de instalación ahora.
                             </p>
 
-                            {/* 3. Calendar (Horizontal / Wide) */}
                             <div className="w-full max-w-[1400px] px-4 md:px-8 mb-12">
                                 <div className="w-full bg-carbon-900/50 border border-white/10 rounded-2xl overflow-hidden shadow-2xl h-[600px]">
                                     <Cal
@@ -123,20 +131,61 @@ export default function BookingSuccess() {
                             animate={{ opacity: 1, scale: 1 }}
                             className="w-full max-w-2xl flex flex-col items-center text-center"
                         >
-                            <div className="w-20 h-20 bg-monza-red rounded-full flex items-center justify-center mb-8 shadow-2xl shadow-monza-red/50">
-                                <CheckCircle className="w-10 h-10 text-white" />
+                            {/* GREEN CHECKMARK */}
+                            <div className="w-24 h-24 bg-green-500 rounded-full flex items-center justify-center mb-8 shadow-2xl shadow-green-500/30 ring-4 ring-green-500/20 animate-pulse-slow">
+                                <CheckCircle className="w-12 h-12 text-white" />
                             </div>
 
                             <h2 className="text-4xl md:text-5xl font-black italic tracking-tighter text-white mb-6 uppercase">
                                 ¡Turno Reservado!
                             </h2>
 
+                            {/* APPOINTMENT DETAILS CARD */}
+                            {apptDetails && (
+                                <div className="w-full bg-carbon-900/50 border border-white/10 rounded-2xl p-6 mb-8 flex flex-col md:flex-row gap-6 justify-center items-center backdrop-blur-sm">
+                                    <div className="flex items-center gap-3">
+                                        <div className="p-2 bg-monza-red/10 rounded-lg text-monza-red">
+                                            <Calendar size={24} />
+                                        </div>
+                                        <div className="text-left">
+                                            <span className="block text-xs uppercase text-gray-500 font-bold tracking-wider">Fecha</span>
+                                            <span className="text-white font-bold text-lg">{apptDetails.date.toLocaleDateString()}</span>
+                                        </div>
+                                    </div>
+
+                                    <div className="hidden md:block w-px h-12 bg-white/10" />
+
+                                    <div className="flex items-center gap-3">
+                                        <div className="p-2 bg-monza-red/10 rounded-lg text-monza-red">
+                                            <Clock size={24} />
+                                        </div>
+                                        <div className="text-left">
+                                            <span className="block text-xs uppercase text-gray-500 font-bold tracking-wider">Hora</span>
+                                            <span className="text-white font-bold text-lg">{apptDetails.time}</span>
+                                        </div>
+                                    </div>
+
+                                    <div className="hidden md:block w-px h-12 bg-white/10" />
+
+                                    <div className="flex items-center gap-3">
+                                        <div className="p-2 bg-monza-red/10 rounded-lg text-monza-red">
+                                            <MapPin size={24} />
+                                        </div>
+                                        <div className="text-left">
+                                            <span className="block text-xs uppercase text-gray-500 font-bold tracking-wider">Lugar</span>
+                                            <span className="text-white font-bold text-lg">Monza Center</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
                             <p className="text-xl text-gray-300 mb-12 max-w-lg leading-relaxed">
-                                Tu instalación ha sido confirmada. Te enviamos los detalles por email.
+                                Tu instalación ha sido confirmada. Te enviamos todos los detalles por email.
                             </p>
 
-                            {!user && (
-                                <div className="w-full bg-carbon-900 border border-white/10 rounded-3xl p-8 mb-12 transform hover:scale-105 transition-all duration-300">
+                            {/* AUTH PROMPT - Should appear if !user */}
+                            {!user ? (
+                                <div className="w-full bg-carbon-900 border border-white/10 rounded-3xl p-8 mb-12 transform hover:border-monza-red/30 transition-all duration-300 shadow-2xl">
                                     <h3 className="text-2xl font-bold uppercase italic text-white mb-2">No pierdas tu turno</h3>
                                     <p className="text-gray-400 mb-8 max-w-md mx-auto">
                                         Creá una cuenta para guardar este turno en tu perfil, ver el historial y gestionar tus pedidos.
@@ -144,7 +193,7 @@ export default function BookingSuccess() {
 
                                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                                         <Link to="/register" className="flex-1">
-                                            <Button className="w-full h-14 text-lg bg-white text-black hover:bg-gray-200 uppercase font-black tracking-widest gap-2">
+                                            <Button className="w-full h-14 text-lg bg-monza-red hover:bg-red-600 text-white uppercase font-black tracking-widest gap-2 shadow-lg shadow-monza-red/20">
                                                 <UserPlus size={20} /> Crear Cuenta
                                             </Button>
                                         </Link>
@@ -154,6 +203,15 @@ export default function BookingSuccess() {
                                             </Button>
                                         </Link>
                                     </div>
+                                </div>
+                            ) : (
+                                <div className="mb-12 p-6 bg-green-500/10 border border-green-500/30 rounded-2xl">
+                                    <p className="text-green-400 font-bold">
+                                        ✓ Turno guardado en tu cuenta <span className="text-white">{user.email}</span>
+                                    </p>
+                                    <Link to="/account?tab=appointments" className="block mt-4 text-sm text-gray-400 hover:text-white underline">
+                                        Ver mis turnos →
+                                    </Link>
                                 </div>
                             )}
 
