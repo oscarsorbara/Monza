@@ -54,15 +54,12 @@ export function AppointmentProvider({ children }: { children: React.ReactNode })
                 .select('*')
                 .eq('user_id', user.id);
 
+            let dbAppointments: Appointment[] = [];
+
             if (error) {
                 console.error('Error fetching appointments:', error);
             } else if (data) {
-                // Transform snake_case from DB to camelCase for TS interface if needed?
-                // The SQL table uses snake_case columns in my previous instruction?
-                // Let's verify column names. The SQL instruction said:
-                // id, user_id, session_id, date, time, service_type, status, vehicle_info (jsonb)
-                // We need to map these to our Typescript interface.
-                const mapped = data.map((d: any) => ({
+                dbAppointments = data.map((d: any) => ({
                     id: d.id,
                     userId: d.user_id,
                     sessionId: d.session_id,
@@ -71,10 +68,54 @@ export function AppointmentProvider({ children }: { children: React.ReactNode })
                     serviceType: d.service_type,
                     status: d.status,
                     vehicleInfo: d.vehicle_info,
-                    orderId: d.order_id // If added later
+                    orderId: d.order_id
                 }));
-                setAppointments(mapped);
             }
+
+            // --- RESCUE BRIDGE: Recover "Lost" LocalStorage Appointments ---
+            // Issue: User might have created appointments while Auth was transient or before DB sync was active.
+            // Fix: Check LocalStorage, if we find appointments that are NOT in DB, upload them now.
+            const localStored = localStorage.getItem('monza_appointments');
+            let recoveredAppointments: Appointment[] = [];
+
+            if (localStored) {
+                const localAppts: Appointment[] = JSON.parse(localStored);
+                // Filter appts that match current user session (or generic ones) AND are not in DB
+                // We identify duplicates by ID.
+                const dbIds = new Set(dbAppointments.map(a => a.id));
+                const missingInDb = localAppts.filter(a => !dbIds.has(a.id));
+
+                if (missingInDb.length > 0) {
+                    console.log(`Rescuing ${missingInDb.length} appointments from LocalStorage...`);
+
+                    // 1. Prepare for Upload
+                    const upserts = missingInDb.map(a => ({
+                        id: a.id,
+                        user_id: user.id, // Claim ownership
+                        session_id: a.sessionId,
+                        date: a.date,
+                        time: a.time,
+                        service_type: a.serviceType,
+                        status: a.status,
+                        vehicle_info: a.vehicleInfo,
+                        order_id: a.orderId
+                    }));
+
+                    // 2. Upload to Supabase
+                    const { error: upsertError } = await supabase.from('appointments').upsert(upserts);
+
+                    if (!upsertError) {
+                        // 3. Add to our current list so user sees them immediately
+                        // Update the usage of mapped object to match interface
+                        recoveredAppointments = missingInDb.map(a => ({ ...a, userId: user.id }));
+                    } else {
+                        console.error("Failed to rescue appointments:", upsertError);
+                    }
+                }
+            }
+
+            // Merge DB and Recovered
+            setAppointments([...dbAppointments, ...recoveredAppointments]);
             setIsLoading(false);
         }
 

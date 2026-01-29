@@ -186,38 +186,75 @@ export default function Account() {
                                     </Button>
                                 </div>
                             ) : (
-                                appointments.map(appt => (
-                                    <div key={appt.id} className="bg-carbon-900 border border-white/5 p-6 rounded-3xl flex flex-col md:flex-row md:items-center justify-between gap-6 hover:border-white/10 transition-colors">
-                                        <div className="flex items-center gap-6">
-                                            <div className="w-14 h-14 bg-monza-red/10 rounded-2xl flex items-center justify-center">
-                                                <Clock className="text-monza-red" />
+                                appointments.map(appt => {
+                                    // Calculate if appointment is in the past
+                                    // Date string format assumed ISO or compatible.
+                                    // We create a Date object for the appointment day + time logic if needed, 
+                                    // but checking just the day is safer for "Completed" status usually.
+                                    // Let's assume end of that day.
+                                    const apptDate = new Date(appt.date);
+                                    const now = new Date();
+                                    // Reset hours to compare pure dates for "today" vs "past" logic, 
+                                    // or just strict comparison. Strict is better.
+                                    const isPast = apptDate < now;
+
+                                    // Determine Display Status
+                                    let statusLabel = appt.status as string;
+                                    let statusColor = "bg-gray-500/10 text-gray-500";
+
+                                    if (isPast && appt.status !== 'cancelled') {
+                                        statusLabel = "Finalizado";
+                                        statusColor = "bg-gray-500/10 text-gray-400 border border-white/5";
+                                    } else {
+                                        switch (appt.status) {
+                                            case 'requested':
+                                                statusLabel = "Solicitada";
+                                                statusColor = "bg-blue-500/10 text-blue-500";
+                                                break;
+                                            case 'confirmed':
+                                                statusLabel = "Confirmada";
+                                                statusColor = "bg-green-500/10 text-green-500";
+                                                break;
+                                            case 'cancelled':
+                                                statusLabel = "Cancelada";
+                                                statusColor = "bg-red-500/10 text-red-500";
+                                                break;
+                                            default:
+                                                statusLabel = appt.status;
+                                        }
+                                    }
+
+                                    return (
+                                        <div key={appt.id} className={`bg-carbon-900 border p-6 rounded-3xl flex flex-col md:flex-row md:items-center justify-between gap-6 transition-colors ${isPast ? 'border-white/5 opacity-60 hover:opacity-100' : 'border-white/10 hover:border-monza-red/30'}`}>
+                                            <div className="flex items-center gap-6">
+                                                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center ${isPast ? 'bg-white/5 grayscale' : 'bg-monza-red/10'}`}>
+                                                    <Clock className={isPast ? "text-gray-500" : "text-monza-red"} />
+                                                </div>
+                                                <div>
+                                                    <p className={`font-black italic uppercase tracking-tighter text-xl ${isPast ? 'text-gray-400' : 'text-white'}`}>
+                                                        {appt.serviceType === 'installation' ? 'Instalación' : appt.serviceType}
+                                                    </p>
+                                                    <p className="text-gray-500 text-sm font-medium">Orden: {appt.orderId || 'Pendiente'}</p>
+                                                </div>
                                             </div>
-                                            <div>
-                                                <p className="text-white font-black italic uppercase tracking-tighter text-xl">
-                                                    {appt.serviceType === 'installation' ? 'Instalación' : appt.serviceType}
-                                                </p>
-                                                <p className="text-gray-500 text-sm font-medium">Orden: {appt.orderId || 'Pendiente'}</p>
+                                            <div className="flex flex-wrap gap-8 items-center">
+                                                <div>
+                                                    <p className="text-xs text-gray-500 font-black uppercase tracking-widest mb-1">Fecha y Hora</p>
+                                                    <p className="font-bold text-white">{new Date(appt.date).toLocaleDateString()} - {appt.time}hs</p>
+                                                </div>
+                                                <div>
+                                                    <p className="text-xs text-gray-500 font-black uppercase tracking-widest mb-1">Vehículo</p>
+                                                    <p className="font-bold text-white">{appt.vehicleInfo.year} {appt.vehicleInfo.make} {appt.vehicleInfo.model}</p>
+                                                </div>
+                                                <div>
+                                                    <span className={`px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest ${statusColor}`}>
+                                                        {statusLabel}
+                                                    </span>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div className="flex flex-wrap gap-8 items-center">
-                                            <div>
-                                                <p className="text-xs text-gray-500 font-black uppercase tracking-widest mb-1">Fecha y Hora</p>
-                                                <p className="font-bold text-white">{new Date(appt.date).toLocaleDateString()} - {appt.time}hs</p>
-                                            </div>
-                                            <div>
-                                                <p className="text-xs text-gray-500 font-black uppercase tracking-widest mb-1">Vehículo</p>
-                                                <p className="font-bold text-white">{appt.vehicleInfo.year} {appt.vehicleInfo.make} {appt.vehicleInfo.model}</p>
-                                            </div>
-                                            <div>
-                                                <span className={`px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest ${appt.status === 'requested' ? 'bg-blue-500/10 text-blue-500' :
-                                                    appt.status === 'confirmed' ? 'bg-green-500/10 text-green-500' : 'bg-gray-500/10 text-gray-500'
-                                                    }`}>
-                                                    {appt.status === 'requested' ? 'Solicitada' : appt.status === 'confirmed' ? 'Confirmada' : appt.status}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))
+                                    );
+                                })
                             )}
                         </div>
                     )}
