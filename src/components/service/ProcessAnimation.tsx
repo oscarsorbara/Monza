@@ -19,26 +19,23 @@ export function ProcessAnimation() {
     }, [step]);
 
     // Cursor Animation Variants
+    // Adjusted co-ordinates to match CENTERED content (max-w-[280px])
+    // Assuming container is relative. 50% x is safe for centered buttons.
     const cursorVariants = {
         step0: {
-            x: "50%", y: "72%", opacity: 1, scale: [1, 1, 0.85, 1]
+            x: "50%", y: "65%", opacity: 1
         },
         step1: {
-            x: "75%", y: "78%", opacity: 1, scale: [1, 1, 0.85, 1]
+            x: "50%", y: "75%", opacity: 1
         },
         step2: {
-            x: "50%", y: "60%", opacity: 1, scale: [1, 1, 0.85, 1]
+            x: "57%", y: "55%", opacity: 1
         }
     };
 
     const cursorTransition = {
-        default: { duration: step === 0 ? 1.2 : 1.5, type: "tween", ease: "easeInOut" },
-        opacity: { duration: 0.2 },
-        scale: {
-            delay: step === 0 ? 1.2 : 1.5,
-            duration: 0.3,
-            times: [0, 0.1, 0.5, 1]
-        }
+        duration: step === 0 ? 1.2 : 1.5,
+        ease: "easeInOut"
     };
 
     return (
@@ -75,12 +72,24 @@ export function ProcessAnimation() {
                     }
                     transition={cursorTransition}
                 >
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="filter drop-shadow-lg">
-                        <path d="M5.65376 12.3673H5.46026L5.31717 12.4976L0.500002 16.8829L0.500002 1.19169L17.4741 12.3673H5.65376Z" fill="black" stroke="white" strokeWidth="1.5" />
-                    </svg>
+                    {/* Inner container for Scale/Click effect - Key forces re-render/animate */}
+                    <motion.div
+                        key={`cursor-scale-${step}`}
+                        animate={{ scale: [1, 1, 0.85, 1] }}
+                        transition={{
+                            delay: step === 0 ? 1.2 : 1.5,
+                            duration: 0.3,
+                            times: [0, 0.1, 0.5, 1]
+                        }}
+                    >
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="filter drop-shadow-lg">
+                            <path d="M5.65376 12.3673H5.46026L5.31717 12.4976L0.500002 16.8829L0.500002 1.19169L17.4741 12.3673H5.65376Z" fill="black" stroke="white" strokeWidth="1.5" />
+                        </svg>
+                    </motion.div>
 
                     {/* Ripple Effect on Click */}
                     <motion.div
+                        key={`cursor-ripple-${step}`}
                         className="w-10 h-10 rounded-full bg-white/20 absolute -top-3 -left-3"
                         initial={{ scale: 0, opacity: 0 }}
                         animate={{ scale: 2, opacity: [0, 1, 0] }}
