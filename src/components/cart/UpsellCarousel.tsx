@@ -6,28 +6,69 @@ import { formatPrice } from '@/lib/utils';
 import { Button } from '@/components/ui/Button';
 
 export function UpsellCarousel() {
-    const { addToCart } = useCart();
-    // Start at 7 minutes (420 seconds)
-    const [timeLeft, setTimeLeft] = useState(420);
-    const [isExpired, setIsExpired] = useState(false);
+    const { addToCart, items } = useCart();
+    // Start at 7 minutes (420 seconds) - PERSISTENT
+    const [timeLeft, setTimeLeft] = useState(() => {
+        const savedExpiry = localStorage.getItem('upsellTimerExpiry');
+        if (savedExpiry) {
+            const remaining = Math.floor((parseInt(savedExpiry, 10) - Date.now()) / 1000);
+            return remaining > 0 ? remaining : 0;
+        }
+        return 420;
+    });
 
-    // Filter 3 distinct products for upsell (Oil, Intake, Spoiler)
-    // Fallback to first 3 items if IDs don't match (Safety Check)
-    const specificUpsell = PRODUCTS.filter(p => ['p6', 'p2', 'p5'].includes(p.id));
-    const upsellProducts = specificUpsell.length >= 3 ? specificUpsell : PRODUCTS.slice(0, 3);
+    const [isExpired, setIsExpired] = useState(timeLeft <= 0);
+
+    // Initialize/Check Timer on Mount
+    useEffect(() => {
+        const savedExpiry = localStorage.getItem('upsellTimerExpiry');
+        if (!savedExpiry) {
+            const newExpiry = Date.now() + (420 * 1000);
+            localStorage.setItem('upsellTimerExpiry', newExpiry.toString());
+        }
+    }, []);
+
+    // Filter 3 distinct products for upsell (Smart Selection)
+    // 1. Identify Brand
+    const cartItemIds = items.map(i => i.id);
+    const cartBrand = items.length > 0 ? (items[0].name.includes('BMW') ? 'BMW' : items[0].name.includes('Audi') ? 'Audi' : items[0].name.includes('Mercedes') ? 'Mercedes' : '') : '';
+
+    // 2. Filter
+    let selectedProducts = PRODUCTS.filter(p =>
+        !cartItemIds.includes(p.id) &&
+        (cartBrand ? p.name.includes(cartBrand) || p.brand?.includes(cartBrand) : true)
+    );
+
+    // 3. Fallback
+    if (selectedProducts.length < 3) {
+        const remaining = PRODUCTS.filter(p => !cartItemIds.includes(p.id) && !selectedProducts.map(sp => sp.id).includes(p.id));
+        selectedProducts = [...selectedProducts, ...remaining];
+    }
+
+    // 4. Final Slice
+    const upsellProducts = (selectedProducts.length >= 3 ? selectedProducts : PRODUCTS).slice(0, 3);
 
     useEffect(() => {
-        if (timeLeft <= 0) {
-            setIsExpired(true);
-            return;
-        }
+        if (isExpired) return;
 
         const timer = setInterval(() => {
-            setTimeLeft(prev => prev - 1);
+            const savedExpiry = localStorage.getItem('upsellTimerExpiry');
+            if (savedExpiry) {
+                const remaining = Math.floor((parseInt(savedExpiry, 10) - Date.now()) / 1000);
+                if (remaining <= 0) {
+                    setTimeLeft(0);
+                    setIsExpired(true);
+                    clearInterval(timer);
+                } else {
+                    setTimeLeft(remaining);
+                }
+            } else {
+                setTimeLeft(prev => prev - 1);
+            }
         }, 1000);
 
         return () => clearInterval(timer);
-    }, [timeLeft]);
+    }, [isExpired]);
 
     const formatTime = (seconds: number) => {
         const mins = Math.floor(seconds / 60);
@@ -37,22 +78,14 @@ export function UpsellCarousel() {
 
     const handleAddUpsell = (originalProduct: typeof PRODUCTS[0]) => {
         // Conceptually apply 30% discount
-        // In a real app, we'd pass a discount code or modified price object
-        // For simulation, we add it and maybe show a toast (or just let standard cart logic handle it)
-        // Since we can't easily modify the CartContext types on the fly to support custom prices without refactoring,
-        // we will add the product as is but visually it "looked" discounted.
-        // OR better: we can cheat gracefully.
-
         addToCart(originalProduct, 1);
     };
 
-
-
-    console.log("Upsell Debug: Products Found", upsellProducts.length);
-
     return (
-        <section className={`mb-12 border-4 border-yellow-500 rounded-3xl overflow-hidden transition-all duration-500 ${isExpired ? 'border-gray-800 opacity-60 grayscale' : 'border-monza-red/30 bg-carbon-900/50'}`}>
-            <div className="bg-yellow-500 text-black font-bold p-2 text-center">DEBUG: UPSELL COMPONENT RENDERED (Found {upsellProducts.length} products)</div>
+        <section className={`mb-12 border-2 rounded-3xl overflow-hidden transition-all duration-500 shadow-2xl ${isExpired ? 'border-gray-800 opacity-60 grayscale' : 'border-monza-red bg-carbon-900 border-opacity-50'}`}>
+            <div className={`text-white font-bold text-sm tracking-widest uppercase p-2 text-center ${isExpired ? 'bg-gray-800' : 'bg-monza-red'}`}>
+                {isExpired ? 'Oferta Finalizada' : 'Oferta por única vez'}
+            </div>
             {/* Header */}
             <div className={`p-4 flex flex-col md:flex-row justify-between items-center gap-4 border-b ${isExpired ? 'bg-gray-900 border-gray-800' : 'bg-gradient-to-r from-monza-red/10 to-transparent border-monza-red/20'}`}>
                 <div className="flex items-center gap-3">
