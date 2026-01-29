@@ -23,13 +23,13 @@ export function ProcessAnimation() {
     // Assuming container is relative. 50% x is safe for centered buttons.
     const cursorVariants = {
         step0: {
-            x: "50%", y: "65%", opacity: 1
+            x: "50%", y: "65%"
         },
         step1: {
-            x: "50%", y: "75%", opacity: 1
+            x: "50%", y: "75%"
         },
         step2: {
-            x: "57%", y: "55%", opacity: 1
+            x: "57%", y: "55%"
         }
     };
 
@@ -63,8 +63,8 @@ export function ProcessAnimation() {
 
                 {/* Simulated Cursor - Always Visible */}
                 <motion.div
-                    className="absolute z-50 pointer-events-none drop-shadow-xl"
-                    initial={{ x: "50%", y: "120%", opacity: 1 }} // Start from bottom
+                    className="absolute z-[100] pointer-events-none drop-shadow-xl"
+                    initial={{ x: "50%", y: "65%" }} // Start exactly where Step 0 is
                     animate={
                         step === 0 ? cursorVariants.step0 :
                             step === 1 ? cursorVariants.step1 :
@@ -75,15 +75,15 @@ export function ProcessAnimation() {
                     {/* Inner container for Scale/Click effect - Key forces re-render/animate */}
                     <motion.div
                         key={`cursor-scale-${step}`}
-                        animate={{ scale: [1, 1, 0.85, 1] }}
+                        animate={{ scale: [1, 0.9, 1] }} // More subtle pulse
                         transition={{
-                            delay: step === 0 ? 1.2 : 1.5,
-                            duration: 0.3,
-                            times: [0, 0.1, 0.5, 1]
+                            delay: step === 0 ? 0.8 : 1.0,
+                            duration: 0.2
                         }}
                     >
+                        {/* High Contrast White Mouse for visibility on Dark BG */}
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="filter drop-shadow-lg">
-                            <path d="M5.65376 12.3673H5.46026L5.31717 12.4976L0.500002 16.8829L0.500002 1.19169L17.4741 12.3673H5.65376Z" fill="black" stroke="white" strokeWidth="1.5" />
+                            <path d="M5.65376 12.3673H5.46026L5.31717 12.4976L0.500002 16.8829L0.500002 1.19169L17.4741 12.3673H5.65376Z" fill="white" stroke="black" strokeWidth="1.5" />
                         </svg>
                     </motion.div>
 
@@ -94,7 +94,7 @@ export function ProcessAnimation() {
                         initial={{ scale: 0, opacity: 0 }}
                         animate={{ scale: 2, opacity: [0, 1, 0] }}
                         transition={{
-                            delay: step === 0 ? 1.2 : 1.5,
+                            delay: step === 0 ? 0.8 : 1.0,
                             duration: 0.4,
                             repeat: 0
                         }}
@@ -128,7 +128,7 @@ function CatalogStep() {
             transition={{ duration: 0.5 }}
             className="w-full h-full p-6 flex flex-col items-center justify-center"
         >
-            <div className="text-monza-red font-bold text-xs uppercase tracking-widest mb-4">Paso 1: SELECCIÓN RÁPIDA</div>
+            <div className="text-monza-red font-bold text-xs uppercase tracking-widest mb-4">Paso 1: Selección</div>
 
             <div className="w-full max-w-[280px] bg-carbon-800 rounded-xl overflow-hidden border border-white/5 shadow-lg group">
                 <div className="h-32 bg-carbon-700 relative overflow-hidden">
