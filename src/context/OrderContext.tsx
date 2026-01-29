@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import type { CartItem } from '@/types';
+import { useAuth } from './AuthContext';
+import { supabase } from '@/lib/supabase';
 
 export interface Order {
     id: string;
@@ -24,14 +26,15 @@ export interface Order {
 
 interface OrderContextType {
     orders: Order[];
-    createOrder: (order: Omit<Order, 'id' | 'date'>) => Order;
+    createOrder: (order: Omit<Order, 'id' | 'date'>) => Promise<Order>;
     getOrderHistory: (userId?: string) => Order[];
     getOrderById: (id: string) => Order | undefined;
-    updateOrderStatus: (id: string, status: Order['status']) => void;
+    updateOrderStatus: (id: string, status: Order['status']) => Promise<void>;
     getTotalSales: () => number;
     getOrderCount: () => number;
     getAverageOrderValue: () => number;
     getTopProducts: () => { productId: string; name: string; count: number }[];
+    isLoading: boolean;
 }
 
 const OrderContext = createContext<OrderContextType | undefined>(undefined);
@@ -47,32 +50,101 @@ export function getSessionId(): string {
 }
 
 export function OrderProvider({ children }: { children: React.ReactNode }) {
+    const { user } = useAuth();
     const [orders, setOrders] = useState<Order[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
 
+    // Load Orders
     useEffect(() => {
-        const stored = localStorage.getItem('monza_orders');
-        if (stored) {
-            setOrders(JSON.parse(stored));
+        async function loadOrders() {
+            if (!user) {
+                // Guests: Load from localstorage
+                const stored = localStorage.getItem('monza_orders');
+                if (stored) {
+                    setOrders(JSON.parse(stored));
+                }
+                setIsLoading(false);
+                return;
+            }
+
+            // Users: Load from Supabase
+            setIsLoading(true);
+            const { data, error } = await supabase
+                .from('orders')
+                .select('*')
+                .eq('user_id', user.id)
+                .order('date', { ascending: false });
+
+            if (error) {
+                console.error('Error loading orders:', error);
+            } else if (data) {
+                const mappedOrders = data.map((d: any) => ({
+                    id: d.id,
+                    userId: d.user_id,
+                    sessionId: d.session_id,
+                    items: d.items, // JSONB
+                    subtotal: d.subtotal,
+                    total: d.total,
+                    date: d.date,
+                    status: d.status,
+                    customerInfo: d.customer_info, // JSONB
+                    vehicleInfo: d.vehicle_info // JSONB
+                }));
+                // Merge with local? Or just Replace?
+                // For simplicity and "Recover History", we Replace.
+                // But we might want to also include current session orders if they haven't been synced?
+                // For now, Replace is consistent with "Account Sync" behavior.
+                setOrders(mappedOrders);
+            }
+            setIsLoading(false);
         }
-    }, []);
 
-    const save = (updated: Order[]) => {
-        setOrders(updated);
-        localStorage.setItem('monza_orders', JSON.stringify(updated));
-    };
+        loadOrders();
+    }, [user]);
 
-    const createOrder = (orderData: Omit<Order, 'id' | 'date'>): Order => {
+    // Guest Persistence
+    useEffect(() => {
+        if (!user) {
+            localStorage.setItem('monza_orders', JSON.stringify(orders));
+        }
+    }, [orders, user]);
+
+
+    const createOrder = async (orderData: Omit<Order, 'id' | 'date'>): Promise<Order> => {
         const newOrder: Order = {
             ...orderData,
             id: 'ORD-' + Math.random().toString(36).substr(2, 9).toUpperCase(),
             date: new Date().toISOString(),
+            status: 'pending' // Default status
         };
-        save([...orders, newOrder]);
+
+        // Optimistic
+        setOrders(prev => [...prev, newOrder]);
+
+        if (user) {
+            const { error } = await supabase.from('orders').insert({
+                id: newOrder.id,
+                user_id: user.id,
+                session_id: newOrder.sessionId,
+                items: newOrder.items,
+                subtotal: newOrder.subtotal,
+                total: newOrder.total,
+                date: newOrder.date,
+                status: newOrder.status,
+                customer_info: newOrder.customerInfo,
+                vehicle_info: newOrder.vehicleInfo
+            });
+            if (error) console.error('Error creating order in DB:', error);
+        }
+
         return newOrder;
     };
 
     const getOrderHistory = (userId?: string): Order[] => {
         const sessionId = getSessionId();
+        // If we are logged in, 'orders' already holds the user's DB orders. 
+        // We just return them. Filter by userId is redundant if we trust state source.
+        // But for safety:
         return orders.filter(o =>
             (userId && o.userId === userId) || o.sessionId === sessionId
         ).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
@@ -80,9 +152,12 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
 
     const getOrderById = (id: string) => orders.find(o => o.id === id);
 
-    const updateOrderStatus = (id: string, status: Order['status']) => {
-        const updated = orders.map(o => o.id === id ? { ...o, status } : o);
-        save(updated);
+    const updateOrderStatus = async (id: string, status: Order['status']) => {
+        setOrders(prev => prev.map(o => o.id === id ? { ...o, status } : o));
+
+        if (user) {
+            await supabase.from('orders').update({ status }).eq('id', id);
+        }
     };
 
     const getTotalSales = () => orders
@@ -123,7 +198,8 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
             getTotalSales,
             getOrderCount,
             getAverageOrderValue,
-            getTopProducts
+            getTopProducts,
+            isLoading
         }}>
             {children}
         </OrderContext.Provider>
