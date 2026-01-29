@@ -8,12 +8,38 @@ export function ProcessAnimation() {
     const [step, setStep] = useState(0);
 
     useEffect(() => {
-        const timer = setInterval(() => {
-            setStep((prev) => (prev + 1) % 3);
-        }, 5000); // 5 seconds per step
+        // Dynamic duration: Step 0 (Selection) is faster (3s), others are standard (5s)
+        const duration = step === 0 ? 3000 : 5000;
 
-        return () => clearInterval(timer);
-    }, []);
+        const timer = setTimeout(() => {
+            setStep((prev) => (prev + 1) % 3);
+        }, duration);
+
+        return () => clearTimeout(timer);
+    }, [step]);
+
+    // Cursor Animation Variants
+    const cursorVariants = {
+        step0: {
+            x: "50%", y: "72%", opacity: 1, scale: [1, 1, 0.85, 1]
+        },
+        step1: {
+            x: "75%", y: "78%", opacity: 1, scale: [1, 1, 0.85, 1]
+        },
+        step2: {
+            x: "50%", y: "60%", opacity: 1, scale: [1, 1, 0.85, 1]
+        }
+    };
+
+    const cursorTransition = {
+        default: { duration: step === 0 ? 1.2 : 1.5, type: "tween", ease: "easeInOut" },
+        opacity: { duration: 0.2 },
+        scale: {
+            delay: step === 0 ? 1.2 : 1.5,
+            duration: 0.3,
+            times: [0, 0.1, 0.5, 1]
+        }
+    };
 
     return (
         <div className="w-full h-full bg-carbon-900 border border-white/10 rounded-3xl overflow-hidden relative flex flex-col shadow-2xl min-h-[500px]">
@@ -38,25 +64,31 @@ export function ProcessAnimation() {
                     {step === 2 && <BookingStep key="step2" />}
                 </AnimatePresence>
 
-                {/* Simulated Cursor */}
+                {/* Simulated Cursor - Always Visible */}
                 <motion.div
                     className="absolute z-50 pointer-events-none drop-shadow-xl"
-                    initial={{ opacity: 0 }}
+                    initial={{ x: "50%", y: "120%", opacity: 1 }} // Start from bottom
                     animate={
-                        step === 0 ? { x: "80%", y: "80%", opacity: 1 } :
-                            step === 1 ? { x: "85%", y: "85%", opacity: 1 } :
-                                step === 2 ? { x: "65%", y: "65%", opacity: 1 } : { opacity: 0 }
+                        step === 0 ? cursorVariants.step0 :
+                            step === 1 ? cursorVariants.step1 :
+                                cursorVariants.step2
                     }
-                    transition={{ duration: 1.5, ease: "easeInOut", delay: 0.5 }}
+                    transition={cursorTransition}
                 >
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M5.65376 12.3673H5.46026L5.31717 12.4976L0.500002 16.8829L0.500002 1.19169L17.4741 12.3673H5.65376Z" fill="black" stroke="white" strokeWidth="1" />
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="filter drop-shadow-lg">
+                        <path d="M5.65376 12.3673H5.46026L5.31717 12.4976L0.500002 16.8829L0.500002 1.19169L17.4741 12.3673H5.65376Z" fill="black" stroke="white" strokeWidth="1.5" />
                     </svg>
+
+                    {/* Ripple Effect on Click */}
                     <motion.div
-                        className="w-8 h-8 rounded-full bg-white/30 absolute -top-2 -left-2"
+                        className="w-10 h-10 rounded-full bg-white/20 absolute -top-3 -left-3"
                         initial={{ scale: 0, opacity: 0 }}
-                        animate={{ scale: 1.5, opacity: [0, 1, 0] }}
-                        transition={{ duration: 0.5, delay: 2, repeat: 0 }}
+                        animate={{ scale: 2, opacity: [0, 1, 0] }}
+                        transition={{
+                            delay: step === 0 ? 1.2 : 1.5,
+                            duration: 0.4,
+                            repeat: 0
+                        }}
                     />
                 </motion.div>
 
@@ -103,7 +135,7 @@ function CatalogStep() {
                     <div className="pt-2">
                         <motion.div
                             animate={{ scale: [1, 0.95, 1] }}
-                            transition={{ delay: 2, duration: 0.2 }}
+                            transition={{ delay: 1.25, duration: 0.2 }}
                             className="w-full h-8 bg-monza-red text-white text-[10px] font-bold uppercase tracking-widest rounded flex items-center justify-center"
                         >
                             Agregar al Carrito
@@ -151,7 +183,7 @@ function CheckoutStep() {
                     </div>
                     <motion.div
                         animate={{ scale: [1, 0.95, 1] }}
-                        transition={{ delay: 2, duration: 0.2 }}
+                        transition={{ delay: 1.55, duration: 0.2 }}
                         className="w-full h-10 bg-black text-white text-[10px] font-bold uppercase tracking-widest rounded flex items-center justify-center shadow-lg"
                     >
                         Pagar Ahora
@@ -198,8 +230,8 @@ function BookingStep() {
                                 "aspect-square rounded flex items-center justify-center text-[8px]",
                                 i === 15 ? "bg-monza-red text-white font-bold" : "bg-white/5 text-gray-400"
                             )}
-                            animate={i === 15 ? { scale: [1, 1.2, 1] } : {}}
-                            transition={i === 15 ? { delay: 2, duration: 0.3 } : {}}
+                            animate={i === 15 ? { scale: [1, 1.2, 1], backgroundColor: ["rgba(255,255,255,0.05)", "#D90429", "#D90429"] } : {}}
+                            transition={i === 15 ? { delay: 1.55, duration: 0.3 } : {}}
                         >
                             {i + 1}
                         </motion.div>
