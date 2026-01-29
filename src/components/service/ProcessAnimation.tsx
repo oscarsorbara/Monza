@@ -35,7 +35,7 @@ export function ProcessAnimation() {
 
     const cursorTransition = {
         duration: step === 0 ? 1.2 : 1.5,
-        ease: "easeInOut"
+        ease: "easeInOut" as const
     };
 
     return (
@@ -128,7 +128,7 @@ function CatalogStep() {
             transition={{ duration: 0.5 }}
             className="w-full h-full p-6 flex flex-col items-center justify-center"
         >
-            <div className="text-monza-red font-bold text-xs uppercase tracking-widest mb-4">Paso 1: Selección</div>
+            <div className="text-monza-red font-bold text-xs uppercase tracking-widest mb-4">Paso 1: SELECCIÓN RÁPIDA</div>
 
             <div className="w-full max-w-[280px] bg-carbon-800 rounded-xl overflow-hidden border border-white/5 shadow-lg group">
                 <div className="h-32 bg-carbon-700 relative overflow-hidden">
