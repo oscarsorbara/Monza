@@ -151,11 +151,6 @@ export default function Cart() {
                     {/* Summary */}
                     <div className="lg:col-span-1">
 
-                        {/* Upsell Carousel - Visible on Desktop/Large screens mainly or stacked */}
-                        <div className="lg:col-span-3 mb-8">
-                            <UpsellCarousel />
-                        </div>
-
                         <div className="sticky top-32 bg-carbon-900 p-8 rounded-3xl border border-white/5">
                             <h3 className="text-xl font-bold mb-6 uppercase tracking-wider">Resumen de Orden</h3>
 

@@ -13,7 +13,9 @@ export function UpsellCarousel() {
     const [isExpired, setIsExpired] = useState(false);
 
     // Filter 3 distinct products for upsell (Oil, Intake, Spoiler)
-    const upsellProducts = PRODUCTS.filter(p => ['p6', 'p2', 'p5'].includes(p.id));
+    // Fallback to first 3 items if IDs don't match (Safety Check)
+    const specificUpsell = PRODUCTS.filter(p => ['p6', 'p2', 'p5'].includes(p.id));
+    const upsellProducts = specificUpsell.length >= 3 ? specificUpsell : PRODUCTS.slice(0, 3);
 
     useEffect(() => {
         if (timeLeft <= 0) {
@@ -45,7 +47,7 @@ export function UpsellCarousel() {
         addToCart(originalProduct, 1);
     };
 
-    if (upsellProducts.length === 0) return null;
+
 
     return (
         <section className={`mb-12 border rounded-3xl overflow-hidden transition-all duration-500 ${isExpired ? 'border-gray-800 opacity-60 grayscale' : 'border-monza-red/30 bg-carbon-900/50'}`}>
