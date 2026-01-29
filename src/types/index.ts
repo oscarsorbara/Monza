@@ -7,6 +7,7 @@ export interface Vehicle {
     year: number;
     engine: string; // e.g., "V6 3.5L", "I4 2.0L Turbo"
     trim?: string;
+    variant?: string; // DB Column mapping for engine/trim
 }
 
 export interface CompatibilityRule {

@@ -30,6 +30,7 @@ interface OrderContextType {
     getOrderHistory: (userId?: string) => Order[];
     getOrderById: (id: string) => Order | undefined;
     updateOrderStatus: (id: string, status: Order['status']) => Promise<void>;
+    claimOrders: (userId: string) => Promise<void>;
     getTotalSales: () => number;
     getOrderCount: () => number;
     getAverageOrderValue: () => number;
@@ -160,6 +161,38 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
         }
     };
 
+    const claimOrders = async (userId: string) => {
+        const sessionId = localStorage.getItem('monza_session_id');
+        if (!sessionId) return;
+
+        // 1. Identify local guest orders
+        const guestOrders = orders.filter(o => o.sessionId === sessionId && !o.userId);
+        if (guestOrders.length === 0) return;
+
+        // 2. Update local state
+        const updated = orders.map(o =>
+            (o.sessionId === sessionId && !o.userId) ? { ...o, userId } : o
+        );
+        setOrders(updated);
+
+        // 3. Sync to DB
+        const upserts = guestOrders.map(o => ({
+            id: o.id,
+            user_id: userId,
+            session_id: o.sessionId,
+            items: o.items,
+            subtotal: o.subtotal,
+            total: o.total,
+            date: o.date,
+            status: o.status,
+            customer_info: o.customerInfo,
+            vehicle_info: o.vehicleInfo
+        }));
+
+        const { error } = await supabase.from('orders').upsert(upserts);
+        if (error) console.error('Error claiming orders:', error);
+    };
+
     const getTotalSales = () => orders
         .filter(o => o.status !== 'cancelled')
         .reduce((sum, o) => sum + o.total, 0);
@@ -195,6 +228,7 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
             getOrderHistory,
             getOrderById,
             updateOrderStatus,
+            claimOrders,
             getTotalSales,
             getOrderCount,
             getAverageOrderValue,

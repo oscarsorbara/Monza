@@ -55,8 +55,18 @@ export function VehicleProvider({ children }: { children: React.ReactNode }) {
             if (error) {
                 console.error('Error loading garage:', error);
             } else if (data) {
-                // Map DB structure to Vehicle structure if needed, currently 1:1 match assumed based on SQL
-                setGarage(data as unknown as Vehicle[]);
+                // Map DB structure to Vehicle structure
+                const mappedGarage = data.map((v: any) => ({
+                    id: v.id,
+                    make: v.make,
+                    model: v.model,
+                    year: v.year,
+                    // Map DB 'variant' to Frontend 'engine' (and keep 'variant')
+                    engine: v.variant || 'Base',
+                    variant: v.variant,
+                    trim: v.variant // Map to trim as well just in case
+                }));
+                setGarage(mappedGarage as Vehicle[]);
             }
             setIsLoading(false);
         }
@@ -94,7 +104,8 @@ export function VehicleProvider({ children }: { children: React.ReactNode }) {
                 make: vehicle.make,
                 model: vehicle.model,
                 year: vehicle.year,
-                variant: vehicle.variant
+                // Map Frontend 'engine' to DB 'variant'
+                variant: vehicle.variant || vehicle.engine || 'Base'
             });
 
             if (error) {
