@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Clock, ShoppingCart, Timer, ChevronRight, Zap } from 'lucide-react';
+import { Clock, ShoppingCart, Timer, Zap } from 'lucide-react';
 import { PRODUCTS } from '@/data/productsMock';
 import { useCart } from '@/context/CartContext';
 import { formatPrice } from '@/lib/utils';
