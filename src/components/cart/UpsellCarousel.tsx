@@ -49,8 +49,11 @@ export function UpsellCarousel() {
 
 
 
+    console.log("Upsell Debug: Products Found", upsellProducts.length);
+
     return (
-        <section className={`mb-12 border rounded-3xl overflow-hidden transition-all duration-500 ${isExpired ? 'border-gray-800 opacity-60 grayscale' : 'border-monza-red/30 bg-carbon-900/50'}`}>
+        <section className={`mb-12 border-4 border-yellow-500 rounded-3xl overflow-hidden transition-all duration-500 ${isExpired ? 'border-gray-800 opacity-60 grayscale' : 'border-monza-red/30 bg-carbon-900/50'}`}>
+            <div className="bg-yellow-500 text-black font-bold p-2 text-center">DEBUG: UPSELL COMPONENT RENDERED (Found {upsellProducts.length} products)</div>
             {/* Header */}
             <div className={`p-4 flex flex-col md:flex-row justify-between items-center gap-4 border-b ${isExpired ? 'bg-gray-900 border-gray-800' : 'bg-gradient-to-r from-monza-red/10 to-transparent border-monza-red/20'}`}>
                 <div className="flex items-center gap-3">

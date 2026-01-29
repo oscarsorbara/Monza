@@ -142,8 +142,12 @@ export default function Cart() {
                             ))}
                         </AnimatePresence>
 
+
                         {/* Upsell Carousel */}
-                        <div className="pt-8">
+                        <div className="pt-8 border-t border-white/10 mt-8">
+                            <div className="bg-red-600 text-white font-black text-xl p-4 text-center mb-4">
+                                🛑 LAYOUT CHECK: IF YOU SEE THIS, THE CODE IS WORKING 🛑
+                            </div>
                             <UpsellCarousel />
                         </div>
                     </div>
