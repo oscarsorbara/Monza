@@ -17,8 +17,7 @@ export default function Cart() {
     const hasAppointment = !!apptDate;
 
     const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    const shipping = subtotal > 1000 ? 0 : 50;
-    const total = subtotal + shipping;
+    const total = subtotal; // Shipping calculated at checkout
 
     const [isCheckingOut, setIsCheckingOut] = useState(false);
 
@@ -153,9 +152,9 @@ export default function Cart() {
                                     <span>Subtotal</span>
                                     <span>${formatPrice(subtotal)}</span>
                                 </div>
-                                <div className="flex justify-between">
+                                <div className="flex justify-between items-start">
                                     <span>Envío</span>
-                                    <span>{shipping === 0 ? 'Gratis' : `$${formatPrice(shipping)}`}</span>
+                                    <span className="text-right text-sm text-gray-400 max-w-[150px]">En la siguiente pantalla aparece el costo de envío</span>
                                 </div>
                                 <div className="h-px bg-white/10 my-4" />
                                 <div className="flex justify-between text-2xl font-bold text-white">
