@@ -40,8 +40,11 @@ export default function Cart() {
             // TODO: If hasAppointment, we could add attributes to the checkout here
             // e.g. customAttributes: [{key: "Appointment", value: ...}]
 
+            // Collect distinct discount codes from cart items (e.g. FLASH30)
+            const discountCodes = Array.from(new Set(items.map(i => i.discountCode).filter(Boolean))) as string[];
+
             const { createCheckout } = await import('@/lib/checkout');
-            const url = await createCheckout(shopifyItems);
+            const url = await createCheckout(shopifyItems, discountCodes);
             window.location.href = url;
 
         } catch (error) {

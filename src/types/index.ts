@@ -47,6 +47,8 @@ export type ProductCategory = string;
 export interface CartItem extends Product {
     quantity: number;
     vehicleId?: string; // The vehicle this part was bought for
+    discountCode?: string; // e.g. "FLASH30"
+    originalPrice?: number; // Store original price if discounted
 }
 
 export interface Collection {

@@ -5,9 +5,14 @@ import { useCart } from '@/context/CartContext';
 import { formatPrice } from '@/lib/utils';
 import { Button } from '@/components/ui/Button';
 
+// Configuration for Real Discount
+const UPSELL_DISCOUNT_CODE = "FLASH30";
+const DISCOUNT_PERCENTAGE = 0.30;
+
 export function UpsellCarousel() {
     const { addToCart, items } = useCart();
-    // Start at 7 minutes (420 seconds) - PERSISTENT
+
+    // Persistent Timer Logic
     const [timeLeft, setTimeLeft] = useState(() => {
         const savedExpiry = localStorage.getItem('upsellTimerExpiry');
         if (savedExpiry) {
@@ -28,24 +33,20 @@ export function UpsellCarousel() {
         }
     }, []);
 
-    // Filter 3 distinct products for upsell (Smart Selection)
-    // 1. Identify Brand
+    // Selection Logic (Smart Brand Matching)
     const cartItemIds = items.map(i => i.id);
     const cartBrand = items.length > 0 ? (items[0].name.includes('BMW') ? 'BMW' : items[0].name.includes('Audi') ? 'Audi' : items[0].name.includes('Mercedes') ? 'Mercedes' : '') : '';
 
-    // 2. Filter
     let selectedProducts = PRODUCTS.filter(p =>
         !cartItemIds.includes(p.id) &&
         (cartBrand ? p.name.includes(cartBrand) || p.brand?.includes(cartBrand) : true)
     );
 
-    // 3. Fallback
     if (selectedProducts.length < 3) {
         const remaining = PRODUCTS.filter(p => !cartItemIds.includes(p.id) && !selectedProducts.map(sp => sp.id).includes(p.id));
         selectedProducts = [...selectedProducts, ...remaining];
     }
 
-    // 4. Final Slice
     const upsellProducts = (selectedProducts.length >= 3 ? selectedProducts : PRODUCTS).slice(0, 3);
 
     useEffect(() => {
@@ -77,34 +78,45 @@ export function UpsellCarousel() {
     };
 
     const handleAddUpsell = (originalProduct: typeof PRODUCTS[0]) => {
-        // Conceptually apply 30% discount
-        addToCart(originalProduct, 1);
+        // Calculate discounted price locally for Cart display
+        const discountedPrice = originalProduct.price * (1 - DISCOUNT_PERCENTAGE);
+
+        // Create enhanced product object with Discount Info
+        const productWithDiscount = {
+            ...originalProduct,
+            price: discountedPrice, // Override price for Cart Total calculation
+            originalPrice: originalProduct.price, // Keep original for reference
+            discountCode: UPSELL_DISCOUNT_CODE, // Attach code for Checkout
+        };
+
+        addToCart(productWithDiscount, 1);
     };
 
     return (
-        <section className={`mb-12 border-2 rounded-3xl overflow-hidden transition-all duration-500 shadow-2xl ${isExpired ? 'border-gray-800 opacity-60 grayscale' : 'border-monza-red bg-carbon-900 border-opacity-50'}`}>
-            <div className={`text-white font-bold text-sm tracking-widest uppercase p-2 text-center ${isExpired ? 'bg-gray-800' : 'bg-monza-red'}`}>
-                {isExpired ? 'Oferta Finalizada' : 'Oferta por única vez'}
+        <section className={`mb-12 border-2 rounded-3xl overflow-hidden transition-all duration-500 shadow-2xl ${isExpired ? 'border-gray-800 opacity-60 grayscale' : 'border-green-600 bg-carbon-900 border-opacity-50'}`}>
+            <div className={`text-white font-bold text-sm tracking-widest uppercase p-2 text-center ${isExpired ? 'bg-gray-800' : 'bg-green-600'}`}>
+                {isExpired ? 'Oferta Finalizada' : 'Oferta Relámpago'}
             </div>
+
             {/* Header */}
-            <div className={`p-4 flex flex-col md:flex-row justify-between items-center gap-4 border-b ${isExpired ? 'bg-gray-900 border-gray-800' : 'bg-gradient-to-r from-monza-red/10 to-transparent border-monza-red/20'}`}>
+            <div className={`p-4 flex flex-col md:flex-row justify-between items-center gap-4 border-b ${isExpired ? 'bg-gray-900 border-gray-800' : 'bg-gradient-to-r from-green-600/10 to-transparent border-green-600/20'}`}>
                 <div className="flex items-center gap-3">
-                    <div className={`p-2 rounded-full ${isExpired ? 'bg-gray-700 text-gray-400' : 'bg-monza-red text-white animate-pulse'}`}>
+                    <div className={`p-2 rounded-full ${isExpired ? 'bg-gray-700 text-gray-400' : 'bg-green-600 text-white animate-pulse'}`}>
                         {isExpired ? <Clock size={20} /> : <Zap size={20} />}
                     </div>
                     <div>
                         <h3 className={`font-bold uppercase tracking-wider ${isExpired ? 'text-gray-400' : 'text-white'}`}>
-                            {isExpired ? 'Oferta Expirada' : 'Oferta Relámpago - 30% OFF'}
+                            {isExpired ? 'Oferta Expirada' : `Descuento Especial - ${(DISCOUNT_PERCENTAGE * 100).toFixed(0)}% OFF`}
                         </h3>
                         {!isExpired && (
-                            <p className="text-xs text-monza-red font-bold">
+                            <p className="text-xs text-green-500 font-bold">
                                 Antes de finalizar tu compra
                             </p>
                         )}
                     </div>
                 </div>
 
-                <div className={`flex items-center gap-2 font-mono text-2xl font-black ${isExpired ? 'text-gray-600' : 'text-monza-red'}`}>
+                <div className={`flex items-center gap-2 font-mono text-2xl font-black ${isExpired ? 'text-gray-600' : 'text-green-500'}`}>
                     <Timer size={24} />
                     <span>{formatTime(timeLeft)}</span>
                 </div>
@@ -113,14 +125,14 @@ export function UpsellCarousel() {
             {/* Carousel Grid */}
             <div className="grid md:grid-cols-3 gap-4 p-6">
                 {upsellProducts.map((product) => {
-                    const discountPrice = product.price * 0.7;
+                    const discountPrice = product.price * (1 - DISCOUNT_PERCENTAGE);
 
                     return (
                         <div key={product.id} className="bg-carbon-950 border border-white/5 rounded-xl p-4 flex flex-col group relative overflow-hidden">
-                            {/* 30% Badge */}
+                            {/* Discount Badge */}
                             {!isExpired && (
-                                <div className="absolute top-0 right-0 bg-monza-red text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg z-10">
-                                    -30%
+                                <div className="absolute top-0 right-0 bg-green-600 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg z-10">
+                                    -{(DISCOUNT_PERCENTAGE * 100).toFixed(0)}%
                                 </div>
                             )}
 
@@ -139,7 +151,7 @@ export function UpsellCarousel() {
                                 <p className="text-xs text-gray-500 mb-3">{product.brand}</p>
 
                                 <div className="flex items-end gap-2 mb-4">
-                                    <span className={`text-lg font-bold ${isExpired ? 'text-gray-500' : 'text-white'}`}>
+                                    <span className={`text-lg font-bold ${isExpired ? 'text-gray-500' : 'text-green-500'}`}>
                                         ${formatPrice(discountPrice)}
                                     </span>
                                     <span className="text-xs text-gray-500 line-through mb-1">
@@ -150,7 +162,7 @@ export function UpsellCarousel() {
 
                             <Button
                                 size="sm"
-                                className={`w-full ${isExpired ? 'bg-gray-800 text-gray-500 cursor-not-allowed' : 'bg-white/10 hover:bg-white/20 text-white'}`}
+                                className={`w-full ${isExpired ? 'bg-gray-800 text-gray-500 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700 text-white border-none'}`}
                                 onClick={() => !isExpired && handleAddUpsell(product)}
                                 disabled={isExpired}
                             >

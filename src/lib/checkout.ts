@@ -1,8 +1,8 @@
 import { shopifyFetch } from '@/lib/shopify';
 
 export const CART_CREATE_MUTATION = `
-  mutation cartCreate($lines: [CartLineInput!]!) {
-    cartCreate(input: { lines: $lines }) {
+  mutation cartCreate($lines: [CartLineInput!]!, $discountCodes: [String!]) {
+    cartCreate(input: { lines: $lines, discountCodes: $discountCodes }) {
       cart {
         id
         checkoutUrl
@@ -16,14 +16,14 @@ export const CART_CREATE_MUTATION = `
   }
 `;
 
-export async function createCheckout(items: { variantId: string; quantity: number }[]) {
+export async function createCheckout(items: { variantId: string; quantity: number }[], discountCodes: string[] = []) {
   const lines = items.map(item => ({
     merchandiseId: item.variantId,
     quantity: item.quantity
   }));
 
-  console.log("Creating cart with lines:", lines);
-  const data: any = await shopifyFetch(CART_CREATE_MUTATION, { lines });
+  console.log("Creating cart with lines:", lines, "Discounts:", discountCodes);
+  const data: any = await shopifyFetch(CART_CREATE_MUTATION, { lines, discountCodes });
   console.log("Cart Response:", data);
 
   if (data.cartCreate?.userErrors?.length > 0) {
