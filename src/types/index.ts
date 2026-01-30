@@ -40,6 +40,15 @@ export interface Product {
     isUniversal?: boolean;
     variantId?: string; // Shopify Variant ID for Checkout
     collections?: string[]; // List of collection handles
+    compareAtPrice?: number;
+    unitPrice?: number;
+    unitPriceMeasurement?: {
+        measuredType?: string;
+        quantityUnit?: string;
+        quantityValue?: number;
+        referenceUnit?: string;
+        referenceValue?: number;
+    };
 }
 
 export type ProductCategory = string;

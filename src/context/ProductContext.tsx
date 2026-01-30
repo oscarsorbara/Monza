@@ -72,23 +72,30 @@ export function ProductProvider({ children }: { children: ReactNode }) {
                                 ? node.images.edges.map((e: any) => e.node.url)
                                 : [placeholderImage];
 
+                            const firstVariant = node.variants.edges[0]?.node;
+                            const compareAtPrice = firstVariant?.compareAtPrice?.amount ? parseFloat(firstVariant.compareAtPrice.amount) : undefined;
+                            const unitPrice = firstVariant?.unitPrice?.amount ? parseFloat(firstVariant.unitPrice.amount) : undefined;
+
                             return {
                                 id: node.id,
                                 name: node.title,
                                 handle: node.handle,
                                 sku: node.id,
                                 price: parseFloat(node.priceRange.minVariantPrice.amount),
+                                compareAtPrice: compareAtPrice,
+                                unitPrice: unitPrice,
+                                unitPriceMeasurement: firstVariant?.unitPriceMeasurement,
                                 category: node.productType || 'Varios',
                                 image: mainImage,
                                 images: galleryImages,
                                 description: node.descriptionHtml || node.description || '',
-                                stock: node.variants.edges[0]?.node?.availableForSale ? 10 : 0,
+                                stock: firstVariant?.availableForSale ? 10 : 0,
                                 rating: 5.0,
                                 reviewsCount: 0,
                                 brand: node.vendor || 'Monza',
                                 compatibility: compatibility,
                                 isUniversal: isUniversal || compatibility.length === 0,
-                                variantId: node.variants.edges[0]?.node?.id,
+                                variantId: firstVariant?.id,
                                 collections: node.collections?.edges.map((e: any) => e.node.handle) || [],
                                 specs: {}
                             } as Product;

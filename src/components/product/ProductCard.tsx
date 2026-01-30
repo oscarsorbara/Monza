@@ -73,7 +73,18 @@ export function ProductCard({ product }: ProductCardProps) {
 
                 <div className="mt-auto flex items-center justify-between gap-3">
                     <div className="flex flex-col">
-                        <span className="text-sm font-bold text-white">${formatPrice(product.price)}</span>
+                        <div className="flex items-baseline gap-2">
+                            <span className="text-sm font-bold text-white">${formatPrice(product.price)}</span>
+                            {product.compareAtPrice && product.compareAtPrice > product.price && (
+                                <span className="text-xs text-gray-500 line-through">${formatPrice(product.compareAtPrice)}</span>
+                            )}
+                        </div>
+                        {product.unitPrice && (
+                            <span className="text-[10px] text-gray-400">
+                                ${formatPrice(product.unitPrice)}
+                                {product.unitPriceMeasurement ? ` / ${product.unitPriceMeasurement.referenceUnit || 'unidad'}` : ''}
+                            </span>
+                        )}
                     </div>
                     <Button
                         size="sm"

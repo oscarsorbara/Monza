@@ -27,6 +27,21 @@ export const PRODUCTS_QUERY = `
               node {
                 id
                 availableForSale
+                compareAtPrice {
+                  amount
+                  currencyCode
+                }
+                unitPrice {
+                  amount
+                  currencyCode
+                }
+                unitPriceMeasurement {
+                  measuredType
+                  quantityUnit
+                  quantityValue
+                  referenceUnit
+                  referenceValue
+                }
               }
             }
           }

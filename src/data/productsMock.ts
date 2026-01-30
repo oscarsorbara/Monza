@@ -136,6 +136,7 @@ export const PRODUCTS: Product[] = [
             { make: 'BMW', model: 'M3', yearStart: 2012, yearEnd: 2019, engines: 'All' },
             { make: 'BMW', model: '3 Series', yearStart: 2012, yearEnd: 2019, engines: 'All' }
         ],
-        specs: { 'Material': 'Fibra de Carbono Prepreg', 'Estilo': 'PSM', 'Instalación': 'Adhesivo 3M / Betalink' }
+        specs: { 'Material': 'Fibra de Carbono Prepreg', 'Estilo': 'PSM', 'Instalación': 'Adhesivo 3M / Betalink' },
+        compareAtPrice: 1350.00 // Demo Discount
     }
 ];

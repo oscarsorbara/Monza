@@ -65,8 +65,23 @@ export default function ProductDetail() {
                             {product.name}
                         </h1>
 
-                        <div className="text-3xl text-gray-300 font-light mb-8">
-                            ${formatPrice(product.price)}
+                        <div className="mb-8">
+                            <div className="flex items-baseline gap-4">
+                                <span className="text-3xl text-white font-bold tracking-tight">
+                                    ${formatPrice(product.price)}
+                                </span>
+                                {product.compareAtPrice && product.compareAtPrice > product.price && (
+                                    <span className="text-xl text-gray-500 line-through decoration-red-500/50 decoration-2">
+                                        ${formatPrice(product.compareAtPrice)}
+                                    </span>
+                                )}
+                            </div>
+                            {product.unitPrice && (
+                                <div className="text-sm text-gray-400 mt-1 font-medium">
+                                    ${formatPrice(product.unitPrice)}
+                                    {product.unitPriceMeasurement ? ` / ${product.unitPriceMeasurement.referenceUnit || 'unidad'}` : ' por unidad'}
+                                </div>
+                            )}
                         </div>
 
                         {/* Inline Vehicle Selector */}
