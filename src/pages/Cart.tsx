@@ -17,8 +17,13 @@ export default function Cart() {
     const apptService = searchParams.get('apptService');
     const hasAppointment = !!apptDate;
 
-    const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    const total = subtotal; // Shipping calculated at checkout
+    const subtotalOriginal = items.reduce((sum, item) => {
+        const originalPrice = item.compareAtPrice && item.compareAtPrice > item.price ? item.compareAtPrice : item.price;
+        return sum + (originalPrice * item.quantity);
+    }, 0);
+
+    const total = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const discount = subtotalOriginal - total;
 
     const [isCheckingOut, setIsCheckingOut] = useState(false);
 
@@ -116,8 +121,22 @@ export default function Cart() {
 
                                     <div className="flex-1">
                                         <h3 className="text-xl font-bold mb-1">{item.name}</h3>
-                                        <p className="text-gray-400 text-sm mb-2">{item.category}</p>
-                                        <div className="text-lg font-mono">${formatPrice(item.price)}</div>
+                                        <p className="text-gray-400 text-sm mb-1">{item.category}</p>
+
+                                        {item.attributes?.["Instalación"] && (
+                                            <span className="inline-block bg-monza-red/20 text-monza-red text-[10px] font-bold px-2 py-0.5 rounded mb-2 uppercase tracking-wide border border-monza-red/30">
+                                                Incluye Instalación
+                                            </span>
+                                        )}
+
+                                        <div className="flex items-center gap-3 mt-1">
+                                            {item.compareAtPrice && item.compareAtPrice > item.price && (
+                                                <span className="text-gray-500 line-through text-lg decoration-red-500/50">
+                                                    ${formatPrice(item.compareAtPrice)}
+                                                </span>
+                                            )}
+                                            <div className="text-xl font-mono font-bold text-white">${formatPrice(item.price)}</div>
+                                        </div>
                                     </div>
 
                                     <div className="flex items-center gap-4 bg-carbon-950 rounded-full px-2 py-1 border border-white/10">
@@ -162,8 +181,16 @@ export default function Cart() {
                             <div className="space-y-4 mb-8 text-gray-300">
                                 <div className="flex justify-between">
                                     <span>Subtotal</span>
-                                    <span>${formatPrice(subtotal)}</span>
+                                    <span>${formatPrice(subtotalOriginal)}</span>
                                 </div>
+
+                                {discount > 0 && (
+                                    <div className="flex justify-between text-monza-red font-medium">
+                                        <span>Descuento</span>
+                                        <span>-${formatPrice(discount)}</span>
+                                    </div>
+                                )}
+
                                 <div className="flex justify-between items-start">
                                     <span>Envío</span>
                                     <span className="text-right text-sm text-gray-400 max-w-[150px]">En la siguiente pantalla aparece el costo de envío</span>

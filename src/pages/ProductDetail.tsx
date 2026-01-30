@@ -45,7 +45,7 @@ export default function ProductDetail() {
     useEffect(() => {
         if (!product || !product.variants || product.variants.length <= 1) return;
 
-        const baseVariant = product.variants.reduce((prev, curr) => prev.price < curr.price ? prev : curr);
+        // baseVariant is defined in component scope now
         const installVariant = product.variants.find(v => v.id !== baseVariant.id) || baseVariant;
 
         if (includeInstallation) {
@@ -55,18 +55,33 @@ export default function ProductDetail() {
         }
     }, [includeInstallation, product]);
 
+    const baseVariant = product.variants && product.variants.length > 0
+        ? product.variants.reduce((prev, curr) => prev.price < curr.price ? prev : curr)
+        : { id: product.variantId!, price: product.price } as any;
+
     const handleAddToCart = () => {
         if (!product) return;
+
+        // Detect if installation is selected (price higher than base)
+        const isInstallation = selectedVariant.price > baseVariant.price;
+
         // Create a product object for the cart using the selected variant's details
         const cartItemProduct = {
-            ...product,
-            id: selectedVariant.id,
-            price: selectedVariant.price,
-            // If the variant title is meaningful (not just "Default"), append it? 
-            // For now, let's keep name as is, or maybe the cart handles variants via ID?
-            // Usually safest to rely on ID.
+            ...product, // Base product details
+            id: selectedVariant.id, // Variant ID
+            price: selectedVariant.price, // Variant Price
+            compareAtPrice: selectedVariant.compareAtPrice, // Variant Compare At Price
+            image: selectedVariant.image?.url || product.image // Variant Image if available
         };
-        addToCart(cartItemProduct, 1, currentVehicle ? `${currentVehicle.make} ${currentVehicle.model} ${currentVehicle.year}` : undefined);
+
+        const attributes = isInstallation ? { "Instalación": "Incluida" } : undefined;
+
+        addToCart(
+            cartItemProduct,
+            1,
+            currentVehicle ? `${currentVehicle.make} ${currentVehicle.model} ${currentVehicle.year}` : undefined,
+            attributes
+        );
     };
 
     return (
@@ -151,7 +166,7 @@ export default function ProductDetail() {
                                                 Incluir Instalación Expert en Taller
                                             </h3>
                                             {(() => {
-                                                const baseVariant = product.variants.reduce((prev, curr) => prev.price < curr.price ? prev : curr);
+                                                // baseVariant defined in component scope
                                                 const installVariant = product.variants.find(v => v.id !== baseVariant.id) || baseVariant;
                                                 const priceDiff = installVariant.price - baseVariant.price;
 
