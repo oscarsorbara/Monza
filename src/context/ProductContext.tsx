@@ -31,7 +31,6 @@ export function ProductProvider({ children }: { children: ReactNode }) {
                 const mocks = mockAleron ? [mockAleron] : [];
 
                 // 2. Fetch from Shopify
-                // 2. Fetch Products
                 let shopifyProducts: Product[] = [];
                 try {
                     const data: any = await shopifyFetch(PRODUCTS_QUERY);
@@ -147,35 +146,28 @@ export function ProductProvider({ children }: { children: ReactNode }) {
                             id: node.id,
                             name: node.title,
                             handle: node.handle,
-                            try {
-                                const collData: any = await shopifyFetch(COLLECTIONS_QUERY);
-                                if(collData?.collections?.edges) {
-                                    shopifyCollections = collData.collections.edges.map(({ node }: any) => ({
-                                        id: node.id,
-                                        name: node.title,
-                                        handle: node.handle,
-                                        description: node.description || '',
-                                        image: node.image?.url || 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&q=80'
-                                    }));
-                                }
-                            } catch(err) {
-                                console.error("Failed to fetch collections from Shopify:", err);
-                            }
-
-setProducts([...mocks, ...shopifyProducts]);
-setCollections(shopifyCollections);
-
-                        } catch (error) {
-                            console.error('Error initializing data:', error);
-                        } finally {
-                            setIsLoading(false);
-                        }
+                            description: node.description || '',
+                            image: node.image?.url || 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&q=80'
+                        }));
                     }
+                } catch (err) {
+                    console.error("Failed to fetch collections from Shopify:", err);
+                }
 
-                    loadData();
-                }, []);
+                setProducts([...mocks, ...shopifyProducts]);
+                setCollections(shopifyCollections);
 
-    // Helper functions (kept for compatibility, though 'save' logic is removed for fetched items)
+            } catch (error) {
+                console.error('Error initializing data:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        }
+
+        loadData();
+    }, []);
+
+    // Helper functions (kept for compatibility)
     const addProduct = (p: Omit<Product, 'id'>) => {
         const newProduct = { ...p, id: Math.random().toString(36).substr(2, 9) } as Product;
         setProducts(prev => [...prev, newProduct]);
