@@ -74,10 +74,10 @@ export function ProductCard({ product }: ProductCardProps) {
                 <div className="mt-auto flex items-center justify-between gap-3">
                     <div className="flex flex-col">
                         <div className="flex items-baseline gap-2">
-                            <span className="text-sm font-bold text-white">${formatPrice(product.price)}</span>
                             {product.compareAtPrice && product.compareAtPrice > product.price && (
-                                <span className="text-xs text-gray-500 line-through">${formatPrice(product.compareAtPrice)}</span>
+                                <span className="text-xs text-gray-400 line-through">${formatPrice(product.compareAtPrice)}</span>
                             )}
+                            <span className="text-sm font-bold text-white">${formatPrice(product.price)}</span>
                         </div>
                         {product.unitPrice && (
                             <span className="text-[10px] text-gray-400">

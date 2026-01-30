@@ -16,10 +16,11 @@ export const CART_CREATE_MUTATION = `
   }
 `;
 
-export async function createCheckout(items: { variantId: string; quantity: number }[], discountCodes: string[] = []) {
+export async function createCheckout(items: { variantId: string; quantity: number; attributes?: Record<string, string> }[], discountCodes: string[] = []) {
   const lines = items.map(item => ({
     merchandiseId: item.variantId,
-    quantity: item.quantity
+    quantity: item.quantity,
+    attributes: item.attributes ? Object.entries(item.attributes).map(([key, value]) => ({ key, value })) : []
   }));
 
   console.log("Creating cart with lines:", lines, "Discounts:", discountCodes);

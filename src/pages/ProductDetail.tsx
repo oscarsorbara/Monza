@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useProduct } from '@/context/ProductContext';
 import { Button } from '@/components/ui/Button';
@@ -23,8 +24,11 @@ export default function ProductDetail() {
     const status = checkCompatibility(product, currentVehicle);
     const isCompatible = status === 'EXACT_MATCH' || status === 'UNIVERSAL';
 
+    const [includeInstallation, setIncludeInstallation] = useState(false);
+
     const handleAddToCart = () => {
-        addToCart(product, 1, currentVehicle?.id);
+        const attributes = includeInstallation ? { "Instalación": "Solicitada" } : undefined;
+        addToCart(product, 1, currentVehicle?.id, attributes);
         // Toast replaced by CartNotification component
     };
 
@@ -66,18 +70,25 @@ export default function ProductDetail() {
                         </h1>
 
                         <div className="mb-8">
-                            <div className="flex items-baseline gap-4">
-                                <span className="text-3xl text-white font-bold tracking-tight">
+                            <div className="flex items-center gap-4">
+                                {product.compareAtPrice && product.compareAtPrice > product.price && (
+                                    <>
+                                        <div className="flex flex-col items-start">
+                                            <span className="text-xl text-gray-400 line-through decoration-red-500/50 decoration-2">
+                                                ${formatPrice(product.compareAtPrice)}
+                                            </span>
+                                            <span className="bg-monza-red text-white text-[10px] font-bold px-2 py-0.5 rounded">
+                                                OFFERTA {Math.round(((product.compareAtPrice - product.price) / product.compareAtPrice) * 100)}% OFF
+                                            </span>
+                                        </div>
+                                    </>
+                                )}
+                                <span className="text-4xl text-white font-black tracking-tight">
                                     ${formatPrice(product.price)}
                                 </span>
-                                {product.compareAtPrice && product.compareAtPrice > product.price && (
-                                    <span className="text-xl text-gray-500 line-through decoration-red-500/50 decoration-2">
-                                        ${formatPrice(product.compareAtPrice)}
-                                    </span>
-                                )}
                             </div>
                             {product.unitPrice && (
-                                <div className="text-sm text-gray-400 mt-1 font-medium">
+                                <div className="text-sm text-gray-400 mt-2 font-medium">
                                     ${formatPrice(product.unitPrice)}
                                     {product.unitPriceMeasurement ? ` / ${product.unitPriceMeasurement.referenceUnit || 'unidad'}` : ' por unidad'}
                                 </div>
@@ -123,6 +134,31 @@ export default function ProductDetail() {
                             className="prose prose-invert prose-lg text-gray-400 mb-12 [&>p]:mb-6 [&>ul]:mb-6 [&>li]:mb-2"
                             dangerouslySetInnerHTML={{ __html: product.description }}
                         />
+
+                        {/* Installation Option */}
+                        <div className="mb-8 p-4 bg-carbon-800 rounded-xl border border-white/10">
+                            <label className="flex items-start gap-3 cursor-pointer group">
+                                <div className="relative flex items-center">
+                                    <input
+                                        type="checkbox"
+                                        className="peer sr-only"
+                                        checked={includeInstallation}
+                                        onChange={(e) => setIncludeInstallation(e.target.checked)}
+                                    />
+                                    <div className="w-6 h-6 border-2 border-gray-500 rounded peer-checked:bg-monza-red peer-checked:border-monza-red transition-all flex items-center justify-center">
+                                        <Check className="w-4 h-4 text-white opacity-0 peer-checked:opacity-100" />
+                                    </div>
+                                </div>
+                                <div className="flex-1">
+                                    <span className="font-bold text-white group-hover:text-monza-red transition-colors">
+                                        Incluir Instalación Expert en Taller
+                                    </span>
+                                    <p className="text-xs text-gray-400 mt-1">
+                                        Agenda tu turno prioritario después de la compra. Garantía de instalación incluida.
+                                    </p>
+                                </div>
+                            </label>
+                        </div>
 
                         <div className="flex gap-4 items-center">
                             <Button size="lg" onClick={handleAddToCart} className="flex-1 bg-white text-black hover:bg-gray-200 h-16 text-lg">

@@ -4,7 +4,7 @@ import { storage } from '@/lib/storage';
 
 interface CartContextType {
     items: CartItem[];
-    addToCart: (product: Product, quantity: number, vehicleId?: string) => void;
+    addToCart: (product: Product, quantity: number, vehicleId?: string, attributes?: Record<string, string>) => void;
     removeFromCart: (productId: string) => void;
     updateQuantity: (productId: string, quantity: number) => void;
     clearCart: () => void;
@@ -29,17 +29,22 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         storage.set('monza_cart', items);
     }, [items]);
 
-    const addToCart = (product: Product, quantity: number, vehicleId?: string) => {
+    const addToCart = (product: Product, quantity: number, vehicleId?: string, attributes?: Record<string, string>) => {
         setItems(prev => {
             const existing = prev.find(item => item.id === product.id);
             if (existing) {
+                // Check if attributes match (simplified: exact match or merging?)
+                // For now, if attributes differ, it should technically be a new line item.
+                // But simpliest approach: just update quantity for same product ID.
+                // Refinement: If installation is requested, it might be the same product ID but different intent.
+                // Let's assume ID uniqueness for now.
                 return prev.map(item =>
                     item.id === product.id
-                        ? { ...item, quantity: item.quantity + quantity }
+                        ? { ...item, quantity: item.quantity + quantity, attributes: { ...item.attributes, ...attributes } }
                         : item
                 );
             }
-            return [...prev, { ...product, quantity, vehicleId }];
+            return [...prev, { ...product, quantity, vehicleId, attributes }];
         });
 
         // Trigger Notification

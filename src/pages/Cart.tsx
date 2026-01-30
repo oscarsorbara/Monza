@@ -28,7 +28,8 @@ export default function Cart() {
             // Filter only items connected to Shopify (with variantId)
             const shopifyItems = items.filter(i => i.variantId).map(i => ({
                 variantId: i.variantId!,
-                quantity: i.quantity
+                quantity: i.quantity,
+                attributes: i.attributes
             }));
 
             if (shopifyItems.length === 0) {

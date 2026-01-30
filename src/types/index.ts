@@ -58,6 +58,7 @@ export interface CartItem extends Product {
     vehicleId?: string; // The vehicle this part was bought for
     discountCode?: string; // e.g. "FLASH30"
     originalPrice?: number; // Store original price if discounted
+    attributes?: Record<string, string>; // e.g. { "Installation": "Requested" }
 }
 
 export interface Collection {
