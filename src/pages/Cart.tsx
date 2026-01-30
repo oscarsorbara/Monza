@@ -185,7 +185,7 @@ export default function Cart() {
                                 </div>
 
                                 {discount > 0 && (
-                                    <div className="flex justify-between text-monza-red font-medium">
+                                    <div className="flex justify-between text-yellow-500 font-medium">
                                         <span>Descuento</span>
                                         <span>-${formatPrice(discount)}</span>
                                     </div>
