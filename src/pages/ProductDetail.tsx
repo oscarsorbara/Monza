@@ -26,27 +26,18 @@ export default function ProductDetail() {
 
     const [includeInstallation, setIncludeInstallation] = useState(false);
 
-    const handleAddToCart = () => {
-        // Variant Selection Logic
-        const [selectedVariant, setSelectedVariant] = useState(product.variants?.[0] || {
+    // Variant Selection Logic
+    // Default to the variant with the lowest price (usually "Sin instalación")
+    const [selectedVariant, setSelectedVariant] = useState(() => {
+        if (product.variants && product.variants.length > 0) {
+            return product.variants.reduce((prev, curr) => prev.price < curr.price ? prev : curr);
+        }
+        return {
             id: product.variantId!,
             title: 'Default',
             price: product.price,
             compareAtPrice: product.compareAtPrice,
             availableForSale: true
-        });
-
-        // Update selected variant if product changes
-        if (selectedVariant.id !== product.variantId && !product.variants?.find(v => v.id === selectedVariant.id)) {
-            if (product.variants && product.variants.length > 0) {
-                setSelectedVariant(product.variants[0]);
-            }
-        }
-
-        const handleAddToCart = () => {
-            // We pass the SPECIFIC variant ID chosen by the user
-            // We do NOT pass "Instalación" attribute anymore, as it's implied by the variant itself.
-            addToCart({ ...product, price: selectedVariant.price, variantId: selectedVariant.id }, 1, currentVehicle?.id);
         };
 
         return (
@@ -86,7 +77,7 @@ export default function ProductDetail() {
                                 {product.name}
                             </h1>
 
-                            <div className="mb-8">
+                            <div className="mb-4">
                                 <div className="flex items-center gap-4">
                                     {selectedVariant.compareAtPrice && selectedVariant.compareAtPrice > selectedVariant.price && (
                                         <>
@@ -112,46 +103,16 @@ export default function ProductDetail() {
                                 )}
                             </div>
 
-                            {/* Inline Vehicle Selector & Compatibility (kept same) */}
-                            <div className="mb-8">
-                                <InlineVehicleSelector />
+                            <div className="flex gap-4 items-center mb-8">
+                                <Button size="lg" onClick={handleAddToCart} className="flex-1 bg-white text-black hover:bg-gray-200 h-16 text-lg">
+                                    Agregar <Plus className="ml-2 w-5 h-5" />
+                                </Button>
+                                <Button size="icon" variant="outline" className="h-16 w-16 rounded-full border-white/20">
+                                    <Info className="w-6 h-6" />
+                                </Button>
                             </div>
 
-                            <AnimatePresence>
-                                {currentVehicle && (
-                                    <motion.div
-                                        initial={{ opacity: 0, height: 0 }}
-                                        animate={{ opacity: 1, height: 'auto' }}
-                                        exit={{ opacity: 0, height: 0 }}
-                                        className={`p-4 rounded-xl mb-8 flex items-start gap-3 border ${isCompatible ? 'bg-green-900/10 border-green-500/30' : 'bg-red-900/10 border-red-500/30'}`}
-                                    >
-                                        {isCompatible ? (
-                                            <div className="p-2 bg-green-500/20 rounded-full">
-                                                <Check className="w-6 h-6 text-green-500" />
-                                            </div>
-                                        ) : (
-                                            <div className="p-2 bg-red-500/20 rounded-full">
-                                                <AlertTriangle className="w-6 h-6 text-red-500" />
-                                            </div>
-                                        )}
-                                        <div>
-                                            <h4 className={`font-black text-lg uppercase tracking-wide ${isCompatible ? 'text-green-500' : 'text-red-500'}`}>
-                                                {isCompatible ? 'Compatible' : 'No Compatible'}
-                                            </h4>
-                                            <p className="text-sm text-gray-300 mt-1">
-                                                Este producto {isCompatible ? 'se ajusta perfectamente a tu' : 'no es adecuado para tu'} <span className="font-bold text-white">{currentVehicle.year} {currentVehicle.make} {currentVehicle.model}</span>.
-                                            </p>
-                                        </div>
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
-
-                            <div
-                                className="prose prose-invert prose-lg text-gray-400 mb-12 [&>p]:mb-6 [&>ul]:mb-6 [&>li]:mb-2"
-                                dangerouslySetInnerHTML={{ __html: product.description }}
-                            />
-
-                            {/* Variant Selector (Replaces Checkbox) */}
+                            {/* Variant Selector (Installation Options) */}
                             {product.variants && product.variants.length > 1 && (
                                 <div className="mb-8 p-6 bg-carbon-800 rounded-2xl border border-white/5">
                                     <h3 className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-4">
@@ -186,14 +147,45 @@ export default function ProductDetail() {
                                 </div>
                             )}
 
-                            <div className="flex gap-4 items-center">
-                                <Button size="lg" onClick={handleAddToCart} className="flex-1 bg-white text-black hover:bg-gray-200 h-16 text-lg">
-                                    Agregar <Plus className="ml-2 w-5 h-5" />
-                                </Button>
-                                <Button size="icon" variant="outline" className="h-16 w-16 rounded-full border-white/20">
-                                    <Info className="w-6 h-6" />
-                                </Button>
+                            {/* Inline Vehicle Selector */}
+                            <div className="mb-8">
+                                <InlineVehicleSelector />
                             </div>
+
+                            {/* Compatibility Result (Only if vehicle is selected) */}
+                            <AnimatePresence>
+                                {currentVehicle && (
+                                    <motion.div
+                                        initial={{ opacity: 0, height: 0 }}
+                                        animate={{ opacity: 1, height: 'auto' }}
+                                        exit={{ opacity: 0, height: 0 }}
+                                        className={`p-4 rounded-xl mb-8 flex items-start gap-3 border ${isCompatible ? 'bg-green-900/10 border-green-500/30' : 'bg-red-900/10 border-red-500/30'}`}
+                                    >
+                                        {isCompatible ? (
+                                            <div className="p-2 bg-green-500/20 rounded-full">
+                                                <Check className="w-6 h-6 text-green-500" />
+                                            </div>
+                                        ) : (
+                                            <div className="p-2 bg-red-500/20 rounded-full">
+                                                <AlertTriangle className="w-6 h-6 text-red-500" />
+                                            </div>
+                                        )}
+                                        <div>
+                                            <h4 className={`font-black text-lg uppercase tracking-wide ${isCompatible ? 'text-green-500' : 'text-red-500'}`}>
+                                                {isCompatible ? 'Compatible' : 'No Compatible'}
+                                            </h4>
+                                            <p className="text-sm text-gray-300 mt-1">
+                                                Este producto {isCompatible ? 'se ajusta perfectamente a tu' : 'no es adecuado para tu'} <span className="font-bold text-white">{currentVehicle.year} {currentVehicle.make} {currentVehicle.model}</span>.
+                                            </p>
+                                        </div>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+
+                            <div
+                                className="prose prose-invert prose-lg text-gray-400 mb-12 [&>p]:mb-6 [&>ul]:mb-6 [&>li]:mb-2"
+                                dangerouslySetInnerHTML={{ __html: product.description }}
+                            />
                         </motion.div>
                     </div>
                 </div>
