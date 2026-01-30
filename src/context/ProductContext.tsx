@@ -96,10 +96,40 @@ export function ProductProvider({ children }: { children: ReactNode }) {
                                 compatibility: compatibility,
                                 isUniversal: isUniversal || compatibility.length === 0,
                                 variantId: firstVariant?.id,
-                                collections: node.collections?.edges.map((e: any) => e.node.handle) || [],
-                                specs: {}
-                            } as Product;
-                        });
+                                const variants = node.variants.edges.map(({ node: v }: any) => ({
+                                    id: v.id,
+                                    title: v.title,
+                                    price: v.price?.amount ? parseFloat(v.price.amount) : parseFloat(node.priceRange.minVariantPrice.amount), // Fallback or fetch variant price? NOTE: Query needs updating to fetch variant price specific
+                                    compareAtPrice: v.compareAtPrice?.amount ? parseFloat(v.compareAtPrice.amount) : undefined,
+                                    availableForSale: v.availableForSale,
+                                    image: v.image
+                                }));
+
+                                return {
+                                    id: node.id,
+                                    name: node.title,
+                                    handle: node.handle,
+                                    sku: node.id,
+                                    price: parseFloat(node.priceRange.minVariantPrice.amount),
+                                    compareAtPrice: compareAtPrice,
+                                    unitPrice: unitPrice,
+                                    unitPriceMeasurement: firstVariant?.unitPriceMeasurement,
+                                    category: node.productType || 'Varios',
+                                    image: mainImage,
+                                    images: galleryImages,
+                                    description: node.descriptionHtml || node.description || '',
+                                    stock: firstVariant?.availableForSale ? 10 : 0,
+                                    rating: 5.0,
+                                    reviewsCount: 0,
+                                    brand: node.vendor || 'Monza',
+                                    compatibility: compatibility,
+                                    isUniversal: isUniversal || compatibility.length === 0,
+                                    variantId: firstVariant?.id,
+                                    collections: node.collections?.edges.map((e: any) => e.node.handle) || [],
+                                    specs: {},
+                                    variants: variants
+                                } as Product;
+                            });
                     }
                 } catch (err) {
                     console.error("Failed to fetch products from Shopify:", err);

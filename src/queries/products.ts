@@ -22,10 +22,15 @@ export const PRODUCTS_QUERY = `
               currencyCode
             }
           }
-          variants(first: 1) {
+          variants(first: 10) {
             edges {
               node {
                 id
+                title
+                image {
+                  url
+                  altText
+                }
                 availableForSale
                 compareAtPrice {
                   amount
@@ -41,6 +46,10 @@ export const PRODUCTS_QUERY = `
                   quantityValue
                   referenceUnit
                   referenceValue
+                }
+                price {
+                  amount
+                  currencyCode
                 }
               }
             }

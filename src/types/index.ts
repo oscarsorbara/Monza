@@ -49,6 +49,20 @@ export interface Product {
         referenceUnit?: string;
         referenceValue?: number;
     };
+    variants?: ProductVariant[];
+}
+
+export interface ProductVariant {
+    id: string;
+    title: string;
+    price: number;
+    compareAtPrice?: number;
+    availableForSale: boolean;
+    sku?: string;
+    image?: {
+        url: string;
+        altText?: string;
+    };
 }
 
 export type ProductCategory = string;
