@@ -65,12 +65,22 @@ export default function ProductDetail() {
         // Detect if installation is selected (price higher than base)
         const isInstallation = selectedVariant.price > baseVariant.price;
 
+        // Clean compareAtPrice logic:
+        // 1. Must exist on component
+        // 2. Must be strictly greater than current price to be a discount
+        // 3. Must not be inherited from the Product parent object if the variant doesn't have one
+        let variantCompareAtPrice = selectedVariant.compareAtPrice;
+
+        if (!variantCompareAtPrice || variantCompareAtPrice <= selectedVariant.price) {
+            variantCompareAtPrice = undefined;
+        }
+
         // Create a product object for the cart using the selected variant's details
         const cartItemProduct = {
             ...product, // Base product details
             id: selectedVariant.id, // Variant ID
             price: selectedVariant.price, // Variant Price
-            compareAtPrice: selectedVariant.compareAtPrice, // Variant Compare At Price
+            compareAtPrice: variantCompareAtPrice, // Variant Compare At Price (Strict)
             image: selectedVariant.image?.url || product.image // Variant Image if available
         };
 
