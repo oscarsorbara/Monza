@@ -61,6 +61,7 @@ export const PRODUCTS_QUERY = `
             edges {
               node {
                 handle
+                title
               }
             }
           }

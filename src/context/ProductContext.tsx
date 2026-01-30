@@ -94,86 +94,110 @@ export function ProductProvider({ children }: { children: ReactNode }) {
                                 compareAtPrice: compareAtPrice,
                                 unitPrice: unitPrice,
                                 unitPriceMeasurement: firstVariant?.unitPriceMeasurement,
-                                category: node.productType || 'Varios',
-                                image: mainImage,
-                                images: galleryImages,
-                                description: node.descriptionHtml || node.description || '',
-                                stock: firstVariant?.availableForSale ? 10 : 0,
-                                rating: 5.0,
-                                reviewsCount: 0,
-                                brand: node.vendor || 'Monza',
-                                compatibility: compatibility,
-                                isUniversal: isUniversal || compatibility.length === 0,
-                                variantId: firstVariant?.id,
-                                collections: node.collections?.edges.map((e: any) => e.node.handle) || [],
-                                specs: {},
-                                variants: variants
-                            } as Product;
-                        });
-                    }
-                } catch (err) {
-                    console.error("Failed to fetch products from Shopify:", err);
-                }
+                                // Determine Category from Product Type or Collections
+                                let category = node.productType;
+                                if(!category || category === 'Varios' || category === 'Home page') {
+                            // Try to find a specific collection
+                            const validCollection = node.collections?.edges.find((e: any) => {
+                                const title = e.node.title;
+                                return title !== 'All' && title !== 'Home page' && title !== 'Destacados' && title !== 'Ofertas';
+                            });
+                            if (validCollection) {
+                                category = validCollection.node.title;
+                            } else {
+                                category = 'Varios';
+                            }
+                        }
 
-                // 3. Fetch Collections from Shopify
-                let shopifyCollections: Collection[] = [];
-                try {
-                    const collData: any = await shopifyFetch(COLLECTIONS_QUERY);
-                    if (collData?.collections?.edges) {
-                        shopifyCollections = collData.collections.edges.map(({ node }: any) => ({
+                        return {
                             id: node.id,
                             name: node.title,
                             handle: node.handle,
-                            description: node.description || '',
-                            image: node.image?.url || 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&q=80'
-                        }));
-                    }
+                            sku: node.id,
+                            price: parseFloat(node.priceRange.minVariantPrice.amount),
+                            compareAtPrice: compareAtPrice,
+                            unitPrice: unitPrice,
+                            unitPriceMeasurement: firstVariant?.unitPriceMeasurement,
+                            category: category,
+                            image: mainImage,
+                            images: galleryImages,
+                            description: node.descriptionHtml || node.description || '',
+                            stock: firstVariant?.availableForSale ? 10 : 0,
+                            rating: 5.0,
+                            reviewsCount: 0,
+                            brand: node.vendor || 'Monza',
+                            compatibility: compatibility,
+                            isUniversal: isUniversal || compatibility.length === 0,
+                            variantId: firstVariant?.id,
+                            collections: node.collections?.edges.map((e: any) => e.node.handle) || [],
+                            specs: {},
+                            variants: variants
+                        } as Product;
+                    });
+}
                 } catch (err) {
-                    console.error("Failed to fetch collections from Shopify:", err);
-                }
+    console.error("Failed to fetch products from Shopify:", err);
+}
 
-                setProducts([...mocks, ...shopifyProducts]);
-                setCollections(shopifyCollections);
+// 3. Fetch Collections from Shopify
+let shopifyCollections: Collection[] = [];
+try {
+    const collData: any = await shopifyFetch(COLLECTIONS_QUERY);
+    if (collData?.collections?.edges) {
+        shopifyCollections = collData.collections.edges.map(({ node }: any) => ({
+            id: node.id,
+            name: node.title,
+            handle: node.handle,
+            description: node.description || '',
+            image: node.image?.url || 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&q=80'
+        }));
+    }
+} catch (err) {
+    console.error("Failed to fetch collections from Shopify:", err);
+}
+
+setProducts([...mocks, ...shopifyProducts]);
+setCollections(shopifyCollections);
 
             } catch (error) {
-                console.error('Error initializing data:', error);
-            } finally {
-                setIsLoading(false);
-            }
+    console.error('Error initializing data:', error);
+} finally {
+    setIsLoading(false);
+}
         }
 
-        loadData();
+loadData();
     }, []);
 
-    // Helper functions (kept for compatibility, though 'save' logic is removed for fetched items)
-    const addProduct = (p: Omit<Product, 'id'>) => {
-        const newProduct = { ...p, id: Math.random().toString(36).substr(2, 9) } as Product;
-        setProducts(prev => [...prev, newProduct]);
-    };
+// Helper functions (kept for compatibility, though 'save' logic is removed for fetched items)
+const addProduct = (p: Omit<Product, 'id'>) => {
+    const newProduct = { ...p, id: Math.random().toString(36).substr(2, 9) } as Product;
+    setProducts(prev => [...prev, newProduct]);
+};
 
-    const updateProduct = (id: string, updates: Partial<Product>) => {
-        setProducts(prev => prev.map(p => p.id === id ? { ...p, ...updates } : p));
-    };
+const updateProduct = (id: string, updates: Partial<Product>) => {
+    setProducts(prev => prev.map(p => p.id === id ? { ...p, ...updates } : p));
+};
 
-    const deleteProduct = (id: string) => {
-        setProducts(prev => prev.filter(p => p.id !== id));
-    };
+const deleteProduct = (id: string) => {
+    setProducts(prev => prev.filter(p => p.id !== id));
+};
 
-    const getProduct = (id: string) => products.find(p => p.id === id);
+const getProduct = (id: string) => products.find(p => p.id === id);
 
-    return (
-        <ProductContext.Provider value={{
-            products,
-            collections,
-            addProduct,
-            updateProduct,
-            deleteProduct,
-            getProduct,
-            isLoading
-        }}>
-            {children}
-        </ProductContext.Provider>
-    );
+return (
+    <ProductContext.Provider value={{
+        products,
+        collections,
+        addProduct,
+        updateProduct,
+        deleteProduct,
+        getProduct,
+        isLoading
+    }}>
+        {children}
+    </ProductContext.Provider>
+);
 }
 
 export const useProduct = () => {
