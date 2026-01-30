@@ -117,9 +117,11 @@ export default function ProductDetail() {
                     >
                         {/* ... (Header/Category kept same) ... */}
                         <div className="flex items-center gap-4 mb-6">
-                            <span className="px-3 py-1 rounded-full border border-white/20 text-xs font-bold uppercase tracking-wider">
-                                {product.category}
-                            </span>
+                            {product.category && (
+                                <span className="px-3 py-1 rounded-full border border-white/20 text-xs font-bold uppercase tracking-wider">
+                                    {product.category}
+                                </span>
+                            )}
                             {product.stock < 5 && (
                                 <span className="text-monza-red text-xs font-bold uppercase tracking-wider">
                                     Poco Stock
