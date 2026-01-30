@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/Button';
 import { useCart } from '@/context/CartContext';
 import { useVehicle } from '@/context/VehicleContext';
 import { checkCompatibility } from '@/lib/compatibility';
-import { Check, AlertTriangle } from 'lucide-react';
+import { Check, AlertTriangle, Plus } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ProductGallery } from '@/components/product/ProductGallery';
 import { InlineVehicleSelector } from '@/components/vehicle/InlineVehicleSelector';
@@ -134,11 +134,8 @@ export default function ProductDetail() {
 
                         <div className="flex gap-4 items-center mb-6">
                             <Button size="lg" onClick={handleAddToCart} className="flex-1 bg-white text-black hover:bg-gray-200 h-14 text-lg font-bold uppercase tracking-wider">
-                                Agregar al Carrito
+                                Agregar al Carrito <Plus className="ml-2 w-5 h-5" />
                             </Button>
-                            {/* <Button size="icon" variant="outline" className="h-14 w-14 rounded-full border-white/20">
-                                    <Info className="w-6 h-6" />
-                                </Button> */}
                         </div>
 
                         {/* Installation Option (Checkbox Logic) */}

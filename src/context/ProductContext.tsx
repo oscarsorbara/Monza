@@ -95,11 +95,10 @@ export function ProductProvider({ children }: { children: ReactNode }) {
                                 brand: node.vendor || 'Monza',
                                 compatibility: compatibility,
                                 isUniversal: isUniversal || compatibility.length === 0,
-                                variantId: firstVariant?.id,
                                 const variants = node.variants.edges.map(({ node: v }: any) => ({
                                     id: v.id,
                                     title: v.title,
-                                    price: v.price?.amount ? parseFloat(v.price.amount) : parseFloat(node.priceRange.minVariantPrice.amount), // Fallback or fetch variant price? NOTE: Query needs updating to fetch variant price specific
+                                    price: v.price?.amount ? parseFloat(v.price.amount) : parseFloat(node.priceRange.minVariantPrice.amount),
                                     compareAtPrice: v.compareAtPrice?.amount ? parseFloat(v.compareAtPrice.amount) : undefined,
                                     availableForSale: v.availableForSale,
                                     image: v.image
