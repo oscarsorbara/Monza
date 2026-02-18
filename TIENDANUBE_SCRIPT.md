@@ -18,7 +18,7 @@
     if (window.location.href.indexOf('checkout/success') > -1) {
         
         // --- CONFIGURACIÓN ---
-        var baseURL = "https://monzarp.com/booking-success";
+        var baseURL = "https://monzars.com/booking-success";
         
         // Intentar obtener datos de la orden (si Tienda Nube los expone en LS.order)
         var orderId = (typeof LS !== 'undefined' && LS.order) ? LS.order.id : '';
@@ -82,7 +82,7 @@
 
         // --- PARTE 2: REDIRECCIÓN AUTOMÁTICA ---
         // Verificamos el 'referrer' para evitar bucles infinitos si el usuario vuelve atrás
-        if (document.referrer.indexOf('monzarp.com/booking-success') === -1) {
+        if (document.referrer.indexOf('monzars.com/booking-success') === -1) {
              
              // Crear mensaje de cuenta regresiva
              var timerMsg = document.createElement("div");

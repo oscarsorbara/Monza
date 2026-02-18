@@ -53,7 +53,7 @@ export function Footer() {
                             </li>
                             <li className="flex items-center gap-3 text-gray-400 text-sm">
                                 <Mail size={18} className="text-monza-red shrink-0" />
-                                <span>info@monzarp.com</span>
+                                <span>info@monzars.com</span>
                             </li>
                         </ul>
                     </div>

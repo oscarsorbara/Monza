@@ -21,7 +21,7 @@
     var customerEmail = "{{ checkout.email }}";
     
     // URL base de tu página de éxito en Vercel/Netlify
-    var baseURL = "https://monzarp.com/booking-success";
+    var baseURL = "https://monzars.com/booking-success";
     
     // Construir la URL con parámetros para que tu app reconozca el pedido
     var targetURL = baseURL + "?order=" + orderId + "&orderName=" + encodeURIComponent(orderName) + "&email=" + encodeURIComponent(customerEmail);
@@ -73,7 +73,7 @@
 
       // 3. MENSAJE DE REDIRECCIÓN Y TIMER
       // Verificamos si ya venimos de ahí para no loopear
-      if (document.referrer.indexOf('monzarp.com') === -1) {
+      if (document.referrer.indexOf('monzars.com') === -1) {
           var timerContainer = document.createElement("div");
           timerContainer.style.textAlign = "center";
           timerContainer.style.marginTop = "10px";

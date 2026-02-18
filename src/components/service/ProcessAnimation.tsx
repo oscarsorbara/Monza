@@ -46,7 +46,7 @@ export function ProcessAnimation() {
                 </div>
                 <div className="flex-1 bg-carbon-800 h-6 rounded px-3 flex items-center gap-2 text-[10px] text-gray-500 font-mono ml-4 max-w-[200px]">
                     <Lock size={8} />
-                    <span>monzarp.com/secure</span>
+                    <span>monzars.com/secure</span>
                 </div>
             </div>
 
