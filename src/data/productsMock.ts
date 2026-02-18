@@ -114,29 +114,4 @@ export const PRODUCTS: Product[] = [
         compatibility: [],
         specs: { 'Viscosidad': '5W-40', 'Volumen': '5 Litros' }
     },
-    {
-        id: 'p7',
-        name: 'Alerón Trasero de Fibra de Carbono Prepreg Estilo PSM para BMW Serie 3 F30 M3 F80 2012–2019',
-        handle: 'aleron-trasero-carbono-psm-bmw-f30',
-        sku: 'AERO-F30-PSM',
-        price: 1000.00,
-        category: 'Alerones',
-        image: '/products/spoiler-f30-main.jpg',
-        images: [
-            '/products/spoiler-f30-rear.jpg',
-            '/products/spoiler-f30-iso.png',
-            '/products/spoiler-f30-detail.jpg'
-        ],
-        description: 'Transforma la estética de tu BMW con este alerón trasero estilo PSM fabricado en fibra de carbono prepreg de alta calidad. Diseñado específicamente para los modelos Serie 3 F30 y M3 F80 (2012–2019), este componente no solo añade un toque agresivo y deportivo, sino que también optimiza la aerodinámica del vehículo. Su acabado brillante y construcción ligera garantizan una integración perfecta y duradera.',
-        stock: 5,
-        rating: 5.0,
-        reviewsCount: 3,
-        brand: 'BMW',
-        compatibility: [
-            { make: 'BMW', model: 'M3', yearStart: 2012, yearEnd: 2019, engines: 'All' },
-            { make: 'BMW', model: '3 Series', yearStart: 2012, yearEnd: 2019, engines: 'All' }
-        ],
-        specs: { 'Material': 'Fibra de Carbono Prepreg', 'Estilo': 'PSM', 'Instalación': 'Adhesivo 3M / Betalink' },
-        compareAtPrice: 1350.00 // Demo Discount
-    }
 ];

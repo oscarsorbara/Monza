@@ -3,7 +3,7 @@ import { shopifyFetch } from '@/lib/shopify';
 import { PRODUCTS_QUERY } from '@/queries/products';
 import { COLLECTIONS_QUERY } from '@/queries/collections';
 import type { Product, CompatibilityRule, Collection } from '@/types';
-import { PRODUCTS as initialProducts } from '@/data/productsMock';
+
 
 interface ProductContextType {
     products: Product[];
@@ -26,9 +26,8 @@ export function ProductProvider({ children }: { children: ReactNode }) {
         async function loadData() {
             setIsLoading(true);
             try {
-                // 1. Keep the requested Mock Alerón
-                const mockAleron = initialProducts.find(p => p.id === 'p7');
-                const mocks = mockAleron ? [mockAleron] : [];
+                // 1. Clear mocks to only use Shopify data
+                const mocks: Product[] = [];
 
                 // 2. Fetch from Shopify
                 let shopifyProducts: Product[] = [];
