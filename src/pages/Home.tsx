@@ -6,7 +6,6 @@ import { ArrowRight } from 'lucide-react';
 import { useProduct } from '@/context/ProductContext';
 import { ProductCard } from '@/components/product/ProductCard';
 import { VehicleSelector } from '@/components/vehicle/VehicleSelector';
-import { AppointmentSection } from '@/components/service/AppointmentSection';
 // import heroBg from '@/assets/hero-audi.jpg';
 // Using local high-res Hero image to ensure 100% reliability and fix 404 issues
 const heroBg = "/hero-audi.png";
@@ -256,8 +255,6 @@ export default function Home() {
                 {/* Content */}
                 <div className="relative z-10">
                     <CategoryReel />
-
-                    <AppointmentSection />
 
                     <section className="py-32 container mx-auto px-6">
                         <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-6">

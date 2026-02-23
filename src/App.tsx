@@ -18,12 +18,14 @@ import SmoothScroll from '@/components/layout/SmoothScroll';
 import PageTransition from '@/components/layout/PageTransition';
 
 import { CartNotification } from '@/components/cart/CartNotification';
+import { FloatingWhatsApp } from '@/components/layout/FloatingWhatsApp';
 
 function PublicLayout() {
   return (
     <>
       <Navbar />
       <CartNotification />
+      <FloatingWhatsApp />
       <div className="flex-grow">
         <Outlet />
       </div>

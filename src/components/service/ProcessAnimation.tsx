@@ -1,44 +1,49 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingCart, Check, Lock, CreditCard } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { Lock, Search, ShieldCheck, MessageCircle, ChevronDown, Check } from 'lucide-react';
+import { Button } from '@/components/ui/Button';
+
+// Definimos los pasos y duraciones
+const PROCESS_STEPS = [
+    {
+        title: "Paso 1: Selecciona tu auto",
+        subtitle: "Filtrá por modelo, año y marca",
+        duration: 4000
+    },
+    {
+        title: "Paso 2: Producto compatible",
+        subtitle: "Aseguramos que el producto encaje perfecto",
+        duration: 4000
+    },
+    {
+        title: "Paso 3: Comprá de forma segura",
+        subtitle: "Completá tus datos y pasarela de pago",
+        duration: 4000
+    },
+    {
+        title: "Paso 4: Escribinos por WhatsApp",
+        subtitle: "Para agendar tu turno y coordinar la entrega",
+        duration: 4000
+    }
+];
 
 export function ProcessAnimation() {
-    // 0: Catalog, 1: Checkout, 2: Booking
     const [step, setStep] = useState(0);
 
+    // Auto-rotación de los pasos
     useEffect(() => {
-        // Dynamic duration: Step 0 (Selection) is faster (3s), others are standard (5s)
-        const duration = step === 0 ? 3000 : 5000;
-
+        const currentDuration = PROCESS_STEPS[step].duration;
         const timer = setTimeout(() => {
-            setStep((prev) => (prev + 1) % 3);
-        }, duration);
+            setStep((prev) => (prev + 1) % PROCESS_STEPS.length);
+        }, currentDuration);
 
         return () => clearTimeout(timer);
     }, [step]);
 
-    // Cursor Animation Variants
-    // Adjusted co-ordinates to match CENTERED content (max-w-[280px])
-    // Assuming container is relative. 50% x is safe for centered buttons.
-    const cursorVariants = {
-        step0: {
-            x: "50%", y: "65%"
-        },
-        step1: {
-            x: "50%", y: "75%"
-        },
-        step2: {
-            x: "57%", y: "55%"
-        }
-    };
-
-
-
     return (
         <div className="w-full h-full bg-carbon-900 border border-white/10 rounded-3xl overflow-hidden relative flex flex-col shadow-2xl min-h-[500px]">
-            {/* Browser Header Simulation */}
-            <div className="h-10 bg-carbon-950 border-b border-white/5 flex items-center px-4 gap-2 shrink-0">
+            {/* Cabecera Tipo Navegador */}
+            <div className="h-10 bg-carbon-950 border-b border-white/5 flex items-center px-4 gap-2 shrink-0 z-20 relative">
                 <div className="flex gap-1.5">
                     <div className="w-2.5 h-2.5 rounded-full bg-red-500/50" />
                     <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/50" />
@@ -50,213 +55,328 @@ export function ProcessAnimation() {
                 </div>
             </div>
 
-            {/* Content Area */}
-            <div className="flex-1 relative overflow-hidden bg-black/40">
-                <AnimatePresence mode="wait">
-                    {step === 0 && <CatalogStep key="step0" />}
-                    {step === 1 && <CheckoutStep key="step1" />}
-                    {step === 2 && <BookingStep key="step2" />}
-                </AnimatePresence>
+            {/* Contenedor de la Animación Virtual (Video Fake) */}
+            <div className="flex-1 relative overflow-hidden bg-carbon-950 flex flex-col justify-end">
 
-                {/* Simulated Cursor - Always Visible */}
-                <motion.div
-                    className="absolute z-[100] pointer-events-none drop-shadow-xl"
-                    initial={{ x: "50%", y: "65%" }} // Start exactly where Step 0 is
-                    animate={
-                        step === 0 ? cursorVariants.step0 :
-                            step === 1 ? cursorVariants.step1 :
-                                cursorVariants.step2
-                    }
-                    transition={{
-                        duration: 1.0,
-                        ease: [0.22, 1, 0.36, 1] // Custom "Human" ease (swift start, slow precise stop)
-                    }}
-                >
-                    {/* Inner container for Scale/Click effect - Key forces re-render/animate */}
-                    <motion.div
-                        key={`cursor-scale-${step}`}
-                        animate={{ scale: [1, 0.9, 1] }}
-                        transition={{
-                            delay: 1.2, // Arrive (1.0s) -> Pause (0.2s) -> Click
-                            duration: 0.15,
-                            times: [0, 0.5, 1]
-                        }}
-                    >
-                        {/* High Contrast White Mouse for visibility on Dark BG */}
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="filter drop-shadow-lg">
-                            <path d="M5.65376 12.3673H5.46026L5.31717 12.4976L0.500002 16.8829L0.500002 1.19169L17.4741 12.3673H5.65376Z" fill="white" stroke="black" strokeWidth="1.5" />
-                        </svg>
-                    </motion.div>
+                {/* Capa de la Animación de la UI */}
+                <div className="absolute inset-0 z-0 flex items-center justify-center p-6 pb-32">
+                    <AnimatePresence mode="wait">
+                        {step === 0 && <Step1Animation key="step1" />}
+                        {step === 1 && <Step2Animation key="step2" />}
+                        {step === 2 && <Step3Animation key="step3" />}
+                        {step === 3 && <Step4Animation key="step4" />}
+                    </AnimatePresence>
+                </div>
 
-                    {/* Ripple Effect on Click */}
-                    <motion.div
-                        key={`cursor-ripple-${step}`}
-                        className="w-10 h-10 rounded-full bg-white/20 absolute -top-3 -left-3"
-                        initial={{ scale: 0, opacity: 0 }}
-                        animate={{ scale: 1.5, opacity: [0, 0.5, 0] }}
-                        transition={{
-                            delay: 1.2,
-                            duration: 0.4,
-                            repeat: 0
-                        }}
-                    />
-                </motion.div>
+                {/* Gradiente Inferior para Oscurecer y leer el texto */}
+                <div className="absolute inset-0 bg-gradient-to-t from-carbon-950 via-carbon-950/80 to-transparent pointer-events-none z-0" />
 
-                {/* Step Indicators */}
-                <div className="absolute bottom-4 left-0 w-full flex justify-center gap-2 z-40">
-                    {[0, 1, 2].map((i) => (
-                        <div
-                            key={i}
-                            className={cn(
-                                "w-1.5 h-1.5 rounded-full transition-all duration-300",
-                                step === i ? "bg-monza-red w-6" : "bg-white/20"
-                            )}
-                        />
-                    ))}
+                {/* Textos y Controles (Fijos sobre la animación) */}
+                <div className="relative z-10 p-6 md:p-8 flex flex-col justify-end">
+                    <AnimatePresence mode="wait">
+                        <motion.div
+                            key={step}
+                            initial={{ y: 15, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            exit={{ y: -15, opacity: 0 }}
+                            transition={{ duration: 0.3 }}
+                            className="mb-6 pointer-events-none"
+                        >
+                            <h3 className="text-2xl md:text-3xl font-black italic tracking-tighter text-white uppercase drop-shadow-md">
+                                {PROCESS_STEPS[step].title}
+                            </h3>
+                            <p className="text-gray-300 font-medium text-sm md:text-base mt-1 drop-shadow-md">
+                                {PROCESS_STEPS[step].subtitle}
+                            </p>
+                        </motion.div>
+                    </AnimatePresence>
+
+                    {/* Barra de Progreso Inferior */}
+                    <div className="flex gap-2 w-full z-20">
+                        {PROCESS_STEPS.map((_, idx) => (
+                            <div
+                                key={idx}
+                                className="h-1.5 flex-1 rounded-full bg-white/20 overflow-hidden cursor-pointer"
+                                onClick={() => setStep(idx)}
+                            >
+                                {step === idx && (
+                                    <motion.div
+                                        className="h-full bg-monza-red"
+                                        initial={{ width: "0%" }}
+                                        animate={{ width: "100%" }}
+                                        transition={{ duration: PROCESS_STEPS[idx].duration / 1000, ease: "linear" }}
+                                    />
+                                )}
+                                {step > idx && (
+                                    <div className="h-full w-full bg-monza-red" />
+                                )}
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </div>
         </div>
     );
 }
 
-// STEP 1: CATALOG
-function CatalogStep() {
-    return (
-        <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            transition={{ duration: 0.5 }}
-            className="w-full h-full p-6 flex flex-col items-center justify-center"
-        >
-            <div className="text-monza-red font-bold text-xs uppercase tracking-widest mb-4">Paso 1: Selección</div>
+// --- Animaciones Específicas Fakes ---
 
-            <div className="w-full max-w-[280px] bg-carbon-800 rounded-xl overflow-hidden border border-white/5 shadow-lg group">
-                <div className="h-32 bg-carbon-700 relative overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                    {/* Placeholder for Product Image */}
-                    <div className="absolute inset-0 flex items-center justify-center opacity-30">
-                        <ShoppingCart size={32} />
-                    </div>
-                </div>
-                <div className="p-4 space-y-3">
-                    <div className="h-4 w-3/4 bg-white/20 rounded animate-pulse" />
-                    <div className="h-3 w-1/2 bg-monza-red/40 rounded animate-pulse" />
-                    <div className="pt-2">
-                        <motion.div
-                            animate={{ scale: [1, 0.95, 1] }}
-                            transition={{ delay: 1.25, duration: 0.2 }}
-                            className="w-full h-8 bg-monza-red text-white text-[10px] font-bold uppercase tracking-widest rounded flex items-center justify-center"
-                        >
-                            Agregar al Carrito
-                        </motion.div>
-                    </div>
-                </div>
-            </div>
-        </motion.div>
-    );
-}
-
-// STEP 2: CHECKOUT
-function CheckoutStep() {
-    return (
-        <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            transition={{ duration: 0.5 }}
-            className="w-full h-full p-6 flex flex-col items-center justify-center bg-white text-black"
-        >
-            <div className="text-monza-red font-bold text-xs uppercase tracking-widest mb-4">Paso 2: Pago Seguro</div>
-
-            <div className="w-full max-w-[280px] space-y-4">
-                <div className="flex items-center justify-between border-b border-gray-100 pb-2">
-                    <h3 className="font-bold text-sm">Monza Checkout</h3>
-                    <div className="flex gap-2 text-gray-400">
-                        <CreditCard size={12} />
-                        <Lock size={12} />
-                    </div>
-                </div>
-
-                <div className="space-y-2 opacity-60">
-                    <div className="h-8 w-full bg-gray-100 rounded border border-gray-200 animate-pulse" />
-                    <div className="flex gap-2">
-                        <div className="h-8 w-1/2 bg-gray-100 rounded border border-gray-200 animate-pulse" />
-                        <div className="h-8 w-1/2 bg-gray-100 rounded border border-gray-200 animate-pulse" />
-                    </div>
-                </div>
-
-                <div className="pt-4 border-t border-gray-100">
-                    <div className="flex justify-between items-center mb-4">
-                        <span className="text-xs font-bold">Total</span>
-                        <span className="text-sm font-bold">$972.000</span>
-                    </div>
-                    <motion.div
-                        animate={{ scale: [1, 0.95, 1] }}
-                        transition={{ delay: 1.25, duration: 0.2 }}
-                        className="w-full h-10 bg-black text-white text-[10px] font-bold uppercase tracking-widest rounded flex items-center justify-center shadow-lg"
-                    >
-                        Pagar Ahora
-                    </motion.div>
-                </div>
-            </div>
-        </motion.div>
-    );
-}
-
-// STEP 3: BOOKING
-function BookingStep() {
+function Step1Animation() {
     return (
         <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
-            className="w-full h-full p-6 flex flex-col items-center justify-center text-center space-y-6"
+            exit={{ opacity: 0, scale: 0.9 }}
+            className="w-full max-w-sm bg-carbon-900 border border-white/10 rounded-2xl p-6 shadow-2xl relative"
         >
-            <div className="text-green-500 font-bold text-xs uppercase tracking-widest mb-2 flex items-center gap-2">
-                <Check size={14} /> Pago Confirmado
+            <div className="flex items-center gap-3 mb-6">
+                <Search className="text-monza-red" />
+                <h4 className="font-bold text-lg">Buscador de Vehículo</h4>
             </div>
 
-            <div className="w-full max-w-[260px] bg-carbon-800 rounded-xl p-4 border border-white/10 shadow-2xl relative overflow-hidden">
-                <div className="absolute top-0 inset-x-0 h-1 bg-monza-red" />
+            <div className="space-y-4">
+                <motion.div
+                    initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.2 }}
+                    className="h-12 w-full bg-carbon-950 border border-white/10 rounded-xl flex items-center px-4 justify-between"
+                >
+                    <span className="text-white font-bold">BMW</span>
+                    <ChevronDown size={16} className="text-gray-500" />
+                </motion.div>
 
-                <div className="flex justify-between items-center mb-4">
-                    <span className="text-white text-xs font-bold">Enero 2026</span>
-                    <div className="flex gap-1 text-gray-500">
-                        <div className="w-4 h-4 rounded bg-white/5" />
-                        <div className="w-4 h-4 rounded bg-white/5" />
-                    </div>
-                </div>
+                <motion.div
+                    initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.8 }}
+                    className="h-12 w-full bg-carbon-950 border border-white/10 rounded-xl flex items-center px-4 justify-between"
+                >
+                    <span className="text-white font-bold">Serie 3</span>
+                    <ChevronDown size={16} className="text-gray-500" />
+                </motion.div>
 
-                <div className="grid grid-cols-7 gap-1 mb-4">
-                    {[...Array(7)].map((_, i) => (
-                        <div key={i} className="text-[8px] text-gray-500 text-center">D</div>
-                    ))}
-                    {[...Array(28)].map((_, i) => (
-                        <motion.div
-                            key={i}
-                            className={cn(
-                                "aspect-square rounded flex items-center justify-center text-[8px]",
-                                i === 15 ? "bg-monza-red text-white font-bold" : "bg-white/5 text-gray-400"
-                            )}
-                            animate={i === 15 ? { scale: [1, 1.2, 1], backgroundColor: ["rgba(255,255,255,0.05)", "#D90429", "#D90429"] } : {}}
-                            transition={i === 15 ? { delay: 1.25, duration: 0.3 } : {}}
-                        >
-                            {i + 1}
-                        </motion.div>
-                    ))}
-                </div>
+                <motion.div
+                    initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 1.4 }}
+                    className="h-12 w-full bg-carbon-950 border border-white/10 rounded-xl flex items-center px-4 justify-between"
+                >
+                    <span className="text-white font-bold">2023</span>
+                    <ChevronDown size={16} className="text-gray-500" />
+                </motion.div>
+
+                <motion.div
+                    initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: 2.2 }}
+                    className="mt-6"
+                >
+                    <Button className="w-full bg-monza-red hover:bg-red-600 border-none font-bold uppercase py-6">
+                        Buscar Repuestos
+                    </Button>
+                </motion.div>
             </div>
 
+            {/* Cursor Falso Animado */}
             <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 2.2 }}
-                className="bg-green-500 text-white px-4 py-2 rounded-full text-[10px] font-bold flex items-center gap-2 shadow-lg hover:shadow-green-500/20"
+                className="absolute z-50 pointer-events-none"
+                initial={{ top: "80%", left: "80%" }}
+                animate={{ top: ["80%", "70%", "85%"], left: ["80%", "50%", "50%"] }}
+                transition={{ duration: 2.5, times: [0, 0.4, 1], ease: "easeInOut", delay: 1 }}
             >
-                <Check size={12} />
-                <span>Turno Agendado Exitosamente</span>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="white" stroke="black" strokeWidth="2"><path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z" /></svg>
+            </motion.div>
+        </motion.div>
+    );
+}
+
+function Step2Animation() {
+    return (
+        <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="w-full max-w-sm bg-carbon-900 border border-white/10 rounded-2xl overflow-hidden shadow-2xl relative"
+        >
+            <div className="h-32 bg-carbon-800 flex items-center justify-center border-b border-white/5 relative">
+                <motion.img
+                    src="/monza-logo.png"
+                    alt="Product"
+                    className="h-12 opacity-50"
+                    initial={{ scale: 0.8 }} animate={{ scale: 1 }} transition={{ duration: 1 }}
+                />
+
+                {/* Insignia de Compatibilidad Dinámica */}
+                <motion.div
+                    initial={{ scale: 0, opacity: 0, rotate: -15 }}
+                    animate={{ scale: 1, opacity: 1, rotate: 0 }}
+                    transition={{ type: "spring", delay: 0.5, bounce: 0.6 }}
+                    className="absolute -bottom-4 left-6 bg-green-500 text-white text-xs font-bold px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-xl border-2 border-carbon-900"
+                >
+                    <Check size={12} strokeWidth={4} />
+                    COMPATIBLE
+                </motion.div>
+            </div>
+
+            <div className="p-6 pt-8 space-y-4">
+                <div className="h-4 w-3/4 bg-white/10 rounded animate-pulse" />
+                <div className="h-8 w-1/2 bg-white/20 rounded font-bold text-2xl" />
+
+                <motion.div
+                    initial={{ scale: 0.95 }}
+                    animate={{ scale: 1, backgroundColor: ["#dc2626", "#b91c1c", "#dc2626"] }}
+                    transition={{ delay: 1.5, duration: 1, repeat: Infinity }}
+                    className="mt-6 w-full h-12 bg-monza-red rounded-xl flex items-center justify-center font-bold text-white uppercase tracking-wider relative overflow-hidden"
+                >
+                    <span className="relative z-10">Agregar al Carrito</span>
+                    <motion.div
+                        initial={{ x: "-100%" }} animate={{ x: "200%" }} transition={{ delay: 2, duration: 1 }}
+                        className="absolute inset-0 w-1/2 bg-white/20 skew-x-12 z-0"
+                    />
+                </motion.div>
+            </div>
+
+            {/* Cursor Falso Animado */}
+            <motion.div
+                className="absolute z-50 pointer-events-none"
+                initial={{ top: "100%", left: "50%" }}
+                animate={{ top: ["100%", "72%", "72%"], left: ["50%", "50%", "50%"], scale: [1, 1, 0.9, 1] }}
+                transition={{ duration: 2, times: [0, 0.4, 0.5, 0.6], ease: "easeInOut", delay: 1 }}
+            >
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="white" stroke="black" strokeWidth="2"><path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z" /></svg>
+            </motion.div>
+        </motion.div>
+    );
+}
+
+function Step3Animation() {
+    return (
+        <motion.div
+            initial={{ opacity: 0, rotateY: 90 }}
+            animate={{ opacity: 1, rotateY: 0 }}
+            exit={{ opacity: 0, rotateY: -90 }}
+            transition={{ type: "spring", damping: 20 }}
+            className="w-full max-w-sm"
+        >
+            <div className="bg-white rounded-xl overflow-hidden shadow-[0_0_40px_rgba(255,255,255,0.1)] p-6 relative">
+                <div className="flex justify-between items-center mb-6">
+                    <span className="font-bold text-gray-900 text-lg">Shopify Secure</span>
+                    <ShieldCheck className="text-green-500" />
+                </div>
+
+                <div className="space-y-4">
+                    <div className="space-y-2">
+                        <div className="h-3 w-20 bg-gray-200 rounded" />
+                        <motion.div
+                            initial={{ width: 0 }} animate={{ width: "100%" }} transition={{ delay: 0.5, duration: 0.5 }}
+                            className="h-10 w-full border border-gray-300 rounded flex items-center px-3"
+                        >
+                            <span className="text-gray-800 font-mono text-sm">•••• •••• •••• 4242</span>
+                        </motion.div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                            <div className="h-3 w-16 bg-gray-200 rounded" />
+                            <motion.div
+                                initial={{ width: 0 }} animate={{ width: "100%" }} transition={{ delay: 1, duration: 0.3 }}
+                                className="h-10 border border-gray-300 rounded flex items-center px-3"
+                            >
+                                <span className="text-gray-800 text-sm">12/26</span>
+                            </motion.div>
+                        </div>
+                        <div className="space-y-2">
+                            <div className="h-3 w-12 bg-gray-200 rounded" />
+                            <motion.div
+                                initial={{ width: 0 }} animate={{ width: "100%" }} transition={{ delay: 1.3, duration: 0.3 }}
+                                className="h-10 border border-gray-300 rounded flex items-center px-3"
+                            >
+                                <span className="text-gray-800 text-sm">•••</span>
+                            </motion.div>
+                        </div>
+                    </div>
+
+                    <motion.div
+                        initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 2 }}
+                        className="mt-6"
+                    >
+                        <div className="w-full bg-blue-600 rounded flex justify-center py-3 text-white font-bold items-center gap-2">
+                            Pagar <Lock size={16} />
+                        </div>
+                    </motion.div>
+
+                    {/* Fake Loading Overlay inside Checkout */}
+                    <AnimatePresence>
+                        <motion.div
+                            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2.5 }}
+                            className="absolute inset-0 bg-white/80 backdrop-blur-sm flex flex-col items-center justify-center z-10"
+                        >
+                            <motion.div
+                                animate={{ rotate: 360 }}
+                                transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+                                className="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full mb-4"
+                            />
+                            <span className="text-blue-600 font-bold uppercase tracking-widest text-xs">Procesando...</span>
+                        </motion.div>
+                    </AnimatePresence>
+
+                    {/* Success Overlay */}
+                    <AnimatePresence>
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 3.5, type: "spring" }}
+                            className="absolute inset-0 bg-green-500 flex flex-col items-center justify-center z-20 text-white"
+                        >
+                            <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 3.8, type: "spring", bounce: 0.7 }}>
+                                <Check size={64} strokeWidth={3} />
+                            </motion.div>
+                            <h2 className="text-2xl font-bold mt-2">¡Pago Exitoso!</h2>
+                        </motion.div>
+                    </AnimatePresence>
+                </div>
+            </div>
+        </motion.div>
+    );
+}
+
+function Step4Animation() {
+    return (
+        <motion.div
+            initial={{ opacity: 0, scale: 1.1 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            className="w-full max-w-sm relative"
+        >
+            <div className="flex justify-end p-4 drop-shadow-2xl">
+                {/* Botón Flotante Falso Animado */}
+                <motion.div
+                    initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", delay: 0.5 }}
+                    className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center relative overflow-visible cursor-pointer"
+                >
+                    <motion.div
+                        animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0, 0.5] }} transition={{ repeat: Infinity, duration: 1.5 }}
+                        className="absolute inset-0 bg-green-500 rounded-full -z-10"
+                    />
+                    <MessageCircle size={32} className="text-white fill-current" />
+                </motion.div>
+            </div>
+
+            {/* Globitos de Chat que emergen */}
+            <div className="absolute top-0 right-20 w-64 space-y-3">
+                <motion.div
+                    initial={{ opacity: 0, x: 20, scale: 0.8 }} animate={{ opacity: 1, x: 0, scale: 1 }} transition={{ delay: 1.5, type: "spring" }}
+                    className="bg-[#25D366] text-white p-3 rounded-2xl rounded-br-sm shadow-lg text-sm"
+                >
+                    ¡Hola Monza! Acabo de hacer la compra de un kit de admisión térmica.
+                </motion.div>
+
+                <motion.div
+                    initial={{ opacity: 0, x: -20, scale: 0.8 }} animate={{ opacity: 1, x: 0, scale: 1 }} transition={{ delay: 2.5, type: "spring" }}
+                    className="bg-white text-gray-800 p-3 rounded-2xl rounded-tl-sm shadow-lg text-sm self-start"
+                >
+                    ¡Hola! Excelente compra 🔥 ¿Para cuándo te gustaría agendar el turno de instalación?
+                </motion.div>
+            </div>
+
+            {/* Cursor Falso Animado */}
+            <motion.div
+                className="absolute z-50 pointer-events-none"
+                initial={{ top: "150%", left: "50%" }}
+                animate={{ top: ["150%", "25%", "25%"], left: ["50%", "85%", "85%"], scale: [1, 1, 0.9, 1] }}
+                transition={{ duration: 1.5, times: [0, 0.8, 0.9, 1], ease: "easeInOut", delay: 0.5 }}
+            >
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="white" stroke="black" strokeWidth="2"><path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z" /></svg>
             </motion.div>
         </motion.div>
     );

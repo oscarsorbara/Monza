@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useProduct } from '@/context/ProductContext';
 import { Button } from '@/components/ui/Button';
@@ -24,73 +24,36 @@ export default function ProductDetail() {
     const status = checkCompatibility(product, currentVehicle);
     const isCompatible = status === 'EXACT_MATCH' || status === 'UNIVERSAL';
 
-    const [includeInstallation, setIncludeInstallation] = useState(false);
-
     // Variant Selection Logic
     // Default to the variant with the lowest price (usually "Sin instalación")
-    const [selectedVariant, setSelectedVariant] = useState(() => {
-        if (product.variants && product.variants.length > 0) {
-            return product.variants.reduce((prev, curr) => prev.price < curr.price ? prev : curr);
+    const [selectedVariant] = useState(() => {
+        if (!product.variants || product.variants.length === 0) {
+            return {
+                id: product.id,
+                title: 'Default',
+                price: product.price,
+                compareAtPrice: product.compareAtPrice
+            };
         }
-        return {
-            id: product.variantId!,
-            title: 'Default',
-            price: product.price,
-            compareAtPrice: product.compareAtPrice,
-            availableForSale: true
-        };
+        return product.variants.reduce((prev, curr) => (prev.price < curr.price ? prev : curr));
     });
-
-    // Sync installation checkbox with selected variant
-    useEffect(() => {
-        if (!product || !product.variants || product.variants.length <= 1) return;
-
-        // baseVariant is defined in component scope now
-        const installVariant = product.variants.find(v => v.id !== baseVariant.id) || baseVariant;
-
-        if (includeInstallation) {
-            setSelectedVariant(installVariant);
-        } else {
-            setSelectedVariant(baseVariant);
-        }
-    }, [includeInstallation, product]);
-
-    const baseVariant = product.variants && product.variants.length > 0
-        ? product.variants.reduce((prev, curr) => prev.price < curr.price ? prev : curr)
-        : { id: product.variantId!, price: product.price } as any;
 
     const handleAddToCart = () => {
         if (!product) return;
 
-        // Detect if installation is selected (price higher than base)
-        const isInstallation = selectedVariant.price > baseVariant.price;
-
-        // Clean compareAtPrice logic:
-        // 1. Must exist on component
-        // 2. Must be strictly greater than current price to be a discount
-        // 3. Must not be inherited from the Product parent object if the variant doesn't have one
-        let variantCompareAtPrice = selectedVariant.compareAtPrice;
-
-        if (!variantCompareAtPrice || variantCompareAtPrice <= selectedVariant.price) {
-            variantCompareAtPrice = undefined;
-        }
-
-        // Create a product object for the cart using the selected variant's details
-        const cartItemProduct = {
-            ...product, // Base product details
-            id: selectedVariant.id, // Variant ID
-            price: selectedVariant.price, // Variant Price
-            compareAtPrice: variantCompareAtPrice, // Variant Compare At Price (Strict)
-            image: selectedVariant.image?.url || product.image // Variant Image if available
-        };
-
-        const attributes = isInstallation ? { "Instalación": "Incluida" } : undefined;
+        // Base variant only since installation option is removed
+        const variantToAdd = selectedVariant;
 
         addToCart(
-            cartItemProduct,
-            1,
-            currentVehicle ? `${currentVehicle.make} ${currentVehicle.model} ${currentVehicle.year}` : undefined,
-            attributes
+            {
+                ...product,
+                id: variantToAdd.id,
+                price: variantToAdd.price,
+                compareAtPrice: product.compareAtPrice,
+                image: product.image
+            },
+            1, // quantity
+            currentVehicle ? `${currentVehicle.make} ${currentVehicle.model} ${currentVehicle.year}` : undefined
         );
     };
 
@@ -165,37 +128,12 @@ export default function ProductDetail() {
                             </Button>
                         </div>
 
-                        {/* Installation Option (Checkbox Logic) */}
+                        {/* Installation Option temporarily removed for launch */}
+                        {/* 
                         {product.variants && product.variants.length > 1 && (
-                            <div className="mb-8 p-5 bg-carbon-800/50 rounded-xl border border-white/10 hover:border-white/20 transition-colors cursor-pointer" onClick={() => setIncludeInstallation(!includeInstallation)}>
-                                <div className="flex items-start gap-4">
-                                    <div className={`mt-1 w-6 h-6 rounded border-2 flex items-center justify-center transition-colors ${includeInstallation ? 'bg-monza-red border-monza-red' : 'border-gray-500 bg-transparent'}`}>
-                                        {includeInstallation && <Check className="w-4 h-4 text-white" />}
-                                    </div>
-                                    <div className="flex-1">
-                                        <div className="flex justify-between items-start">
-                                            <h3 className="font-bold text-white text-lg leading-none mb-2">
-                                                Incluir Instalación Expert en Taller
-                                            </h3>
-                                            {(() => {
-                                                // baseVariant defined in component scope
-                                                const installVariant = product.variants.find(v => v.id !== baseVariant.id) || baseVariant;
-                                                const priceDiff = installVariant.price - baseVariant.price;
-
-                                                return priceDiff > 0 && (
-                                                    <span className="font-mono text-monza-red font-bold">
-                                                        + ${formatPrice(priceDiff)}
-                                                    </span>
-                                                );
-                                            })()}
-                                        </div>
-                                        <p className="text-sm text-gray-400 leading-relaxed">
-                                            Agenda tu turno prioritario después de la compra. Garantía de instalación incluida.
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        )}
+                            ...
+                        )} 
+                        */}
 
                         {/* Inline Vehicle Selector */}
                         <div className="mb-8">
