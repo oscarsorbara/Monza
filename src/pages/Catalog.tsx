@@ -20,26 +20,15 @@ export default function Catalog() {
         return location.state?.filterByVehicle ?? false;
     });
 
-    const categoryFilter = searchParams.get('category');
     const makeFilter = searchParams.get('make');
     const collectionFilter = searchParams.get('collection');
 
     const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
 
     // --- Derived Data ---
-    const categories = useMemo(() => {
-        return Array.from(new Set(products.map(p => p.category))).sort();
-    }, [products]);
-
     const carMakes = useMemo(() => {
-        const makes = new Set<string>();
-        products.forEach(p => {
-            p.compatibility.forEach(rule => {
-                if (rule.make && rule.make !== 'All') makes.add(rule.make);
-            });
-        });
-        return Array.from(makes).sort();
-    }, [products]);
+        return ['BMW', 'Audi', 'Mini', 'Volkswagen', 'Mercedes-Benz'];
+    }, []);
 
     useEffect(() => {
         if (!currentVehicle) setIsVehicleFilterActive(false);
@@ -47,7 +36,7 @@ export default function Catalog() {
 
     // --- Filtering Logic ---
     const filteredProducts = useMemo(() => {
-        let result = products;
+        let result = [...products];
 
         if (currentVehicle && isVehicleFilterActive) {
             result = result.filter(p => {
@@ -57,25 +46,26 @@ export default function Catalog() {
         }
 
         if (makeFilter) {
-            result = result.filter(p => {
-                if (p.isUniversal) return true;
-                return p.compatibility.some(rule => rule.make === 'All' || rule.make === makeFilter);
-            });
-        }
-
-        if (categoryFilter) {
-            result = result.filter(p => p.category === categoryFilter);
+            result = result.filter(p => p.brand === makeFilter);
         }
 
         if (collectionFilter) {
             result = result.filter(p => p.collections?.includes(collectionFilter));
         }
 
+        // Sort by Collection (order of collections array from Shopify)
+        const collectionRank = Object.fromEntries(collections.map((c, i) => [c.handle, i]));
+        result.sort((a, b) => {
+            const rankA = a.collections && a.collections.length > 0 ? collectionRank[a.collections[0]] ?? 999 : 999;
+            const rankB = b.collections && b.collections.length > 0 ? collectionRank[b.collections[0]] ?? 999 : 999;
+            return rankA - rankB;
+        });
+
         return result;
-    }, [products, currentVehicle, isVehicleFilterActive, makeFilter, categoryFilter, collectionFilter]);
+    }, [products, collections, currentVehicle, isVehicleFilterActive, makeFilter, collectionFilter]);
 
     // --- Handlers ---
-    const updateFilter = (key: 'category' | 'make' | 'collection', value: string | null) => {
+    const updateFilter = (key: 'make' | 'collection', value: string | null) => {
         const newParams = new URLSearchParams(searchParams);
         if (value) {
             newParams.set(key, value);
@@ -90,7 +80,7 @@ export default function Catalog() {
         setIsVehicleFilterActive(false);
     };
 
-    const hasActiveFilters = categoryFilter || makeFilter || collectionFilter || isVehicleFilterActive;
+    const hasActiveFilters = makeFilter || collectionFilter || isVehicleFilterActive;
 
     return (
         <div className="min-h-screen pt-32 pb-20 px-4 md:px-8">
@@ -192,35 +182,7 @@ export default function Catalog() {
                             </div>
 
                             <div>
-                                <h3 className="text-sm font-bold text-white/50 uppercase tracking-widest mb-4">Categorías</h3>
-                                <div className="space-y-1">
-                                    <button
-                                        onClick={() => updateFilter('category', null)}
-                                        className={cn(
-                                            "w-full text-left py-2 px-3 rounded-lg text-sm transition-colors flex justify-between items-center group",
-                                            !categoryFilter ? "bg-white text-black font-bold" : "text-gray-400 hover:bg-white/5 hover:text-white"
-                                        )}
-                                    >
-                                        Todas
-                                    </button>
-                                    {categories.map(cat => (
-                                        <button
-                                            key={cat}
-                                            onClick={() => updateFilter('category', cat === categoryFilter ? null : cat)}
-                                            className={cn(
-                                                "w-full text-left py-2 px-3 rounded-lg text-sm transition-colors flex justify-between items-center group",
-                                                cat === categoryFilter ? "bg-white text-black font-bold" : "text-gray-400 hover:bg-white/5 hover:text-white"
-                                            )}
-                                        >
-                                            {cat}
-                                            {cat === categoryFilter && <Check size={14} />}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-
-                            <div>
-                                <h3 className="text-sm font-bold text-white/50 uppercase tracking-widest mb-4">Marca de Auto</h3>
+                                <h3 className="text-sm font-bold text-white/50 uppercase tracking-widest mb-4">Marca</h3>
                                 <div className="space-y-1">
                                     <button
                                         onClick={() => updateFilter('make', null)}
