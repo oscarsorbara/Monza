@@ -232,6 +232,26 @@ export function ProductProvider({ children }: { children: ReactNode }) {
                                 );
                             }
 
+                            // MANUAL OVERRIDE FOR REQUESTED PRODUCT 7: Alerón Estilo M4 BMW Serie 2 | Fibra de Carbono Real (Performance)
+                            if (node.id === 'gid://shopify/Product/8902523846884' || node.handle === 'aleron-estilo-m4-bmw-serie-2-f22-fibra-de-carbono-real-performance') {
+                                compatibility.push(
+                                    {
+                                        make: 'BMW',
+                                        model: 'Serie 2',
+                                        yearStart: 2014,
+                                        yearEnd: 2022,
+                                        engines: 'All'
+                                    },
+                                    {
+                                        make: 'BMW',
+                                        model: 'M2',
+                                        yearStart: 2014,
+                                        yearEnd: 2019,
+                                        engines: 'All'
+                                    }
+                                );
+                            }
+
                             const placeholderImage = 'https://placehold.co/600x400/1a1a1a/FFF?text=No+Image';
                             const mainImage = node.images.edges[0]?.node?.url || placeholderImage;
                             const galleryImages = node.images.edges.length > 0
