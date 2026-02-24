@@ -23,7 +23,7 @@ const PROCESS_STEPS = [
     {
         title: "Paso 4: Escribinos por WhatsApp",
         subtitle: "Para agendar tu turno y coordinar la entrega",
-        duration: 4000
+        duration: 5000
     }
 ];
 
@@ -270,41 +270,47 @@ function Step3Animation() {
             transition={{ type: "spring", damping: 20 }}
             className="w-full max-w-sm"
         >
-            <div className="bg-white rounded-xl overflow-hidden shadow-[0_0_40px_rgba(255,255,255,0.1)] p-6 relative">
+            <div className="bg-white rounded-xl overflow-hidden shadow-[0_0_40px_rgba(255,255,255,0.1)] p-6 relative h-[360px]">
                 <div className="flex justify-between items-center mb-6">
                     <span className="font-bold text-gray-900 text-lg">Shopify Secure</span>
-                    <ShieldCheck className="text-green-500" />
+                    <ShieldCheck className="text-green-600" />
                 </div>
 
                 <div className="space-y-4">
                     <div className="space-y-2">
                         <div className="h-3 w-20 bg-gray-200 rounded" />
-                        <motion.div
-                            initial={{ width: 0 }} animate={{ width: "100%" }} transition={{ delay: 0.5, duration: 0.5 }}
-                            className="h-10 w-full border border-gray-300 rounded flex items-center px-3"
-                        >
-                            <span className="text-gray-800 font-mono text-sm">•••• •••• •••• 4242</span>
-                        </motion.div>
+                        <div className="h-10 w-full border border-gray-300 rounded flex items-center px-3 overflow-hidden bg-gray-50">
+                            <motion.span
+                                initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5, duration: 0.5 }}
+                                className="text-gray-800 font-mono text-sm tracking-widest"
+                            >
+                                •••• •••• •••• 4242
+                            </motion.span>
+                        </div>
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
                             <div className="h-3 w-16 bg-gray-200 rounded" />
-                            <motion.div
-                                initial={{ width: 0 }} animate={{ width: "100%" }} transition={{ delay: 1, duration: 0.3 }}
-                                className="h-10 border border-gray-300 rounded flex items-center px-3"
-                            >
-                                <span className="text-gray-800 text-sm">12/26</span>
-                            </motion.div>
+                            <div className="h-10 w-full border border-gray-300 rounded flex items-center px-3 overflow-hidden bg-gray-50">
+                                <motion.span
+                                    initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1, duration: 0.3 }}
+                                    className="text-gray-800 text-sm tracking-widest"
+                                >
+                                    12/26
+                                </motion.span>
+                            </div>
                         </div>
                         <div className="space-y-2">
                             <div className="h-3 w-12 bg-gray-200 rounded" />
-                            <motion.div
-                                initial={{ width: 0 }} animate={{ width: "100%" }} transition={{ delay: 1.3, duration: 0.3 }}
-                                className="h-10 border border-gray-300 rounded flex items-center px-3"
-                            >
-                                <span className="text-gray-800 text-sm">•••</span>
-                            </motion.div>
+                            <div className="h-10 w-full border border-gray-300 rounded flex items-center px-3 overflow-hidden bg-gray-50">
+                                <motion.span
+                                    initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.3, duration: 0.3 }}
+                                    className="text-gray-800 text-sm tracking-widest"
+                                >
+                                    •••
+                                </motion.span>
+                            </div>
                         </div>
                     </div>
 
@@ -312,8 +318,8 @@ function Step3Animation() {
                         initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 2 }}
                         className="mt-6"
                     >
-                        <div className="w-full bg-blue-600 rounded flex justify-center py-3 text-white font-bold items-center gap-2">
-                            Pagar <Lock size={16} />
+                        <div className="w-full bg-blue-600 rounded-lg flex justify-center py-3 text-white font-bold items-center gap-2 shadow-sm">
+                            <Lock size={16} /> Pagar $2.817.726
                         </div>
                     </motion.div>
 
@@ -321,12 +327,12 @@ function Step3Animation() {
                     <AnimatePresence>
                         <motion.div
                             initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2.5 }}
-                            className="absolute inset-0 bg-white/80 backdrop-blur-sm flex flex-col items-center justify-center z-10"
+                            className="absolute inset-0 bg-white/90 backdrop-blur-sm flex flex-col items-center justify-center z-10"
                         >
                             <motion.div
                                 animate={{ rotate: 360 }}
                                 transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
-                                className="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full mb-4"
+                                className="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full mb-4 shadow"
                             />
                             <span className="text-blue-600 font-bold uppercase tracking-widest text-xs">Procesando...</span>
                         </motion.div>
@@ -341,7 +347,7 @@ function Step3Animation() {
                             <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 3.8, type: "spring", bounce: 0.7 }}>
                                 <Check size={64} strokeWidth={3} />
                             </motion.div>
-                            <h2 className="text-2xl font-bold mt-2">¡Pago Exitoso!</h2>
+                            <h2 className="text-2xl font-bold mt-3">¡Pago Exitoso!</h2>
                         </motion.div>
                     </AnimatePresence>
                 </div>
