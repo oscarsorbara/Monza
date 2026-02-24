@@ -104,6 +104,26 @@ export function ProductProvider({ children }: { children: ReactNode }) {
                                 );
                             }
 
+                            // MANUAL OVERRIDE FOR NUEVO PRODUCTO OLED
+                            if (node.title.includes('Ópticas OLED BMW Serie 2 F22') || node.title.includes('Estilo GTS')) {
+                                compatibility.push(
+                                    {
+                                        make: 'BMW',
+                                        model: 'Serie 2',
+                                        yearStart: 2014,
+                                        yearEnd: 2022,
+                                        engines: 'All'
+                                    },
+                                    {
+                                        make: 'BMW',
+                                        model: 'M2',
+                                        yearStart: 2014,
+                                        yearEnd: 2019,
+                                        engines: 'All'
+                                    }
+                                );
+                            }
+
                             const placeholderImage = 'https://placehold.co/600x400/1a1a1a/FFF?text=No+Image';
                             const mainImage = node.images.edges[0]?.node?.url || placeholderImage;
                             const galleryImages = node.images.edges.length > 0

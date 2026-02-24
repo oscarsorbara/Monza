@@ -110,36 +110,24 @@ export function VehicleSelector({ className }: VehicleSelectorProps) {
     const [model, setModel] = useState<string>('');
 
     // --- Logic ---
-    // 1. Get List of Years (Unique from all cars)
-    const years = useMemo(() => {
-        const yearSet = new Set<string>();
-        Object.values(VEHICLE_DATABASE).forEach(models => {
-            Object.values(models).forEach(yearsObj => {
-                Object.keys(yearsObj).forEach(y => yearSet.add(y));
-            });
-        });
-        return Array.from(yearSet).sort((a, b) => Number(b) - Number(a));
+    // 1. Get List of Makes (All)
+    const makes = useMemo(() => {
+        return Object.keys(VEHICLE_DATABASE).sort();
     }, []);
 
-    // 2. Get Makes available for selected Year
-    const makes = useMemo(() => {
-        if (!year) return [];
-        return Object.keys(VEHICLE_DATABASE).filter(brand => {
-            // Check if brand has any model with this year
-            return Object.values(VEHICLE_DATABASE[brand]).some(modelObj =>
-                Object.keys(modelObj).includes(year)
-            );
-        }).sort();
-    }, [year]);
-
-    // 3. Get Models available for selected Year + Make
+    // 2. Get Models available for selected Make
     const models = useMemo(() => {
-        if (!year || !make) return [];
-        const modelsObj = VEHICLE_DATABASE[make];
-        return Object.keys(modelsObj).filter(m =>
-            Object.keys(modelsObj[m]).includes(year)
-        ).sort();
-    }, [year, make]);
+        if (!make) return [];
+        return Object.keys(VEHICLE_DATABASE[make]).sort();
+    }, [make]);
+
+    // 3. Get Years available for selected Make + Model
+    const years = useMemo(() => {
+        if (!make || !model) return [];
+        const modelData = VEHICLE_DATABASE[make][model];
+        if (!modelData) return [];
+        return Object.keys(modelData).sort((a, b) => Number(b) - Number(a));
+    }, [make, model]);
 
 
     const handleSelect = () => {
@@ -200,38 +188,38 @@ export function VehicleSelector({ className }: VehicleSelectorProps) {
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                                {/* Year */}
-                                <div className="space-y-2 relative z-30">
-                                    <label className="text-xs text-gray-400 uppercase font-bold tracking-wider ml-1">Año</label>
-                                    <CustomSelect
-                                        value={year}
-                                        onChange={(val) => { setYear(val); setMake(''); setModel(''); }}
-                                        options={years}
-                                        placeholder="Seleccionar Año"
-                                    />
-                                </div>
-
                                 {/* Make */}
-                                <div className="space-y-2 relative z-20">
+                                <div className="space-y-2 relative z-30">
                                     <label className="text-xs text-gray-400 uppercase font-bold tracking-wider ml-1">Marca</label>
                                     <CustomSelect
                                         value={make}
-                                        onChange={(val) => { setMake(val); setModel(''); }}
+                                        onChange={(val) => { setMake(val); setModel(''); setYear(''); }}
                                         options={makes}
                                         placeholder="Seleccionar Marca"
-                                        disabled={!year}
                                     />
                                 </div>
 
                                 {/* Model */}
-                                <div className="space-y-2 relative z-10">
+                                <div className="space-y-2 relative z-20">
                                     <label className="text-xs text-gray-400 uppercase font-bold tracking-wider ml-1">Modelo</label>
                                     <CustomSelect
                                         value={model}
-                                        onChange={(val) => setModel(val)}
+                                        onChange={(val) => { setModel(val); setYear(''); }}
                                         options={models}
                                         placeholder="Seleccionar Modelo"
                                         disabled={!make}
+                                    />
+                                </div>
+
+                                {/* Year */}
+                                <div className="space-y-2 relative z-10">
+                                    <label className="text-xs text-gray-400 uppercase font-bold tracking-wider ml-1">Año</label>
+                                    <CustomSelect
+                                        value={year}
+                                        onChange={(val) => setYear(val)}
+                                        options={years}
+                                        placeholder="Seleccionar Año"
+                                        disabled={!model}
                                     />
                                 </div>
 

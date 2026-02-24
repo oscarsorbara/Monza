@@ -12,35 +12,23 @@ export function InlineVehicleSelector() {
     const [year, setYear] = useState<string>('');
     const [make, setMake] = useState<string>('');
     const [model, setModel] = useState<string>('');
-    const [submodel, setSubmodel] = useState<string>('');
 
-    // --- Logic Reuse (Ideal to extract hook, but duplicated for safety/speed now) ---
-    const years = useMemo(() => {
-        const yearSet = new Set<string>();
-        Object.values(VEHICLE_DATABASE).forEach(models => {
-            Object.values(models).forEach(yearsObj => {
-                Object.keys(yearsObj).forEach(y => yearSet.add(y));
-            });
-        });
-        return Array.from(yearSet).sort((a, b) => Number(b) - Number(a));
+    // --- Logic Reuse ---
+    const makes = useMemo(() => {
+        return Object.keys(VEHICLE_DATABASE).sort();
     }, []);
 
-    const makes = useMemo(() => {
-        if (!year) return [];
-        return Object.keys(VEHICLE_DATABASE).filter(brand => {
-            return Object.values(VEHICLE_DATABASE[brand]).some(modelObj =>
-                Object.keys(modelObj).includes(year)
-            );
-        }).sort();
-    }, [year]);
-
     const models = useMemo(() => {
-        if (!year || !make) return [];
-        const modelsObj = VEHICLE_DATABASE[make];
-        return Object.keys(modelsObj).filter(m =>
-            Object.keys(modelsObj[m]).includes(year)
-        ).sort();
-    }, [year, make]);
+        if (!make) return [];
+        return Object.keys(VEHICLE_DATABASE[make]).sort();
+    }, [make]);
+
+    const years = useMemo(() => {
+        if (!make || !model) return [];
+        const modelData = VEHICLE_DATABASE[make][model];
+        if (!modelData) return [];
+        return Object.keys(modelData).sort((a, b) => Number(b) - Number(a));
+    }, [make, model]);
 
     const handleSelect = () => {
         if (!make || !model || !year) return;
@@ -49,7 +37,8 @@ export function InlineVehicleSelector() {
             make,
             model,
             year: parseInt(year),
-            engine: submodel || 'Base'
+            engine: 'Base',
+            variant: 'Base'
         });
         setIsAddingNew(false);
     };
@@ -82,22 +71,11 @@ export function InlineVehicleSelector() {
                         className="space-y-4"
                     >
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            {/* Year */}
-                            <select
-                                value={year}
-                                onChange={(e) => { setYear(e.target.value); setMake(''); setModel(''); }}
-                                className="h-12 bg-carbon-800 border border-white/10 rounded-xl px-4 text-white hover:border-white/20 focus:border-monza-red outline-none"
-                            >
-                                <option value="">Año</option>
-                                {years.map(y => <option key={y} value={y}>{y}</option>)}
-                            </select>
-
                             {/* Make */}
                             <select
                                 value={make}
-                                onChange={(e) => { setMake(e.target.value); setModel(''); }}
-                                disabled={!year}
-                                className="h-12 bg-carbon-800 border border-white/10 rounded-xl px-4 text-white hover:border-white/20 focus:border-monza-red outline-none disabled:opacity-30"
+                                onChange={(e) => { setMake(e.target.value); setModel(''); setYear(''); }}
+                                className="h-12 bg-carbon-800 border border-white/10 rounded-xl px-4 text-white hover:border-white/20 focus:border-monza-red outline-none"
                             >
                                 <option value="">Marca</option>
                                 {makes.map(m => <option key={m} value={m}>{m}</option>)}
@@ -106,12 +84,23 @@ export function InlineVehicleSelector() {
                             {/* Model */}
                             <select
                                 value={model}
-                                onChange={(e) => { setModel(e.target.value); setSubmodel(''); }}
+                                onChange={(e) => { setModel(e.target.value); setYear(''); }}
                                 disabled={!make}
                                 className="h-12 bg-carbon-800 border border-white/10 rounded-xl px-4 text-white hover:border-white/20 focus:border-monza-red outline-none disabled:opacity-30"
                             >
                                 <option value="">Modelo</option>
                                 {models.map(m => <option key={m} value={m}>{m}</option>)}
+                            </select>
+
+                            {/* Year */}
+                            <select
+                                value={year}
+                                onChange={(e) => setYear(e.target.value)}
+                                disabled={!model}
+                                className="h-12 bg-carbon-800 border border-white/10 rounded-xl px-4 text-white hover:border-white/20 focus:border-monza-red outline-none disabled:opacity-30"
+                            >
+                                <option value="">Año</option>
+                                {years.map(y => <option key={y} value={y}>{y}</option>)}
                             </select>
                         </div>
 
