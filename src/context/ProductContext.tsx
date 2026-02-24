@@ -144,6 +144,47 @@ export function ProductProvider({ children }: { children: ReactNode }) {
                                 );
                             }
 
+                            // MANUAL OVERRIDE FOR REQUESTED PRODUCT 4: Tablero Digital BMW | Upgrade Cluster sin CarPlay
+                            if (node.id === 'gid://shopify/Product/8903910686948' || node.handle === 'tablero-digital-bmw-serie-3-4-upgrade-cluster') {
+                                compatibility.push(
+                                    {
+                                        make: 'BMW',
+                                        model: 'Serie 1',
+                                        yearStart: 2013,
+                                        yearEnd: 2024,
+                                        engines: 'All'
+                                    },
+                                    {
+                                        make: 'BMW',
+                                        model: 'Serie 2',
+                                        yearStart: 2013,
+                                        yearEnd: 2022,
+                                        engines: 'All'
+                                    },
+                                    {
+                                        make: 'BMW',
+                                        model: 'M2',
+                                        yearStart: 2013,
+                                        yearEnd: 2022,
+                                        engines: 'All'
+                                    },
+                                    {
+                                        make: 'BMW',
+                                        model: 'Serie 3',
+                                        yearStart: 2013,
+                                        yearEnd: 2020,
+                                        engines: 'All'
+                                    },
+                                    {
+                                        make: 'BMW',
+                                        model: 'Serie 4',
+                                        yearStart: 2013,
+                                        yearEnd: 2020,
+                                        engines: 'All'
+                                    }
+                                );
+                            }
+
                             const placeholderImage = 'https://placehold.co/600x400/1a1a1a/FFF?text=No+Image';
                             const mainImage = node.images.edges[0]?.node?.url || placeholderImage;
                             const galleryImages = node.images.edges.length > 0
