@@ -92,21 +92,14 @@ export function ProductProvider({ children }: { children: ReactNode }) {
                                         model: 'Serie 2',
                                         yearStart: 2014,
                                         yearEnd: 2022,
-                                        engines: ['F22', 'Base'] // Include Base to catch default selections
+                                        engines: 'All'
                                     },
                                     {
                                         make: 'BMW',
-                                        model: 'Serie 2',
+                                        model: 'M2',
                                         yearStart: 2014,
-                                        yearEnd: 2022,
-                                        engines: ['F23', 'Base']
-                                    },
-                                    {
-                                        make: 'BMW',
-                                        model: 'M2C',
-                                        yearStart: 2014,
-                                        yearEnd: 2019,
-                                        engines: ['F87'] // Or 'All' if M2C F87 is implied
+                                        yearEnd: 2026,
+                                        engines: 'All'
                                     }
                                 );
                             }
