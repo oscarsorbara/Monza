@@ -387,21 +387,14 @@ export function ProductProvider({ children }: { children: ReactNode }) {
                                 );
                             }
 
-                            // MANUAL OVERRIDE FOR REQUESTED PRODUCT 13: Ópticas Traseras LED Union Jack MINI Cooper R56
-                            if (node.id === 'gid://shopify/Product/8912640540900' || node.handle === 'opticas-traseras-led-union-jack-mini-cooper-r56-f57-f58-59-look-jcw-premium') {
+                            // MANUAL OVERRIDE FOR REQUESTED PRODUCT: Tablero Digital VW AMAROK | Upgrade Cluster con CarPlay Integrado
+                            if (node.id === 'gid://shopify/Product/8909216055524' || node.handle === 'tablero-digital-vw-amarok-upgrade-cluster-con-carplay-integrado') {
                                 compatibility.push(
                                     {
-                                        make: 'MINI',
-                                        model: 'Cooper',
-                                        yearStart: 2007,
-                                        yearEnd: 2013,
-                                        engines: 'All'
-                                    },
-                                    {
-                                        make: 'MINI',
-                                        model: 'Cooper S',
-                                        yearStart: 2007,
-                                        yearEnd: 2013,
+                                        make: 'Volkswagen',
+                                        model: 'Amarok',
+                                        yearStart: 2017,
+                                        yearEnd: 2025,
                                         engines: 'All'
                                     }
                                 );
