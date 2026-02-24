@@ -161,7 +161,8 @@ const DATA: Record<string, Array<{ name: string, start: number, end?: number, va
     ],
     "BMW": [
         { name: "Serie 1", start: 2004, end: 2026, variants: ["118i", "120i", "M135i", "140i"] },
-        { name: "Serie 2", start: 2014, end: 2026, variants: ["218i", "220i", "M235i", "M240i", "M2"] },
+        { name: "Serie 2", start: 2014, end: 2026, variants: ["F22", "F23", "218i", "220i", "M235i", "M240i", "M2"] },
+        { name: "M2C", start: 2014, end: 2019, variants: ["F87"] },
         { name: "Serie 3", start: 1999, end: 2026, variants: ["320i", "323i", "325i", "328i", "330i", "340i", "M3"] },
         { name: "Serie 4", start: 2013, end: 2026, variants: ["430i", "440i", "M4"] },
         { name: "Serie 5", start: 1999, end: 2026, variants: ["530i", "540i", "M5"] },

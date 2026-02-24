@@ -44,7 +44,27 @@ export function ProductProvider({ children }: { children: ReactNode }) {
                                     const cleanTag = tag.trim();
                                     if (cleanTag.toLowerCase() === 'universal') isUniversal = true;
 
-                                    if (cleanTag.includes(':')) {
+                                    // Parse compat tag format: compat:Make:Model:YearStart:YearEnd:Engine
+                                    // Example: compat:BMW:Serie 2:2014:2022:F22
+                                    if (cleanTag.toLowerCase().startsWith('compat:')) {
+                                        const parts = cleanTag.split(':');
+                                        if (parts.length >= 3) {
+                                            const make = parts[1].trim();
+                                            const model = parts[2].trim();
+                                            const yearStart = parts[3] ? parseInt(parts[3]) || null : null;
+                                            const yearEnd = parts[4] ? parseInt(parts[4]) || null : null;
+                                            const engine = parts[5] ? [parts[5].trim()] : 'All';
+
+                                            compatibility.push({
+                                                make,
+                                                model,
+                                                yearStart,
+                                                yearEnd,
+                                                engines: engine
+                                            });
+                                        }
+                                    } else if (cleanTag.includes(':')) {
+                                        // Legacy make:BMW format for simple make-only compatibility
                                         const parts = cleanTag.split(':');
                                         if (parts.length >= 2) {
                                             const key = parts[0].trim().toLowerCase();
@@ -62,6 +82,33 @@ export function ProductProvider({ children }: { children: ReactNode }) {
                                         }
                                     }
                                 });
+                            }
+
+                            // MANUAL OVERRIDE FOR REQUESTED PRODUCT: Ópticas BMW Serie 2 F22
+                            if (node.title.includes('Ópticas BMW Serie 2 F22') || node.title.includes('Conversión Estilo G')) {
+                                compatibility.push(
+                                    {
+                                        make: 'BMW',
+                                        model: 'Serie 2',
+                                        yearStart: 2014,
+                                        yearEnd: 2022,
+                                        engines: ['F22'] // Using engine field to store chassis for now based on UI logic
+                                    },
+                                    {
+                                        make: 'BMW',
+                                        model: 'Serie 2',
+                                        yearStart: 2014,
+                                        yearEnd: 2022,
+                                        engines: ['F23']
+                                    },
+                                    {
+                                        make: 'BMW',
+                                        model: 'M2C',
+                                        yearStart: 2014,
+                                        yearEnd: 2019,
+                                        engines: ['F87'] // Or 'All' if M2C F87 is implied
+                                    }
+                                );
                             }
 
                             const placeholderImage = 'https://placehold.co/600x400/1a1a1a/FFF?text=No+Image';

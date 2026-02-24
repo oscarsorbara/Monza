@@ -160,10 +160,10 @@ export default function ProductDetail() {
                                     )}
                                     <div>
                                         <h4 className={`font-black text-lg uppercase tracking-wide ${isCompatible ? 'text-green-500' : 'text-red-500'}`}>
-                                            {isCompatible ? 'Compatible' : 'No Compatible'}
+                                            {isCompatible ? 'Compatible con tu vehículo' : 'No compatible con tu vehículo'}
                                         </h4>
                                         <p className="text-sm text-gray-300 mt-1">
-                                            Este producto {isCompatible ? 'se ajusta perfectamente a tu' : 'no es adecuado para tu'} <span className="font-bold text-white">{currentVehicle.year} {currentVehicle.make} {currentVehicle.model}</span>.
+                                            {isCompatible ? 'Este producto se ajusta perfectamente a tu' : 'Este producto no es adecuado para tu'} <span className="font-bold text-white">{currentVehicle.year} {currentVehicle.make} {currentVehicle.model} {currentVehicle.variant !== 'Base' ? currentVehicle.variant : ''}</span>.
                                         </p>
                                     </div>
                                 </motion.div>
