@@ -252,6 +252,26 @@ export function ProductProvider({ children }: { children: ReactNode }) {
                                 );
                             }
 
+                            // MANUAL OVERRIDE FOR REQUESTED PRODUCT 9: Alerón Cola de Pato BMW Serie 2 | Fibra de Carbono Real (Ducktail)
+                            if (node.id === 'gid://shopify/Product/8902507200740' || node.handle === 'aleron-cola-de-pato-bmw-serie-2-f22-fibra-de-carbono-real-ducktail') {
+                                compatibility.push(
+                                    {
+                                        make: 'BMW',
+                                        model: 'Serie 2',
+                                        yearStart: 2014,
+                                        yearEnd: 2022,
+                                        engines: 'All'
+                                    },
+                                    {
+                                        make: 'BMW',
+                                        model: 'M2',
+                                        yearStart: 2014,
+                                        yearEnd: 2019,
+                                        engines: 'All'
+                                    }
+                                );
+                            }
+
                             const placeholderImage = 'https://placehold.co/600x400/1a1a1a/FFF?text=No+Image';
                             const mainImage = node.images.edges[0]?.node?.url || placeholderImage;
                             const galleryImages = node.images.edges.length > 0
