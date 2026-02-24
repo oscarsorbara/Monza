@@ -272,6 +272,26 @@ export function ProductProvider({ children }: { children: ReactNode }) {
                                 );
                             }
 
+                            // MANUAL OVERRIDE FOR REQUESTED PRODUCT 10: Alerón Cola de Pato BMW Serie 3 | Fibra de Carbono Real (Ducktail)
+                            if (node.id === 'gid://shopify/Product/8920818417892' || node.handle === 'aleron-cola-de-pato-bmw-serie-3-fibra-de-carbono-real-ducktail') {
+                                compatibility.push(
+                                    {
+                                        make: 'BMW',
+                                        model: 'Serie 3',
+                                        yearStart: 2013,
+                                        yearEnd: 2018,
+                                        engines: 'All'
+                                    },
+                                    {
+                                        make: 'BMW',
+                                        model: 'M3',
+                                        yearStart: 2014,
+                                        yearEnd: 2019,
+                                        engines: 'All'
+                                    }
+                                );
+                            }
+
                             const placeholderImage = 'https://placehold.co/600x400/1a1a1a/FFF?text=No+Image';
                             const mainImage = node.images.edges[0]?.node?.url || placeholderImage;
                             const galleryImages = node.images.edges.length > 0
