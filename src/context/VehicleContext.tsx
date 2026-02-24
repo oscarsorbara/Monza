@@ -63,8 +63,8 @@ export function VehicleProvider({ children }: { children: React.ReactNode }) {
                     year: v.year,
                     // Map DB 'variant' to Frontend 'engine' (and keep 'variant')
                     engine: v.variant || 'Base',
-                    variant: v.variant,
-                    trim: v.variant // Map to trim as well just in case
+                    variant: v.variant || 'Base',
+                    trim: v.variant || 'Base' // Map to trim as well just in case
                 }));
                 setGarage(mappedGarage as Vehicle[]);
             }

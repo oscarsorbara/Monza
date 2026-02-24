@@ -17,8 +17,10 @@ export function checkCompatibility(product: Product, vehicle: Vehicle | null): C
             (!rule.yearEnd || vehicle.year <= rule.yearEnd)
         );
 
-        // Engine check
-        const isEngineMatch = rule.engines === 'All' || rule.engines.includes(vehicle.engine);
+        // Engine/Variant check
+        const isEngineMatch = rule.engines === 'All' ||
+            rule.engines.includes(vehicle.engine) ||
+            (vehicle.variant && rule.engines.includes(vehicle.variant));
 
         if (isMakeMatch && isModelMatch && isYearMatch && isEngineMatch) {
             return 'EXACT_MATCH';

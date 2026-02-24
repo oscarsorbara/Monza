@@ -92,14 +92,14 @@ export function ProductProvider({ children }: { children: ReactNode }) {
                                         model: 'Serie 2',
                                         yearStart: 2014,
                                         yearEnd: 2022,
-                                        engines: ['F22'] // Using engine field to store chassis for now based on UI logic
+                                        engines: ['F22', 'Base'] // Include Base to catch default selections
                                     },
                                     {
                                         make: 'BMW',
                                         model: 'Serie 2',
                                         yearStart: 2014,
                                         yearEnd: 2022,
-                                        engines: ['F23']
+                                        engines: ['F23', 'Base']
                                     },
                                     {
                                         make: 'BMW',

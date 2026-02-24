@@ -143,14 +143,22 @@ export function VehicleSelector({ className }: VehicleSelectorProps) {
     }, [year, make]);
 
 
+    const variants = useMemo(() => {
+        if (!make || !model || !year) return [];
+        const modelsObj = VEHICLE_DATABASE[make];
+        if (!modelsObj || !modelsObj[model] || !modelsObj[model][year]) return [];
+        return modelsObj[model][year] || [];
+    }, [make, model, year]);
+
     const handleSelect = () => {
         if (!make || !model || !year) return;
         selectVehicle({
-            id: `${make}-${model}-${year}`,
+            id: `${make}-${model}-${year}-${submodel || 'Base'}`,
             make,
             model,
             year: parseInt(year),
-            engine: submodel || 'Base'
+            engine: submodel || 'Base',
+            variant: submodel || 'Base' // ensure variant matches for compatibility engine check
         });
         setIsOpen(false);
         navigate('/catalog', { state: { filterByVehicle: true } });
@@ -165,7 +173,7 @@ export function VehicleSelector({ className }: VehicleSelectorProps) {
         setSubmodel('');
     };
 
-    const isComplete = Boolean(year && make && model);
+    const isComplete = Boolean(year && make && model && (!variants.length || submodel));
 
     // --- UI: Sticky Bar / Expandable ---
     return (
@@ -200,7 +208,7 @@ export function VehicleSelector({ className }: VehicleSelectorProps) {
                                 )}
                             </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                            <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
                                 {/* Year */}
                                 <div className="space-y-2 relative z-30">
                                     <label className="text-xs text-gray-400 uppercase font-bold tracking-wider ml-1">Año</label>
@@ -233,6 +241,18 @@ export function VehicleSelector({ className }: VehicleSelectorProps) {
                                         options={models}
                                         placeholder="Seleccionar Modelo"
                                         disabled={!make}
+                                    />
+                                </div>
+
+                                {/* Variant/Submodel */}
+                                <div className="space-y-2 relative z-0">
+                                    <label className="text-xs text-gray-400 uppercase font-bold tracking-wider ml-1">Variante / Chasis</label>
+                                    <CustomSelect
+                                        value={submodel}
+                                        onChange={(val) => setSubmodel(val)}
+                                        options={variants}
+                                        placeholder="Seleccionar Variante"
+                                        disabled={!model || variants.length === 0}
                                     />
                                 </div>
 
