@@ -164,7 +164,7 @@ function Step1Animation() {
                     className="mt-6"
                 >
                     <Button className="w-full bg-monza-red hover:bg-red-600 border-none font-bold uppercase py-6">
-                        Buscar Repuestos
+                        Buscar Productos
                     </Button>
                 </motion.div>
             </div>
