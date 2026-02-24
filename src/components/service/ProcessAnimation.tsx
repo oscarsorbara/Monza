@@ -68,8 +68,8 @@ export function ProcessAnimation() {
                     </AnimatePresence>
                 </div>
 
-                {/* Gradiente Inferior para Oscurecer y leer el texto */}
-                <div className="absolute inset-0 bg-gradient-to-t from-carbon-950 via-carbon-950/80 to-transparent pointer-events-none z-0" />
+                {/* Gradiente Inferior para Oscurecer y leer el texto - ACHICADO PARA MAS BRILLO */}
+                <div className="absolute inset-0 bg-gradient-to-t from-carbon-950/90 via-carbon-950/40 to-transparent pointer-events-none z-0" />
 
                 {/* Textos y Controles (Fijos sobre la animación) */}
                 <div className="relative z-10 p-6 md:p-8 flex flex-col justify-end">
@@ -185,55 +185,75 @@ function Step1Animation() {
 function Step2Animation() {
     return (
         <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="w-full max-w-sm bg-carbon-900 border border-white/10 rounded-2xl overflow-hidden shadow-2xl relative"
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -50 }}
+            className="w-full max-w-sm bg-[#0a0a0a] border border-white/10 rounded-xl overflow-hidden shadow-2xl relative"
         >
-            <div className="h-32 bg-carbon-800 flex items-center justify-center border-b border-white/5 relative">
-                <motion.img
-                    src="/monza-logo.png"
-                    alt="Product"
-                    className="h-12 opacity-50"
-                    initial={{ scale: 0.8 }} animate={{ scale: 1 }} transition={{ duration: 1 }}
-                />
-
-                {/* Insignia de Compatibilidad Dinámica */}
-                <motion.div
-                    initial={{ scale: 0, opacity: 0, rotate: -15 }}
-                    animate={{ scale: 1, opacity: 1, rotate: 0 }}
-                    transition={{ type: "spring", delay: 0.5, bounce: 0.6 }}
-                    className="absolute -bottom-4 left-6 bg-green-500 text-white text-xs font-bold px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-xl border-2 border-carbon-900"
-                >
-                    <Check size={12} strokeWidth={4} />
-                    COMPATIBLE
-                </motion.div>
+            {/* Header: Agregado al carrito */}
+            <div className="bg-[#E50000] text-white px-4 py-3 flex items-center justify-between">
+                <div className="flex items-center gap-2 font-bold text-sm">
+                    <Check size={16} strokeWidth={3} />
+                    <span>AGREGADO AL CARRITO</span>
+                </div>
+                <div className="opacity-70 text-lg">&times;</div>
             </div>
 
-            <div className="p-6 pt-8 space-y-4">
-                <div className="h-4 w-3/4 bg-white/10 rounded animate-pulse" />
-                <div className="h-8 w-1/2 bg-white/20 rounded font-bold text-2xl" />
+            {/* Product Details */}
+            <div className="p-5">
+                <div className="flex gap-4 mb-6">
+                    {/* Fake Product Image */}
+                    <div className="w-20 h-20 bg-carbon-900 rounded-md border border-white/5 flex-shrink-0 flex items-center justify-center overflow-hidden">
+                        <img
+                            src="https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?auto=format&fit=crop&q=80&w=200"
+                            alt="Tail lights"
+                            className="w-full h-full object-cover opacity-80"
+                        />
+                    </div>
 
+                    <div className="flex-1 flex flex-col justify-start">
+                        <h4 className="text-white text-sm font-bold leading-tight line-clamp-2">
+                            Ópticas BMW Serie 2 F22 | Conversión Estilo G...
+                        </h4>
+                        <span className="text-gray-500 text-xs mt-1">BMW</span>
+                        <div className="text-[#E50000] font-bold text-sm mt-auto pt-1">
+                            $1.286.048
+                        </div>
+                    </div>
+                </div>
+
+                <div className="h-px w-full bg-white/10 mb-4" />
+
+                {/* Subtotal */}
+                <div className="flex justify-between items-center mb-4">
+                    <span className="text-gray-400 text-sm">Total (2 productos):</span>
+                    <span className="text-white font-bold text-sm">$2.817.726</span>
+                </div>
+
+                {/* Butons */}
                 <motion.div
                     initial={{ scale: 0.95 }}
-                    animate={{ scale: 1, backgroundColor: ["#dc2626", "#b91c1c", "#dc2626"] }}
-                    transition={{ delay: 1.5, duration: 1, repeat: Infinity }}
-                    className="mt-6 w-full h-12 bg-monza-red rounded-xl flex items-center justify-center font-bold text-white uppercase tracking-wider relative overflow-hidden"
+                    animate={{ scale: 1 }}
+                    transition={{ delay: 0.5, type: "spring", stiffness: 400, damping: 10 }}
+                    className="w-full bg-white text-black rounded-lg py-3 flex items-center justify-center gap-2 font-bold text-sm cursor-pointer hover:bg-gray-200 transition-colors"
                 >
-                    <span className="relative z-10">Agregar al Carrito</span>
-                    <motion.div
-                        initial={{ x: "-100%" }} animate={{ x: "200%" }} transition={{ delay: 2, duration: 1 }}
-                        className="absolute inset-0 w-1/2 bg-white/20 skew-x-12 z-0"
-                    />
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                    VER CARRITO
                 </motion.div>
+
+                <div className="text-center mt-3">
+                    <span className="text-gray-400 text-xs font-bold uppercase tracking-widest cursor-pointer hover:text-white transition-colors">
+                        SEGUR COMPRANDO
+                    </span>
+                </div>
             </div>
 
             {/* Cursor Falso Animado */}
             <motion.div
                 className="absolute z-50 pointer-events-none"
-                initial={{ top: "100%", left: "50%" }}
-                animate={{ top: ["100%", "72%", "72%"], left: ["50%", "50%", "50%"], scale: [1, 1, 0.9, 1] }}
-                transition={{ duration: 2, times: [0, 0.4, 0.5, 0.6], ease: "easeInOut", delay: 1 }}
+                initial={{ top: "120%", left: "50%" }}
+                animate={{ top: ["120%", "72%", "72%"], left: ["50%", "50%", "50%"], scale: [1, 1, 0.9, 1] }}
+                transition={{ duration: 1.5, times: [0, 0.4, 0.5, 0.6], ease: "easeInOut", delay: 1 }}
             >
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="white" stroke="black" strokeWidth="2"><path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z" /></svg>
             </motion.div>
