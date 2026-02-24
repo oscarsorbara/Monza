@@ -84,8 +84,8 @@ export function ProductProvider({ children }: { children: ReactNode }) {
                                 });
                             }
 
-                            // MANUAL OVERRIDE FOR REQUESTED PRODUCT: Ópticas BMW Serie 2 F22
-                            if (node.title.includes('Ópticas BMW Serie 2 F22') || node.title.includes('Conversión Estilo G')) {
+                            // MANUAL OVERRIDE FOR REQUESTED PRODUCT 1: Ópticas BMW Serie 2 F22 (Look G)
+                            if (node.id === 'gid://shopify/Product/8902433407204' || node.handle === 'opticas-bmw-f22-g-look-nuevo-serie-2') {
                                 compatibility.push(
                                     {
                                         make: 'BMW',
@@ -104,8 +104,8 @@ export function ProductProvider({ children }: { children: ReactNode }) {
                                 );
                             }
 
-                            // MANUAL OVERRIDE FOR NUEVO PRODUCTO OLED
-                            if (node.title.includes('Ópticas OLED BMW Serie 2 F22') || node.title.includes('Estilo GTS')) {
+                            // MANUAL OVERRIDE FOR REQUESTED PRODUCT 2: Ópticas OLED BMW Serie 2 F22 (Estilo GTS)
+                            if (node.id === 'gid://shopify/Product/8902437535972' || node.handle === 'opticas-bmw-serie-2-f22-estilo-gts') {
                                 compatibility.push(
                                     {
                                         make: 'BMW',
