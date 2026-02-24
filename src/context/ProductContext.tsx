@@ -400,6 +400,33 @@ export function ProductProvider({ children }: { children: ReactNode }) {
                                 );
                             }
 
+                            // MANUAL OVERRIDE FOR REQUESTED PRODUCT 17: Tablero Digital AUDI | Upgrade Cluster con CarPlay Integrado
+                            if (node.id === 'gid://shopify/Product/8909032816868' || node.handle === 'tablero-digital-audi-upgrade-cluster-con-carplay-integrado-copia') {
+                                compatibility.push(
+                                    {
+                                        make: 'Audi',
+                                        model: 'A3',
+                                        yearStart: 2013,
+                                        yearEnd: 2020,
+                                        engines: 'All'
+                                    },
+                                    {
+                                        make: 'Audi',
+                                        model: 'A4',
+                                        yearStart: 2009,
+                                        yearEnd: 2012,
+                                        engines: 'All'
+                                    },
+                                    {
+                                        make: 'Audi',
+                                        model: 'A4',
+                                        yearStart: 2013,
+                                        yearEnd: 2016,
+                                        engines: 'All'
+                                    }
+                                );
+                            }
+
                             const placeholderImage = 'https://placehold.co/600x400/1a1a1a/FFF?text=No+Image';
                             const mainImage = node.images.edges[0]?.node?.url || placeholderImage;
                             const galleryImages = node.images.edges.length > 0
