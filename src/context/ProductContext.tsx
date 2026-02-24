@@ -124,6 +124,26 @@ export function ProductProvider({ children }: { children: ReactNode }) {
                                 );
                             }
 
+                            // MANUAL OVERRIDE FOR REQUESTED PRODUCT 3: Parrilla Fibra de Carbono Real Doble Rejilla BMW Serie 2
+                            if (node.id === 'gid://shopify/Product/8920752816356' || node.handle === 'parrilla-fibra-de-carbono-real-doble-rejilla-bmw-serie-2-f22-look-sport-oem') {
+                                compatibility.push(
+                                    {
+                                        make: 'BMW',
+                                        model: 'Serie 2',
+                                        yearStart: 2014,
+                                        yearEnd: 2022,
+                                        engines: 'All'
+                                    },
+                                    {
+                                        make: 'BMW',
+                                        model: 'M2',
+                                        yearStart: 2014,
+                                        yearEnd: 2019,
+                                        engines: 'All'
+                                    }
+                                );
+                            }
+
                             const placeholderImage = 'https://placehold.co/600x400/1a1a1a/FFF?text=No+Image';
                             const mainImage = node.images.edges[0]?.node?.url || placeholderImage;
                             const galleryImages = node.images.edges.length > 0
