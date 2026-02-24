@@ -163,13 +163,6 @@ export function ProductProvider({ children }: { children: ReactNode }) {
                                     },
                                     {
                                         make: 'BMW',
-                                        model: 'M2',
-                                        yearStart: 2013,
-                                        yearEnd: 2022,
-                                        engines: 'All'
-                                    },
-                                    {
-                                        make: 'BMW',
                                         model: 'Serie 3',
                                         yearStart: 2013,
                                         yearEnd: 2020,
