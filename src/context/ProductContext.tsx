@@ -387,6 +387,26 @@ export function ProductProvider({ children }: { children: ReactNode }) {
                                 );
                             }
 
+                            // MANUAL OVERRIDE FOR REQUESTED PRODUCT 13: Ópticas Traseras LED Union Jack MINI Cooper R56
+                            if (node.id === 'gid://shopify/Product/8912640540900' || node.handle === 'opticas-traseras-led-union-jack-mini-cooper-r56-f57-f58-59-look-jcw-premium') {
+                                compatibility.push(
+                                    {
+                                        make: 'MINI',
+                                        model: 'Cooper',
+                                        yearStart: 2007,
+                                        yearEnd: 2013,
+                                        engines: 'All'
+                                    },
+                                    {
+                                        make: 'MINI',
+                                        model: 'Cooper S',
+                                        yearStart: 2007,
+                                        yearEnd: 2013,
+                                        engines: 'All'
+                                    }
+                                );
+                            }
+
                             const placeholderImage = 'https://placehold.co/600x400/1a1a1a/FFF?text=No+Image';
                             const mainImage = node.images.edges[0]?.node?.url || placeholderImage;
                             const galleryImages = node.images.edges.length > 0
