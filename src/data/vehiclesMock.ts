@@ -42,7 +42,9 @@ const DATA: Record<string, Array<{ name: string, start: number, end?: number, va
         { name: "Taos", start: 2021, end: 2026, variants: ["Comfortline", "Highline", "Hero"] },
         { name: "Tiguan", start: 2008, end: 2026, variants: ["Trend & Fun", "Sport & Style", "Allspace", "Life"] },
         { name: "Saveiro", start: 1999, end: 2026, variants: ["Cabina Simple", "Cabina Extendida", "Cabina Doble", "Cross"] },
-        { name: "Voyage", start: 2008, end: 2023, variants: VARIANTS.VW }
+        { name: "Voyage", start: 2008, end: 2023, variants: VARIANTS.VW },
+        { name: "Golf 7 / 7.5", start: 2013, end: 2020, variants: ["Trendline", "Comfortline", "Highline", "GTS"] },
+        { name: "Golf GTI 7 / 7.5", start: 2013, end: 2020, variants: ["GTI"] }
     ],
     "Toyota": [
         { name: "Hilux", start: 1999, end: 2026, variants: ["DX", "SR", "SRV", "SRX", "GR-Sport", "Conquest"] },
