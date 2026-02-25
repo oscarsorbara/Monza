@@ -72,16 +72,21 @@ function HeroSection() {
                     </motion.div>
                 </div>
 
-                {/* Center Focal Point - Logo */}
-                <div className="relative py-12">
-                    <motion.img
+                {/* Center Focal Point - Logo Recreated in Text */}
+                <div className="relative py-12 flex flex-col items-center justify-center pointer-events-none">
+                    <motion.div
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-                        src="/monza-logo.png"
-                        alt="MONZA Racing Parts"
-                        className="w-full max-w-lg mx-auto object-contain"
-                    />
+                        className="flex flex-col items-center tracking-widest z-10"
+                    >
+                        <h1 className="text-5xl sm:text-7xl md:text-8xl font-black text-white italic drop-shadow-2xl">
+                            MONZA
+                        </h1>
+                        <p className="text-lg sm:text-2xl md:text-3xl font-bold tracking-[0.5em] text-white mt-1 uppercase">
+                            Racing Store
+                        </p>
+                    </motion.div>
                 </div>
 
                 {/* Lower Balance - Button */}

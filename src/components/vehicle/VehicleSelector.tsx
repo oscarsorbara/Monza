@@ -258,7 +258,7 @@ export function VehicleSelector({ className }: VehicleSelectorProps) {
                                 <div className="flex items-center gap-3 text-white font-bold bg-white/5 py-3 px-6 rounded-2xl border border-white/10 group hover:border-monza-red transition-colors cursor-default whitespace-nowrap shadow-xl">
                                     <span className="text-monza-red text-2xl font-black italic">{currentVehicle.year}</span>
                                     <span className="text-2xl uppercase tracking-tight truncate">{currentVehicle.make} {currentVehicle.model}</span>
-                                    {currentVehicle.engine && <span className="text-white/40 text-sm font-medium ml-2 hidden lg:inline">[{currentVehicle.engine}]</span>}
+                                    {currentVehicle.engine && currentVehicle.engine !== 'Base' && <span className="text-white/40 text-sm font-medium ml-2 hidden lg:inline">[{currentVehicle.engine}]</span>}
                                     <button
                                         onClick={handleClear}
                                         className="ml-4 bg-white/10 hover:bg-monza-red rounded-full p-1.5 transition-colors"
