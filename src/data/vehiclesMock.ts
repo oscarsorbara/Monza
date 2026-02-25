@@ -195,6 +195,7 @@ const DATA: Record<string, Array<{ name: string, start: number, end?: number, va
     ],
     "MINI": [
         { name: "Cooper", start: 2001, end: 2026, variants: ["Salt", "Pepper", "Chili", "S", "JCW"] },
+        { name: "Cooper S", start: 2001, end: 2026, variants: ["Chili", "Pepper", "JCW", "John Cooper Works"] },
         { name: "Countryman", start: 2010, end: 2026, variants: ["Salt", "Pepper", "Chili", "S", "JCW"] },
         { name: "Clubman", start: 2007, end: 2026, variants: ["S", "JCW"] }
     ],
