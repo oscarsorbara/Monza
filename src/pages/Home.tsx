@@ -30,7 +30,7 @@ function HeroSection() {
     return (
         <section
             ref={ref}
-            className="relative w-full h-screen min-h-[600px] flex flex-col items-center justify-center overflow-hidden bg-black"
+            className="relative w-full h-[100dvh] md:h-screen min-h-[600px] flex flex-col items-center justify-center overflow-hidden bg-black"
         >
             {/* 1. Underlying Base Background (Layer 0) */}
             <div className="absolute inset-0 z-0 bg-black" />
@@ -43,7 +43,7 @@ function HeroSection() {
                     loading="eager"
                     // @ts-ignore
                     fetchpriority="high"
-                    className="w-full h-full object-cover opacity-80"
+                    className="w-full h-full object-cover object-[65%_center] md:object-center opacity-80"
                 />
             </div>
 
@@ -56,16 +56,16 @@ function HeroSection() {
                 animate={{ opacity: 1 }}
                 transition={{ duration: 1 }}
                 style={{ y: yText }}
-                className="relative z-30 text-center max-w-5xl px-4 flex flex-col items-center"
+                className="relative z-30 text-center w-full max-w-5xl px-4 md:px-4 flex flex-col items-center"
             >
                 {/* Upper Balance - Span */}
-                <div className="mb-6">
+                <div className="mb-4 md:mb-6 mt-8 md:mt-0">
                     <motion.div className="overflow-hidden">
                         <motion.span
                             initial={{ y: "100%" }}
                             animate={{ y: 0 }}
                             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                            className="inline-block text-sm md:text-base font-bold tracking-[0.2em] uppercase text-monza-red"
+                            className="inline-block text-xs sm:text-sm md:text-base font-bold tracking-[0.2em] uppercase text-monza-red"
                         >
                             Est. 2026 — Performance Parts
                         </motion.span>
@@ -73,14 +73,14 @@ function HeroSection() {
                 </div>
 
                 {/* Center Focal Point - Logo */}
-                <div className="relative py-12">
+                <div className="relative py-8 md:py-12 w-full px-4 md:px-0">
                     <motion.img
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
                         src="/monza-logo.png"
                         alt="MONZA Racing Parts"
-                        className="w-full max-w-lg mx-auto object-contain"
+                        className="w-full max-w-[280px] sm:max-w-sm md:max-w-lg mx-auto object-contain"
                     />
                 </div>
 
@@ -89,10 +89,10 @@ function HeroSection() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, delay: 0.4 }}
-                    className="mt-4"
+                    className="mt-6 md:mt-4 w-full px-4 sm:px-12 md:px-0 md:w-auto"
                 >
-                    <Link to="/catalog">
-                        <Button size="lg" className="bg-white text-black hover:bg-gray-200">
+                    <Link to="/catalog" className="w-full md:w-auto block md:inline-block">
+                        <Button size="lg" className="w-full md:w-auto min-h-[56px] md:min-h-0 text-base md:text-sm bg-white text-black hover:bg-gray-200 uppercase tracking-widest font-black md:normal-case md:tracking-normal md:font-medium">
                             Ver Catálogo
                         </Button>
                     </Link>

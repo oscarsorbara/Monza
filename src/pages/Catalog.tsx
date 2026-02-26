@@ -3,11 +3,12 @@ import { useState, useMemo, useEffect } from 'react';
 import { useProduct } from '@/context/ProductContext';
 import { ProductCard } from '@/components/product/ProductCard';
 import { Button } from '@/components/ui/Button';
-import { Filter, X, Car, ChevronDown, Check } from 'lucide-react';
+import { X, Car, Check, SlidersHorizontal } from 'lucide-react';
 import { useSearchParams, useLocation } from 'react-router-dom';
 import { useVehicle } from '@/context/VehicleContext';
 import { checkCompatibility } from '@/lib/compatibility';
 import { cn } from '@/lib/utils';
+import { AnimatePresence, motion } from 'framer-motion';
 
 export default function Catalog() {
     const { products, collections } = useProduct();
@@ -82,6 +83,78 @@ export default function Catalog() {
 
     const hasActiveFilters = makeFilter || collectionFilter || isVehicleFilterActive;
 
+    const renderFilters = () => (
+        <div className="space-y-8">
+            {hasActiveFilters && (
+                <div className="pb-6 border-b border-white/10">
+                    <Button
+                        onClick={clearAllFilters}
+                        variant="ghost"
+                        className="w-full justify-start text-gray-400 hover:text-monza-red px-0 h-auto"
+                    >
+                        <X size={16} className="mr-2" /> Limpiar Filtros
+                    </Button>
+                </div>
+            )}
+
+            <div>
+                <h3 className="text-sm font-bold text-white/50 uppercase tracking-widest mb-4">Colecciones</h3>
+                <div className="space-y-1">
+                    <button
+                        onClick={() => updateFilter('collection', null)}
+                        className={cn(
+                            "w-full text-left py-3 md:py-2 px-3 rounded-lg text-sm transition-colors flex justify-between items-center group",
+                            !collectionFilter ? "bg-white text-black font-bold" : "text-gray-400 hover:bg-white/5 hover:text-white"
+                        )}
+                    >
+                        Todas
+                    </button>
+                    {collections.map(coll => (
+                        <button
+                            key={coll.id}
+                            onClick={() => updateFilter('collection', coll.handle === collectionFilter ? null : coll.handle)}
+                            className={cn(
+                                "w-full text-left py-3 md:py-2 px-3 rounded-lg text-sm transition-colors flex justify-between items-center group",
+                                coll.handle === collectionFilter ? "bg-white text-black font-bold" : "text-gray-400 hover:bg-white/5 hover:text-white"
+                            )}
+                        >
+                            {coll.name}
+                            {coll.handle === collectionFilter && <Check size={14} />}
+                        </button>
+                    ))}
+                </div>
+            </div>
+
+            <div>
+                <h3 className="text-sm font-bold text-white/50 uppercase tracking-widest mb-4">Marca</h3>
+                <div className="space-y-1">
+                    <button
+                        onClick={() => updateFilter('make', null)}
+                        className={cn(
+                            "w-full text-left py-3 md:py-2 px-3 rounded-lg text-sm transition-colors flex justify-between items-center",
+                            !makeFilter ? "bg-white text-black font-bold" : "text-gray-400 hover:bg-white/5 hover:text-white"
+                        )}
+                    >
+                        Todas
+                    </button>
+                    {carMakes.map(make => (
+                        <button
+                            key={make}
+                            onClick={() => updateFilter('make', make === makeFilter ? null : make)}
+                            className={cn(
+                                "w-full text-left py-3 md:py-2 px-3 rounded-lg text-sm transition-colors flex justify-between items-center",
+                                make === makeFilter ? "bg-white text-black font-bold" : "text-gray-400 hover:bg-white/5 hover:text-white"
+                            )}
+                        >
+                            {make}
+                            {make === makeFilter && <Check size={14} />}
+                        </button>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
+
     return (
         <div className="min-h-screen pt-32 pb-20 px-4 md:px-8">
             <div className="container mx-auto">
@@ -127,87 +200,61 @@ export default function Catalog() {
                     )}
                 </div>
 
-                <div className="flex flex-col lg:flex-row gap-12">
-                    <div className="w-full lg:w-64 flex-shrink-0 space-y-8">
-                        <div className="lg:hidden mb-6">
+                <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
+                    <div className="w-full lg:w-64 flex-shrink-0">
+                        {/* Mobile Filter Toggle Button */}
+                        <div className="lg:hidden mb-2">
                             <Button
-                                onClick={() => setIsMobileFiltersOpen(!isMobileFiltersOpen)}
+                                onClick={() => setIsMobileFiltersOpen(true)}
                                 variant="outline"
-                                className="w-full justify-between"
+                                className="w-full justify-center h-14 bg-white/5 border-white/10 hover:bg-white/10 text-sm font-bold uppercase tracking-widest"
                             >
-                                <span className="flex items-center gap-2"><Filter size={16} /> Filtros</span>
-                                <ChevronDown size={16} className={cn("transition-transform", isMobileFiltersOpen && "rotate-180")} />
+                                <SlidersHorizontal size={18} className="mr-3" /> Filtrar Catálogo
                             </Button>
                         </div>
 
-                        <div className={cn("lg:block space-y-8", isMobileFiltersOpen ? "block" : "hidden")}>
-                            {hasActiveFilters && (
-                                <div className="pb-6 border-b border-white/10">
-                                    <Button
-                                        onClick={clearAllFilters}
-                                        variant="ghost"
-                                        className="w-full justify-start text-gray-400 hover:text-monza-red px-0"
+                        {/* Mobile Drawer */}
+                        <AnimatePresence>
+                            {isMobileFiltersOpen && (
+                                <>
+                                    <motion.div
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        exit={{ opacity: 0 }}
+                                        onClick={() => setIsMobileFiltersOpen(false)}
+                                        className="lg:hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[100]"
+                                    />
+                                    <motion.div
+                                        initial={{ y: "100%" }}
+                                        animate={{ y: 0 }}
+                                        exit={{ y: "100%" }}
+                                        transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                                        className="lg:hidden fixed inset-x-0 bottom-0 max-h-[85vh] flex flex-col bg-carbon-950 rounded-t-3xl z-[110] border-t border-white/10 shadow-[0_-10px_40px_rgba(0,0,0,0.5)]"
                                     >
-                                        <X size={16} className="mr-2" /> Limpiar Filtros
-                                    </Button>
-                                </div>
+                                        <div className="flex justify-between items-center p-6 border-b border-white/5 shrink-0">
+                                            <h2 className="text-xl font-black italic uppercase tracking-tighter text-white">Filtros</h2>
+                                            <button onClick={() => setIsMobileFiltersOpen(false)} className="p-2 bg-white/5 hover:bg-monza-red rounded-full transition-colors text-white">
+                                                <X size={20} />
+                                            </button>
+                                        </div>
+
+                                        <div className="overflow-y-auto p-6 pb-24">
+                                            {renderFilters()}
+                                        </div>
+
+                                        <div className="fixed bottom-0 left-0 w-full p-4 bg-carbon-950/95 backdrop-blur-md border-t border-white/10 shrink-0">
+                                            <Button onClick={() => setIsMobileFiltersOpen(false)} className="w-full h-14 bg-monza-red text-white hover:bg-white hover:text-black text-lg font-bold uppercase tracking-wider">
+                                                Ver {filteredProducts.length} Resultados
+                                            </Button>
+                                        </div>
+                                    </motion.div>
+                                </>
                             )}
+                        </AnimatePresence>
 
-                            <div>
-                                <h3 className="text-sm font-bold text-white/50 uppercase tracking-widest mb-4">Colecciones</h3>
-                                <div className="space-y-1">
-                                    <button
-                                        onClick={() => updateFilter('collection', null)}
-                                        className={cn(
-                                            "w-full text-left py-2 px-3 rounded-lg text-sm transition-colors flex justify-between items-center group",
-                                            !collectionFilter ? "bg-white text-black font-bold" : "text-gray-400 hover:bg-white/5 hover:text-white"
-                                        )}
-                                    >
-                                        Todas
-                                    </button>
-                                    {collections.map(coll => (
-                                        <button
-                                            key={coll.id}
-                                            onClick={() => updateFilter('collection', coll.handle === collectionFilter ? null : coll.handle)}
-                                            className={cn(
-                                                "w-full text-left py-2 px-3 rounded-lg text-sm transition-colors flex justify-between items-center group",
-                                                coll.handle === collectionFilter ? "bg-white text-black font-bold" : "text-gray-400 hover:bg-white/5 hover:text-white"
-                                            )}
-                                        >
-                                            {coll.name}
-                                            {coll.handle === collectionFilter && <Check size={14} />}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-
-                            <div>
-                                <h3 className="text-sm font-bold text-white/50 uppercase tracking-widest mb-4">Marca</h3>
-                                <div className="space-y-1">
-                                    <button
-                                        onClick={() => updateFilter('make', null)}
-                                        className={cn(
-                                            "w-full text-left py-2 px-3 rounded-lg text-sm transition-colors flex justify-between items-center",
-                                            !makeFilter ? "bg-white text-black font-bold" : "text-gray-400 hover:bg-white/5 hover:text-white"
-                                        )}
-                                    >
-                                        Todas
-                                    </button>
-                                    {carMakes.map(make => (
-                                        <button
-                                            key={make}
-                                            onClick={() => updateFilter('make', make === makeFilter ? null : make)}
-                                            className={cn(
-                                                "w-full text-left py-2 px-3 rounded-lg text-sm transition-colors flex justify-between items-center",
-                                                make === makeFilter ? "bg-white text-black font-bold" : "text-gray-400 hover:bg-white/5 hover:text-white"
-                                            )}
-                                        >
-                                            {make}
-                                            {make === makeFilter && <Check size={14} />}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
+                        {/* Desktop Sidebar */}
+                        <div className="hidden lg:block">
+                            {renderFilters()}
                         </div>
                     </div>
 
