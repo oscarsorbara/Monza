@@ -43,7 +43,7 @@ function HeroSection() {
                     loading="eager"
                     // @ts-ignore
                     fetchpriority="high"
-                    className="w-full h-full object-cover object-[80%_center] md:object-center opacity-80"
+                    className="w-full h-full object-cover object-center opacity-80"
                 />
             </div>
 
