@@ -255,10 +255,10 @@ export function VehicleSelector({ className }: VehicleSelectorProps) {
                                     <span className="text-monza-red text-xs font-bold animate-pulse">Listo para buscar</span>
                                 </div>
 
-                                <div className="flex items-center gap-3 text-white font-bold bg-white/5 py-3 px-6 rounded-2xl border border-white/10 group hover:border-monza-red transition-colors cursor-default whitespace-nowrap shadow-xl">
-                                    <span className="text-monza-red text-2xl font-black italic">{currentVehicle.year}</span>
-                                    <span className="text-2xl uppercase tracking-tight truncate">{currentVehicle.make} {currentVehicle.model}</span>
-                                    {currentVehicle.engine && currentVehicle.engine !== 'Base' && <span className="text-white/40 text-sm font-medium ml-2 hidden lg:inline">[{currentVehicle.engine}]</span>}
+                                <div className="flex items-center gap-2 md:gap-3 text-white font-bold bg-white/5 py-3 px-4 md:px-6 rounded-2xl border border-white/10 group hover:border-monza-red transition-colors cursor-default whitespace-nowrap shadow-xl min-w-0 flex-1">
+                                    <span className="text-monza-red text-2xl font-black italic hidden md:inline">{currentVehicle.year}</span>
+                                    <span className="text-lg md:text-2xl uppercase tracking-tight truncate flex-1 min-w-0">{currentVehicle.make} {currentVehicle.model}</span>
+                                    {currentVehicle.engine && currentVehicle.engine !== 'Base' && <span className="text-white/40 text-sm font-medium hidden lg:inline">[{currentVehicle.engine}]</span>}
                                     <button
                                         onClick={handleClear}
                                         className="ml-4 bg-white/10 hover:bg-monza-red rounded-full p-1.5 transition-colors"
