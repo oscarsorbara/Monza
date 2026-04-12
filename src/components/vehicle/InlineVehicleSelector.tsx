@@ -1,34 +1,33 @@
 import { useState, useMemo } from 'react';
-import { VEHICLE_DATABASE } from '@/data/vehiclesMock';
 import { Button } from '@/components/ui/Button';
 import { useVehicle } from '@/context/VehicleContext';
+import { useFilteredVehicles } from '@/hooks/useFilteredVehicles';
 import { Car, Plus, Trash2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export function InlineVehicleSelector() {
     const { selectVehicle, currentVehicle, clearVehicle } = useVehicle();
+    const filteredDB = useFilteredVehicles();
     const [isAddingNew, setIsAddingNew] = useState(false);
 
     const [year, setYear] = useState<string>('');
     const [make, setMake] = useState<string>('');
     const [model, setModel] = useState<string>('');
 
-    // --- Logic Reuse ---
+    // --- Logic (filtered by products with real compatibility) ---
     const makes = useMemo(() => {
-        return Object.keys(VEHICLE_DATABASE).sort();
-    }, []);
+        return Object.keys(filteredDB).sort();
+    }, [filteredDB]);
 
     const models = useMemo(() => {
-        if (!make) return [];
-        return Object.keys(VEHICLE_DATABASE[make]).sort();
-    }, [make]);
+        if (!make || !filteredDB[make]) return [];
+        return Object.keys(filteredDB[make]).sort();
+    }, [make, filteredDB]);
 
     const years = useMemo(() => {
-        if (!make || !model) return [];
-        const modelData = VEHICLE_DATABASE[make][model];
-        if (!modelData) return [];
-        return Object.keys(modelData).sort((a, b) => Number(b) - Number(a));
-    }, [make, model]);
+        if (!make || !model || !filteredDB[make]?.[model]) return [];
+        return Object.keys(filteredDB[make][model]).sort((a, b) => Number(b) - Number(a));
+    }, [make, model, filteredDB]);
 
     const handleSelect = () => {
         if (!make || !model || !year) return;

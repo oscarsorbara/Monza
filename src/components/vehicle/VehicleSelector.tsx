@@ -1,7 +1,7 @@
 import { useState, useMemo, useRef, useEffect } from 'react';
-import { VEHICLE_DATABASE } from '@/data/vehiclesMock';
 import { Button } from '@/components/ui/Button';
 import { useVehicle } from '@/context/VehicleContext';
+import { useFilteredVehicles } from '@/hooks/useFilteredVehicles';
 import clsx from 'clsx';
 import { X, Search, ChevronDown, Check } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -102,6 +102,7 @@ function CustomSelect({ value, onChange, options, placeholder, disabled, classNa
 
 export function VehicleSelector({ className }: VehicleSelectorProps) {
     const { selectVehicle, currentVehicle, clearVehicle } = useVehicle();
+    const filteredDB = useFilteredVehicles();
     const [isOpen, setIsOpen] = useState(false);
     const navigate = useNavigate();
 
@@ -109,25 +110,20 @@ export function VehicleSelector({ className }: VehicleSelectorProps) {
     const [make, setMake] = useState<string>('');
     const [model, setModel] = useState<string>('');
 
-    // --- Logic ---
-    // 1. Get List of Makes (All)
+    // --- Logic (filtered by products with real compatibility) ---
     const makes = useMemo(() => {
-        return Object.keys(VEHICLE_DATABASE).sort();
-    }, []);
+        return Object.keys(filteredDB).sort();
+    }, [filteredDB]);
 
-    // 2. Get Models available for selected Make
     const models = useMemo(() => {
-        if (!make) return [];
-        return Object.keys(VEHICLE_DATABASE[make]).sort();
-    }, [make]);
+        if (!make || !filteredDB[make]) return [];
+        return Object.keys(filteredDB[make]).sort();
+    }, [make, filteredDB]);
 
-    // 3. Get Years available for selected Make + Model
     const years = useMemo(() => {
-        if (!make || !model) return [];
-        const modelData = VEHICLE_DATABASE[make][model];
-        if (!modelData) return [];
-        return Object.keys(modelData).sort((a, b) => Number(b) - Number(a));
-    }, [make, model]);
+        if (!make || !model || !filteredDB[make]?.[model]) return [];
+        return Object.keys(filteredDB[make][model]).sort((a, b) => Number(b) - Number(a));
+    }, [make, model, filteredDB]);
 
 
     const handleSelect = () => {
