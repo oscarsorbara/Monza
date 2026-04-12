@@ -46,7 +46,7 @@ function HeroSection() {
                 <div className="relative py-8 md:py-12 w-full px-4 md:px-0">
                     <img
                         src="/monza-logo.png"
-                        alt="MONZA Racing Parts"
+                        alt="MONZA Racing Store"
                         className="w-full max-w-[280px] sm:max-w-sm md:max-w-lg mx-auto object-contain"
                     />
                 </div>

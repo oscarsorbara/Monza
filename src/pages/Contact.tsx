@@ -130,7 +130,7 @@ export default function Contact() {
                         <div className="prose prose-invert">
                             <h3 className="text-2xl font-bold text-white mb-4">¿Por qué elegir Monza?</h3>
                             <p className="text-gray-400 leading-relaxed">
-                                En Monza Racing Parts, no solo vendemos piezas; ofrecemos soluciones de rendimiento completas. Nuestro equipo técnico está altamente capacitado para asesorarte sobre la mejor configuración para tu vehículo específico.
+                                En Monza Racing Store, no solo vendemos piezas; ofrecemos soluciones de rendimiento completas. Nuestro equipo técnico está altamente capacitado para asesorarte sobre la mejor configuración para tu vehículo específico.
                             </p>
                             <p className="text-gray-400 leading-relaxed mt-4">
                                 Trabajamos directamente con los mejores fabricantes del mundo para asegurar autenticidad, garantía y fitment perfecto.
