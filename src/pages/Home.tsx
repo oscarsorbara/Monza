@@ -1,42 +1,22 @@
 import { useRef, useMemo, useLayoutEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/Button';
 import { ArrowRight } from 'lucide-react';
 import { useProduct } from '@/context/ProductContext';
 import { ProductCard } from '@/components/product/ProductCard';
 import { VehicleSelector } from '@/components/vehicle/VehicleSelector';
 import { AppointmentSection } from '@/components/service/AppointmentSection';
-// import heroBg from '@/assets/hero-audi.jpg';
-// Using local high-res Hero image to ensure 100% reliability and fix 404 issues
 const heroBg = "/hero-audi.png";
 
-
-
-// ... (imports remain same, added WavyBackground)
-
-// Note: COLLECTIONS are now fetched dynamically from Shopify via ProductContext.
-
 function HeroSection() {
-    const ref = useRef(null);
-    const { scrollYProgress } = useScroll({
-        target: ref,
-        offset: ["start start", "end start"]
-    });
-
-    const yText = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
-    const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
     return (
         <section
-            ref={ref}
             className="relative w-full h-[100dvh] md:h-screen min-h-[600px] flex flex-col items-center justify-center overflow-hidden bg-black"
         >
-            {/* 1. Underlying Base Background (Layer 0) */}
-            <div className="absolute inset-0 z-0 bg-black" />
-
-            {/* 2. Audi RS6 Image (Layer 10) - Using basic img to ensure instant load/visibility */}
-            <div className="absolute inset-0 z-10 w-full h-full overflow-hidden">
+            {/* Background Image */}
+            <div className="absolute inset-0 z-0">
                 <img
                     src={heroBg}
                     alt="Audi RS6 Avant"
@@ -47,65 +27,42 @@ function HeroSection() {
                 />
             </div>
 
-            {/* 3. Dark Overlay (Layer 20) */}
-            <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/90 z-20 pointer-events-none" />
+            {/* Dark Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/90 z-10 pointer-events-none" />
 
-            {/* 4. Content Side (Layer 30) */}
+            {/* Content */}
             <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 1 }}
-                style={{ y: yText }}
-                className="relative z-30 text-center w-full max-w-5xl px-4 md:px-4 flex flex-col items-center"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, ease: [0.25, 1, 0.5, 1] }}
+                className="relative z-20 text-center w-full max-w-5xl px-4 flex flex-col items-center"
             >
-                {/* Upper Balance - Span */}
                 <div className="mb-4 md:mb-6 mt-8 md:mt-0">
-                    <motion.div className="overflow-hidden">
-                        <motion.span
-                            initial={{ y: "100%" }}
-                            animate={{ y: 0 }}
-                            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                            className="inline-block text-xs sm:text-sm md:text-base font-bold tracking-[0.2em] uppercase text-monza-red"
-                        >
-                            Est. 2026 — Performance Parts
-                        </motion.span>
-                    </motion.div>
+                    <span className="inline-block text-xs sm:text-sm md:text-base font-bold tracking-[0.2em] uppercase text-monza-red">
+                        Est. 2026 — Performance Parts
+                    </span>
                 </div>
 
-                {/* Center Focal Point - Logo */}
                 <div className="relative py-8 md:py-12 w-full px-4 md:px-0">
-                    <motion.img
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+                    <img
                         src="/monza-logo.png"
                         alt="MONZA Racing Parts"
                         className="w-full max-w-[280px] sm:max-w-sm md:max-w-lg mx-auto object-contain"
                     />
                 </div>
 
-                {/* Lower Balance - Button */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: 0.4 }}
-                    className="mt-6 md:mt-4 w-full px-4 sm:px-12 md:px-0 md:w-auto"
-                >
+                <div className="mt-6 md:mt-4 w-full px-4 sm:px-12 md:px-0 md:w-auto">
                     <Link to="/catalog" className="w-full md:w-auto block md:inline-block">
                         <Button size="lg" className="w-full md:w-auto min-h-[56px] md:min-h-0 text-base md:text-sm bg-white text-black hover:bg-gray-200 uppercase tracking-widest font-black md:normal-case md:tracking-normal md:font-medium">
                             Ver Catálogo
                         </Button>
                     </Link>
-                </motion.div>
+                </div>
             </motion.div>
 
-            {/* Scroll Indicator */}
-            <motion.div
-                style={{ opacity }}
-                className="absolute bottom-10 left-1/2 -translate-x-1/2 text-white/50 text-xs font-bold uppercase tracking-widest animate-pulse"
-            >
+            <div className="absolute bottom-10 left-1/2 -translate-x-1/2 text-white/50 text-xs font-bold uppercase tracking-widest animate-pulse z-20">
                 Scrolleá para explorar
-            </motion.div>
+            </div>
         </section>
     );
 }
@@ -205,15 +162,15 @@ function CategoryReel() {
                         to={`/catalog?category=${cat.id}`}
                         className="group relative w-[280px] h-[400px] flex-shrink-0 rounded-xl overflow-hidden cursor-pointer snap-center"
                     >
-                        <div className="absolute inset-0 bg-carbon-800 transition-transform duration-700 group-hover:scale-95" />
+                        <div className="absolute inset-0 bg-carbon-800 transition-transform duration-300 group-hover:scale-95" />
 
                         {/* Image */}
-                        <div className="absolute inset-0 transition-transform duration-700 group-hover:scale-110">
+                        <div className="absolute inset-0 transition-transform duration-300 group-hover:scale-110">
                             <img
                                 src={cat.image}
                                 alt={cat.name}
                                 loading="lazy"
-                                className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-700"
+                                className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-300"
                                 onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&q=80'; }}
                             />
                         </div>

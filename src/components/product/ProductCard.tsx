@@ -23,7 +23,7 @@ export function ProductCard({ product }: ProductCardProps) {
     const isIncompatible = status === 'INCOMPATIBLE';
 
     return (
-        <div className="bg-carbon-800 border border-carbon-700 rounded-xl overflow-hidden hover:border-carbon-500 transition-all duration-300 group flex flex-col h-full">
+        <div className="bg-carbon-800 border border-carbon-700 rounded-xl overflow-hidden hover:border-carbon-500 transition-colors duration-200 group flex flex-col h-full will-change-auto" style={{ transform: 'translateZ(0)' }}>
             {/* Image Area */}
             {/* Image Area */}
             <Link to={`/product/${product.handle}`} className="block relative h-48 overflow-hidden bg-white/5">
@@ -31,7 +31,7 @@ export function ProductCard({ product }: ProductCardProps) {
                     src={product.image}
                     alt={product.name}
                     loading="lazy"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
                 {product.stock < 5 && (
                     <span className="absolute top-2 left-2 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded">
