@@ -182,10 +182,11 @@ export default function Cart() {
                                 </div>
                             </div>
 
-                            <div className="fixed bottom-0 left-0 w-full p-4 bg-carbon-950/95 backdrop-blur-md border-t border-white/10 z-[100] md:relative md:p-0 md:bg-transparent md:backdrop-blur-none md:border-t-0 md:z-auto">
+                            {/* Desktop-only checkout button inside summary */}
+                            <div className="hidden md:block">
                                 <Button
                                     size="lg"
-                                    className="w-full h-14 min-h-[56px] text-lg bg-red-600 md:bg-monza-red md:hover:bg-red-600 border-none shadow-[0_-10px_40px_rgba(0,0,0,0.5)] md:shadow-xl md:shadow-monza-red/20 font-bold uppercase tracking-widest text-white rounded-xl"
+                                    className="w-full h-14 min-h-[56px] text-lg bg-monza-red hover:bg-red-600 border-none shadow-xl shadow-monza-red/20 font-bold uppercase tracking-widest text-white rounded-xl"
                                     onClick={handleCheckout}
                                     disabled={isCheckingOut}
                                 >
@@ -201,6 +202,23 @@ export default function Cart() {
                     </div>
                 </div >
             </div >
+
+            {/* Mobile-only fixed checkout button - outside all containers */}
+            <div className="fixed bottom-0 left-0 w-full p-4 bg-carbon-950/95 backdrop-blur-md border-t border-white/10 z-[100] md:hidden">
+                <Button
+                    size="lg"
+                    className="w-full h-14 min-h-[56px] text-lg bg-red-600 border-none shadow-[0_-10px_40px_rgba(0,0,0,0.5)] font-bold uppercase tracking-widest text-white rounded-xl"
+                    onClick={handleCheckout}
+                    disabled={isCheckingOut}
+                >
+                    {isCheckingOut ? (
+                        <>Procesando... <Clock className="ml-2 animate-spin shrink-0" /></>
+                    ) : (
+                        'Pagar Ahora'
+                    )}
+                    {!isCheckingOut && <ArrowRight className="ml-2 shrink-0" />}
+                </Button>
+            </div>
         </div >
     );
 }
