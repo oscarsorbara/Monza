@@ -400,6 +400,19 @@ export function ProductProvider({ children }: { children: ReactNode }) {
                                 );
                             }
 
+                            // MANUAL OVERRIDE FOR REQUESTED PRODUCT 16: Parrilla Fibra de Carbono Real Doble Rejilla BMW Serie 1 | Look Sport / OEM+
+                            if (node.id === 'gid://shopify/Product/8920707793124' || node.handle === 'parrilla-fibra-de-carbono-real-doble-rejilla-bmw-serie-3-f20-look-sport-oem') {
+                                compatibility.push(
+                                    {
+                                        make: 'BMW',
+                                        model: 'Serie 1',
+                                        yearStart: 2015,
+                                        yearEnd: 2020,
+                                        engines: 'All'
+                                    }
+                                );
+                            }
+
                             // MANUAL OVERRIDE FOR REQUESTED PRODUCT 15: Tablero Digital VW GOLF | Upgrade Cluster con CarPlay Integrado
                             if (node.id === 'gid://shopify/Product/8909135970532' || node.handle === 'tablero-digital-vw-golf-upgrade-cluster-con-carplay-integrado') {
                                 compatibility.push(
