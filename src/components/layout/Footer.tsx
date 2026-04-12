@@ -35,7 +35,6 @@ export function Footer() {
                             <li><Link to="/catalog" className="text-gray-400 hover:text-white transition-colors text-sm">Catálogo</Link></li>
                             <li><Link to="/catalog?category=Escapes" className="text-gray-400 hover:text-white transition-colors text-sm">Escapes</Link></li>
                             <li><Link to="/catalog?category=Suspension" className="text-gray-400 hover:text-white transition-colors text-sm">Suspensión</Link></li>
-                            <li><Link to="/account" className="text-gray-400 hover:text-white transition-colors text-sm">Mi Cuenta</Link></li>
                         </ul>
                     </div>
 
