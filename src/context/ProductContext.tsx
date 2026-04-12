@@ -400,6 +400,26 @@ export function ProductProvider({ children }: { children: ReactNode }) {
                                 );
                             }
 
+                            // MANUAL OVERRIDE FOR REQUESTED PRODUCT 14: Ópticas Traseras LED Union Jack MINI Cooper F55/F56/F57 | Look JCW (Premium)
+                            if (node.id === 'gid://shopify/Product/8902932988132' || node.handle === 'opticas-traseras-led-union-jack-mini-cooper-f55-f56-f57-look-jcw-premium') {
+                                compatibility.push(
+                                    {
+                                        make: 'MINI',
+                                        model: 'Cooper',
+                                        yearStart: 2015,
+                                        yearEnd: 2023,
+                                        engines: 'All'
+                                    },
+                                    {
+                                        make: 'MINI',
+                                        model: 'Cooper S',
+                                        yearStart: 2015,
+                                        yearEnd: 2023,
+                                        engines: 'All'
+                                    }
+                                );
+                            }
+
                             // MANUAL OVERRIDE FOR REQUESTED PRODUCT 13: Ópticas Traseras LED Union Jack MINI Cooper R56/R57/R58/R59 | Look JCW (Premium)
                             if (node.id === 'gid://shopify/Product/8912640540900' || node.handle === 'opticas-traseras-led-union-jack-mini-cooper-r56-f57-f58-59-look-jcw-premium') {
                                 compatibility.push(
