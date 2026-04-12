@@ -400,6 +400,26 @@ export function ProductProvider({ children }: { children: ReactNode }) {
                                 );
                             }
 
+                            // MANUAL OVERRIDE FOR REQUESTED PRODUCT 13: Ópticas Traseras LED Union Jack MINI Cooper R56/R57/R58/R59 | Look JCW (Premium)
+                            if (node.id === 'gid://shopify/Product/8912640540900' || node.handle === 'opticas-traseras-led-union-jack-mini-cooper-r56-f57-f58-59-look-jcw-premium') {
+                                compatibility.push(
+                                    {
+                                        make: 'MINI',
+                                        model: 'Cooper',
+                                        yearStart: 2008,
+                                        yearEnd: 2014,
+                                        engines: 'All'
+                                    },
+                                    {
+                                        make: 'MINI',
+                                        model: 'Cooper S',
+                                        yearStart: 2008,
+                                        yearEnd: 2014,
+                                        engines: 'All'
+                                    }
+                                );
+                            }
+
                             // MANUAL OVERRIDE FOR REQUESTED PRODUCT 17: Tablero Digital AUDI | Upgrade Cluster con CarPlay Integrado
                             if (node.id === 'gid://shopify/Product/8909032816868' || node.handle === 'tablero-digital-audi-upgrade-cluster-con-carplay-integrado-copia') {
                                 compatibility.push(
