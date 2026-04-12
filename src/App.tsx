@@ -3,15 +3,12 @@ import { AnimatePresence } from 'framer-motion';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import Home from '@/pages/Home';
-import Account from '@/pages/Account';
 import Catalog from '@/pages/Catalog';
 import ProductDetail from '@/pages/ProductDetail';
 import Contact from '@/pages/Contact'; // Replaces Maintenance
 import Cart from '@/pages/Cart';
 import Checkout from '@/pages/Checkout';
 import OrderConfirmation from '@/pages/OrderConfirmation';
-import Login from '@/pages/Login';
-import Register from '@/pages/Register';
 import BookingSuccess from '@/pages/BookingSuccess';
 
 import SmoothScroll from '@/components/layout/SmoothScroll';
@@ -40,15 +37,9 @@ function AnimatedRoutes() {
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-
-
-
         {/* Public Routes with Navbar */}
         <Route element={<PublicLayout />}>
           <Route path="/" element={<PageTransition><Home /></PageTransition>} />
-          <Route path="/account" element={<PageTransition><Account /></PageTransition>} />
           <Route path="/catalog" element={<PageTransition><Catalog /></PageTransition>} />
           <Route path="/product/:id" element={<PageTransition><ProductDetail /></PageTransition>} />
           <Route path="/maintenance" element={<PageTransition><Contact /></PageTransition>} />

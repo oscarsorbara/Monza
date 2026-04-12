@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ShoppingCart, Menu, X, User } from 'lucide-react';
+import { ShoppingCart, Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '@/context/CartContext';
 import { Button } from '@/components/ui/Button';
@@ -75,9 +75,6 @@ export function Navbar() {
                         )}
                     </Link>
 
-                    <Link to="/account" className="hover:text-monza-red transition-colors">
-                        <User className="w-5 h-5 hover:scale-110 transition-transform" />
-                    </Link>
                 </div>
 
                 {/* Mobile Menu Button - Pointer Events Auto */}
@@ -132,12 +129,6 @@ export function Navbar() {
                                 </Link>
                             </div>
 
-                            <div className="mt-auto">
-                                <Link to="/account" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 text-white font-medium bg-white/5 border border-white/10 px-6 py-4 rounded-xl hover:bg-white/10 transition-colors w-full justify-center">
-                                    <User className="w-5 h-5" />
-                                    <span>Mi Cuenta</span>
-                                </Link>
-                            </div>
                         </motion.div>
                     </>
                 )}
