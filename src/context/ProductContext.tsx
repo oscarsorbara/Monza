@@ -400,6 +400,26 @@ export function ProductProvider({ children }: { children: ReactNode }) {
                                 );
                             }
 
+                            // MANUAL OVERRIDE FOR REQUESTED PRODUCT 15: Tablero Digital VW GOLF | Upgrade Cluster con CarPlay Integrado
+                            if (node.id === 'gid://shopify/Product/8909135970532' || node.handle === 'tablero-digital-vw-golf-upgrade-cluster-con-carplay-integrado') {
+                                compatibility.push(
+                                    {
+                                        make: 'Volkswagen',
+                                        model: 'Golf 7 / 7.5',
+                                        yearStart: 2013,
+                                        yearEnd: 2020,
+                                        engines: 'All'
+                                    },
+                                    {
+                                        make: 'Volkswagen',
+                                        model: 'Golf GTI 7 / 7.5',
+                                        yearStart: 2013,
+                                        yearEnd: 2020,
+                                        engines: 'All'
+                                    }
+                                );
+                            }
+
                             // MANUAL OVERRIDE FOR REQUESTED PRODUCT 14: Ópticas Traseras LED Union Jack MINI Cooper F55/F56/F57 | Look JCW (Premium)
                             if (node.id === 'gid://shopify/Product/8902932988132' || node.handle === 'opticas-traseras-led-union-jack-mini-cooper-f55-f56-f57-look-jcw-premium') {
                                 compatibility.push(
