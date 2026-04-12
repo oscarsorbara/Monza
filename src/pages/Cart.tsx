@@ -5,7 +5,6 @@ import { Minus, Plus, Trash2, ArrowRight, Clock } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { formatPrice } from '@/lib/utils';
-import { UpsellCarousel } from '@/components/cart/UpsellCarousel';
 
 export default function Cart() {
     const { items, removeFromCart, updateQuantity } = useCart();
@@ -151,12 +150,6 @@ export default function Cart() {
                                 </motion.div>
                             ))}
                         </AnimatePresence>
-
-
-                        {/* Upsell Carousel */}
-                        <div className="pt-8">
-                            <UpsellCarousel />
-                        </div>
                     </div>
 
                     {/* Summary */}
