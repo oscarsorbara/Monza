@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/Button';
 import { formatPrice } from '@/lib/utils';
 
 const FREE_SHIPPING_GOAL = 1_000_000;
+const FLAT_SHIPPING_COST = 15_000; // Tarifa plana nacional Argentina
 
 export function CartDrawer() {
     const {
@@ -24,13 +25,17 @@ export function CartDrawer() {
         return sum + (originalPrice * item.quantity);
     }, 0);
 
-    const total = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    const discount = subtotalOriginal - total;
+    const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const discount = subtotalOriginal - subtotal;
 
-    // Free shipping progress
-    const progress = Math.min((total / FREE_SHIPPING_GOAL) * 100, 100);
-    const remainingForFreeShipping = Math.max(FREE_SHIPPING_GOAL - total, 0);
-    const hasFreeShipping = total >= FREE_SHIPPING_GOAL && total > 0;
+    // Free shipping progress (threshold based on subtotal)
+    const progress = Math.min((subtotal / FREE_SHIPPING_GOAL) * 100, 100);
+    const remainingForFreeShipping = Math.max(FREE_SHIPPING_GOAL - subtotal, 0);
+    const hasFreeShipping = subtotal >= FREE_SHIPPING_GOAL && subtotal > 0;
+
+    // Shipping cost: free above threshold, flat rate otherwise
+    const shippingCost = hasFreeShipping ? 0 : FLAT_SHIPPING_COST;
+    const total = subtotal + shippingCost;
 
     // Prevent body scroll while drawer is open
     useEffect(() => {
@@ -254,11 +259,18 @@ export function CartDrawer() {
                                                 <span>-${formatPrice(discount)}</span>
                                             </div>
                                         )}
+                                        <div className="flex justify-between text-gray-300">
+                                            <span>Envío <span className="text-gray-500 text-xs">(nacional)</span></span>
+                                            {hasFreeShipping ? (
+                                                <span className="text-green-400 font-semibold">Gratis</span>
+                                            ) : (
+                                                <span>${formatPrice(shippingCost)}</span>
+                                            )}
+                                        </div>
                                         <div className="flex justify-between items-baseline pt-2 border-t border-white/10">
                                             <span className="text-base font-bold text-white">Total</span>
                                             <span className="text-xl font-black text-white">${formatPrice(total)}</span>
                                         </div>
-                                        <p className="text-[11px] text-gray-500 text-right">Envío calculado en el checkout</p>
                                     </div>
 
                                     {/* Trust badges */}
