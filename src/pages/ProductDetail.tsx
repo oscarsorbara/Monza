@@ -6,8 +6,8 @@ import { useCart } from '@/context/CartContext';
 import { useVehicle } from '@/context/VehicleContext';
 import { checkCompatibility } from '@/lib/compatibility';
 import { getReviewStats } from '@/data/reviewsMock';
-import { Check, AlertTriangle, Plus, ShieldCheck, Truck, Star } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { Check, Plus, ShieldCheck, Truck, Star } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { ProductGallery } from '@/components/product/ProductGallery';
 import { ProductReviews } from '@/components/product/ProductReviews';
 import { ProductPageUpsell } from '@/components/product/ProductPageUpsell';
@@ -26,7 +26,6 @@ export default function ProductDetail() {
     if (!product) return <div className="pt-32 text-center text-2xl font-bold">Producto no encontrado</div>;
 
     const status = checkCompatibility(product, currentVehicle);
-    const isCompatible = status === 'EXACT_MATCH' || status === 'UNIVERSAL';
     const { avgRating, count: reviewsCount } = getReviewStats(product.handle);
 
     // Variant Selection Logic
@@ -161,40 +160,10 @@ export default function ProductDetail() {
                         {/* Compatible Upsell — other users also bought */}
                         <ProductPageUpsell currentProductId={product.id} />
 
-                        {/* Inline Vehicle Selector */}
+                        {/* Inline Vehicle Selector (merged with compatibility banner) */}
                         <div className="mb-6 md:mb-8">
-                            <InlineVehicleSelector />
+                            <InlineVehicleSelector compatibilityStatus={status} />
                         </div>
-
-                        {/* Compatibility Result (Only if vehicle is selected) */}
-                        <AnimatePresence>
-                            {currentVehicle && (
-                                <motion.div
-                                    initial={{ opacity: 0, height: 0 }}
-                                    animate={{ opacity: 1, height: 'auto' }}
-                                    exit={{ opacity: 0, height: 0 }}
-                                    className={`p-4 rounded-xl mb-8 flex items-start gap-3 border ${isCompatible ? 'bg-green-900/10 border-green-500/30' : 'bg-red-900/10 border-red-500/30'}`}
-                                >
-                                    {isCompatible ? (
-                                        <div className="p-2 bg-green-500/20 rounded-full">
-                                            <Check className="w-6 h-6 text-green-500" />
-                                        </div>
-                                    ) : (
-                                        <div className="p-2 bg-red-500/20 rounded-full">
-                                            <AlertTriangle className="w-6 h-6 text-red-500" />
-                                        </div>
-                                    )}
-                                    <div>
-                                        <h4 className={`font-black text-lg uppercase tracking-wide ${isCompatible ? 'text-green-500' : 'text-red-500'}`}>
-                                            {isCompatible ? 'Compatible con tu vehículo' : 'No compatible con tu vehículo'}
-                                        </h4>
-                                        <p className="text-sm text-gray-300 mt-1">
-                                            {isCompatible ? 'Este producto se ajusta perfectamente a tu' : 'Este producto no es adecuado para tu'} <span className="font-bold text-white">{currentVehicle.year} {currentVehicle.make} {currentVehicle.model} {currentVehicle.variant !== 'Base' ? currentVehicle.variant : ''}</span>.
-                                        </p>
-                                    </div>
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
 
                         <div className="mt-6 md:mt-8 mb-10 md:mb-12">
                             {/* Mobile specific bullet points */}

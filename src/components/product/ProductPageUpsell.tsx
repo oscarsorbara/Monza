@@ -71,7 +71,7 @@ export function ProductPageUpsell({ currentProductId }: ProductPageUpsellProps) 
                     return (
                         <article
                             key={p.id}
-                            className="flex-shrink-0 w-[160px] md:w-[170px] bg-carbon-900 border border-white/5 rounded-xl overflow-hidden snap-start flex flex-col"
+                            className="flex-shrink-0 w-[220px] md:w-[240px] bg-carbon-900 border border-white/5 rounded-xl overflow-hidden snap-start flex flex-col"
                         >
                             <Link
                                 to={`/product/${p.handle}`}
@@ -83,15 +83,15 @@ export function ProductPageUpsell({ currentProductId }: ProductPageUpsellProps) 
                                     loading="lazy"
                                     className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                                 />
-                                <span className={`absolute top-2 left-2 inline-flex items-center gap-1 text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded ${isUniversal ? 'bg-white/10 text-gray-200 border border-white/10' : 'bg-green-500/15 text-green-400 border border-green-500/30'}`}>
-                                    <Check className="w-2.5 h-2.5" />
+                                <span className={`absolute top-2.5 left-2.5 inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded ${isUniversal ? 'bg-white/10 text-gray-200 border border-white/10' : 'bg-green-500/15 text-green-400 border border-green-500/30'}`}>
+                                    <Check className="w-3 h-3" />
                                     {isUniversal ? 'Universal' : 'Compatible'}
                                 </span>
                             </Link>
 
-                            <div className="p-2.5 flex flex-col flex-1">
+                            <div className="p-3.5 flex flex-col flex-1">
                                 <Link to={`/product/${p.handle}`}>
-                                    <h5 className="text-[12px] font-bold text-white leading-tight line-clamp-2 mb-2 min-h-[30px] hover:text-monza-red transition-colors">
+                                    <h5 className="text-[14px] font-bold text-white leading-tight line-clamp-2 mb-2.5 min-h-[36px] hover:text-monza-red transition-colors">
                                         {p.name}
                                     </h5>
                                 </Link>
@@ -99,20 +99,20 @@ export function ProductPageUpsell({ currentProductId }: ProductPageUpsellProps) 
                                 <div className="mt-auto flex items-center justify-between gap-2">
                                     <div className="min-w-0">
                                         {p.compareAtPrice && p.compareAtPrice > p.price && (
-                                            <div className="text-[10px] text-gray-500 line-through leading-none">
+                                            <div className="text-[11px] text-gray-500 line-through leading-none">
                                                 ${formatPrice(p.compareAtPrice)}
                                             </div>
                                         )}
-                                        <div className="text-[13px] font-black text-white truncate">
+                                        <div className="text-[15px] font-black text-white truncate">
                                             ${formatPrice(p.price)}
                                         </div>
                                     </div>
                                     <button
                                         onClick={() => handleAdd(p)}
                                         aria-label={`Agregar ${p.name}`}
-                                        className="w-8 h-8 shrink-0 rounded-full bg-monza-red hover:bg-red-600 text-white flex items-center justify-center transition-colors active:scale-95"
+                                        className="w-10 h-10 shrink-0 rounded-full bg-monza-red hover:bg-red-600 text-white flex items-center justify-center transition-colors active:scale-95"
                                     >
-                                        <Plus className="w-4 h-4" />
+                                        <Plus className="w-5 h-5" />
                                     </button>
                                 </div>
                             </div>
