@@ -5,6 +5,7 @@ import { X, Minus, Plus, Trash2, ArrowRight, Clock, ShoppingBag, Truck, ShieldCh
 import { useCart } from '@/context/CartContext';
 import { Button } from '@/components/ui/Button';
 import { formatPrice } from '@/lib/utils';
+import { CartUpsell } from './CartUpsell';
 
 const FREE_SHIPPING_GOAL = 1_000_000;
 const FLAT_SHIPPING_COST = 15_000; // Tarifa plana nacional Argentina
@@ -171,7 +172,7 @@ export function CartDrawer() {
                                     </div>
                                 </div>
 
-                                {/* Scrollable items */}
+                                {/* Scrollable items + upsell */}
                                 <div className="flex-1 overflow-y-auto overscroll-contain px-5 md:px-6 py-4" style={{ WebkitOverflowScrolling: 'touch' }}>
                                     <ul className="space-y-3">
                                         <AnimatePresence initial={false}>
@@ -244,6 +245,9 @@ export function CartDrawer() {
                                             ))}
                                         </AnimatePresence>
                                     </ul>
+
+                                    {/* Compatible upsell recommendations */}
+                                    <CartUpsell />
                                 </div>
 
                                 {/* Footer: totals + trust + CTA */}
