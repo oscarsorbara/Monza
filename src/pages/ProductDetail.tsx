@@ -223,7 +223,7 @@ export default function ProductDetail() {
                         </div>
 
                         {/* Customer Reviews */}
-                        <ProductReviews />
+                        <ProductReviews productHandle={product.handle} />
                     </motion.div>
                 </div>
             </div>

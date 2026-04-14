@@ -1,55 +1,15 @@
 import { useRef } from 'react';
 import { Star, ChevronLeft, ChevronRight } from 'lucide-react';
 import clsx from 'clsx';
+import { PRODUCT_REVIEWS, FALLBACK_REVIEWS } from '@/data/reviewsMock';
 
-interface Review {
-    name: string;
-    avatar: string;
-    rating: number;
-    comment: string;
+interface ProductReviewsProps {
+    productHandle: string;
 }
 
-const REVIEWS: Review[] = [
-    {
-        name: 'Martín Rodríguez',
-        avatar: 'https://i.pravatar.cc/150?img=12',
-        rating: 5,
-        comment: 'Excelente calidad, tal cual la descripción. La instalación fue sencilla y el producto luce impresionante. Super recomendable.'
-    },
-    {
-        name: 'Lucía Fernández',
-        avatar: 'https://i.pravatar.cc/150?img=47',
-        rating: 5,
-        comment: 'Llegó rápido y muy bien embalado. El acabado es premium, se nota la diferencia con opciones genéricas.'
-    },
-    {
-        name: 'Diego Martínez',
-        avatar: 'https://i.pravatar.cc/150?img=33',
-        rating: 4,
-        comment: 'Muy buen producto por el precio. Calidad superior a lo esperado, atención al cliente muy profesional.'
-    },
-    {
-        name: 'Camila Pérez',
-        avatar: 'https://i.pravatar.cc/150?img=44',
-        rating: 5,
-        comment: 'Mi auto quedó increíble. Los detalles de fabricación son impecables. Volvería a comprar sin dudar.'
-    },
-    {
-        name: 'Federico López',
-        avatar: 'https://i.pravatar.cc/150?img=15',
-        rating: 5,
-        comment: 'Calidad alemana a un precio justo. El equipo de Monza se tomó el tiempo para asesorarme en la compatibilidad.'
-    },
-    {
-        name: 'Valentina Gómez',
-        avatar: 'https://i.pravatar.cc/150?img=49',
-        rating: 4,
-        comment: 'Muy conforme con la compra. El producto cumple las expectativas y la atención fue rápida y clara.'
-    }
-];
-
-export function ProductReviews() {
+export function ProductReviews({ productHandle }: ProductReviewsProps) {
     const scrollRef = useRef<HTMLDivElement>(null);
+    const reviews = PRODUCT_REVIEWS[productHandle] ?? FALLBACK_REVIEWS;
 
     const scroll = (direction: 'left' | 'right') => {
         if (!scrollRef.current) return;
@@ -60,12 +20,35 @@ export function ProductReviews() {
         });
     };
 
+    // Aggregate rating
+    const avgRating = reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length;
+
     return (
         <section className="mt-12 mb-8">
             <div className="flex items-center justify-between mb-6">
-                <h3 className="text-2xl md:text-3xl font-bold italic uppercase tracking-tight text-white">
-                    Opiniones de clientes
-                </h3>
+                <div>
+                    <h3 className="text-2xl md:text-3xl font-bold italic uppercase tracking-tight text-white">
+                        Opiniones de clientes
+                    </h3>
+                    <div className="flex items-center gap-2 mt-1">
+                        <div className="flex items-center gap-0.5">
+                            {Array.from({ length: 5 }).map((_, idx) => (
+                                <Star
+                                    key={idx}
+                                    size={14}
+                                    className={clsx(
+                                        idx < Math.round(avgRating)
+                                            ? 'text-yellow-500 fill-yellow-500'
+                                            : 'text-white/20'
+                                    )}
+                                />
+                            ))}
+                        </div>
+                        <span className="text-sm text-gray-400">
+                            {avgRating.toFixed(1)} · {reviews.length} {reviews.length === 1 ? 'opinión' : 'opiniones'}
+                        </span>
+                    </div>
+                </div>
 
                 <div className="hidden md:flex items-center gap-2">
                     <button
@@ -90,7 +73,7 @@ export function ProductReviews() {
                 className="flex gap-4 overflow-x-auto scrollbar-hide snap-x snap-mandatory -mx-4 px-4 md:mx-0 md:px-0 pb-2"
                 style={{ WebkitOverflowScrolling: 'touch' }}
             >
-                {REVIEWS.map((review, i) => (
+                {reviews.map((review, i) => (
                     <article
                         key={i}
                         className="flex-shrink-0 w-[280px] md:w-[320px] bg-carbon-900 border border-white/5 rounded-2xl p-5 shadow-lg shadow-black/20 snap-start"
