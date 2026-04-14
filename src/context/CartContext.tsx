@@ -13,6 +13,11 @@ interface CartContextType {
     lastAddedItem: Product | null;
     showNotification: boolean;
     closeNotification: () => void;
+    // Drawer state (non-breaking additions)
+    isDrawerOpen: boolean;
+    openDrawer: () => void;
+    closeDrawer: () => void;
+    toggleDrawer: () => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -24,6 +29,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
     const [lastAddedItem, setLastAddedItem] = useState<Product | null>(null);
     const [showNotification, setShowNotification] = useState(false);
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+    const openDrawer = () => setIsDrawerOpen(true);
+    const closeDrawer = () => setIsDrawerOpen(false);
+    const toggleDrawer = () => setIsDrawerOpen(prev => !prev);
 
     useEffect(() => {
         storage.set('monza_cart', items);
@@ -84,7 +94,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
             itemCount,
             lastAddedItem,
             showNotification,
-            closeNotification
+            closeNotification,
+            isDrawerOpen,
+            openDrawer,
+            closeDrawer,
+            toggleDrawer
         }}>
             {children}
         </CartContext.Provider>

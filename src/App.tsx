@@ -15,6 +15,7 @@ import SmoothScroll from '@/components/layout/SmoothScroll';
 import PageTransition from '@/components/layout/PageTransition';
 
 import { CartNotification } from '@/components/cart/CartNotification';
+import { CartDrawer } from '@/components/cart/CartDrawer';
 import { FloatingWhatsApp } from '@/components/layout/FloatingWhatsApp';
 
 function PublicLayout() {
@@ -22,6 +23,7 @@ function PublicLayout() {
     <>
       <Navbar />
       <CartNotification />
+      <CartDrawer />
       <FloatingWhatsApp />
       <div className="flex-grow">
         <Outlet />

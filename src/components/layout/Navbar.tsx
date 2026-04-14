@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/Button';
 import { cn } from '@/lib/utils';
 
 export function Navbar() {
-    const { itemCount } = useCart();
+    const { itemCount, openDrawer } = useCart();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
 
@@ -66,14 +66,18 @@ export function Navbar() {
 
                     <div className="w-px h-4 bg-white/20 mx-2" />
 
-                    <Link to="/cart" className="relative group hover:text-monza-red transition-colors">
+                    <button
+                        onClick={openDrawer}
+                        aria-label="Abrir carrito"
+                        className="relative group hover:text-monza-red transition-colors"
+                    >
                         <ShoppingCart className="w-5 h-5 group-hover:scale-110 transition-transform" />
                         {itemCount > 0 && (
                             <span className="absolute -top-2 -right-2 w-4 h-4 bg-monza-red text-white rounded-full text-[10px] flex items-center justify-center font-bold">
                                 {itemCount}
                             </span>
                         )}
-                    </Link>
+                    </button>
 
                 </div>
 
@@ -123,10 +127,13 @@ export function Navbar() {
                                 <div className="h-px bg-white/5 w-full" />
                                 <Link to="/maintenance" className="text-3xl font-bold italic hover:text-monza-red transition-colors uppercase tracking-tight" onClick={() => setIsMenuOpen(false)}>Contacto</Link>
                                 <div className="h-px bg-white/5 w-full" />
-                                <Link to="/cart" className="text-3xl font-bold italic hover:text-monza-red transition-colors uppercase tracking-tight flex items-center justify-between" onClick={() => setIsMenuOpen(false)}>
-                                    Carrito
+                                <button
+                                    onClick={() => { setIsMenuOpen(false); openDrawer(); }}
+                                    className="text-3xl font-bold italic hover:text-monza-red transition-colors uppercase tracking-tight flex items-center justify-between text-left"
+                                >
+                                    <span>Carrito</span>
                                     {itemCount > 0 && <span className="bg-monza-red text-white text-xs font-bold px-2 py-1 rounded-full">{itemCount}</span>}
-                                </Link>
+                                </button>
                             </div>
 
                         </motion.div>
