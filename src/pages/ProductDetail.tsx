@@ -8,6 +8,7 @@ import { checkCompatibility } from '@/lib/compatibility';
 import { Check, AlertTriangle, Plus, ShieldCheck, Truck } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ProductGallery } from '@/components/product/ProductGallery';
+import { ProductReviews } from '@/components/product/ProductReviews';
 import { Accordion } from '@/components/ui/Accordion';
 import { InlineVehicleSelector } from '@/components/vehicle/InlineVehicleSelector';
 import { formatPrice } from '@/lib/utils';
@@ -220,6 +221,9 @@ export default function ProductDetail() {
                                 dangerouslySetInnerHTML={{ __html: product.description }}
                             />
                         </div>
+
+                        {/* Customer Reviews */}
+                        <ProductReviews />
                     </motion.div>
                 </div>
             </div>
