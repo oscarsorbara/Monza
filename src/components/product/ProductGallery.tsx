@@ -68,20 +68,22 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
             {/* Overlay Gradient for consistency */}
             <div className="absolute inset-0 z-20 bg-gradient-to-t from-carbon-950/20 via-transparent to-transparent pointer-events-none" />
 
-            {/* Navigation Arrows */}
+            {/* Navigation Arrows — always visible, subtle */}
             {images.length > 1 && (
                 <>
                     <button
                         onClick={prevImage}
-                        className="absolute left-4 top-1/2 -translate-y-1/2 z-30 w-10 h-10 rounded-full bg-black/20 backdrop-blur-md border border-white/10 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-all hover:bg-black/50"
+                        aria-label="Imagen anterior"
+                        className="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 z-30 w-10 h-10 md:w-11 md:h-11 rounded-full bg-black/35 backdrop-blur-md border border-white/15 flex items-center justify-center text-white/90 hover:text-white hover:bg-black/60 hover:border-white/25 transition-colors shadow-lg shadow-black/30"
                     >
-                        <ChevronLeft size={20} />
+                        <ChevronLeft size={20} strokeWidth={2.2} />
                     </button>
                     <button
                         onClick={nextImage}
-                        className="absolute right-4 top-1/2 -translate-y-1/2 z-30 w-10 h-10 rounded-full bg-black/20 backdrop-blur-md border border-white/10 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-all hover:bg-black/50"
+                        aria-label="Imagen siguiente"
+                        className="absolute right-3 md:right-4 top-1/2 -translate-y-1/2 z-30 w-10 h-10 md:w-11 md:h-11 rounded-full bg-black/35 backdrop-blur-md border border-white/15 flex items-center justify-center text-white/90 hover:text-white hover:bg-black/60 hover:border-white/25 transition-colors shadow-lg shadow-black/30"
                     >
-                        <ChevronRight size={20} />
+                        <ChevronRight size={20} strokeWidth={2.2} />
                     </button>
 
                     {/* Dots Indicator */}
