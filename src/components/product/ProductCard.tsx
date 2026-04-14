@@ -8,6 +8,7 @@ import clsx from 'clsx';
 import { Link } from 'react-router-dom';
 
 import { formatPrice } from '@/lib/utils';
+import { getReviewStats } from '@/data/reviewsMock';
 
 interface ProductCardProps {
     product: Product;
@@ -21,6 +22,8 @@ export function ProductCard({ product }: ProductCardProps) {
 
     const isCompatible = status === 'EXACT_MATCH' || status === 'UNIVERSAL';
     const isIncompatible = status === 'INCOMPATIBLE';
+
+    const { avgRating, count: reviewsCount } = getReviewStats(product.handle);
 
     return (
         <div className="bg-carbon-800 border border-carbon-700 rounded-xl overflow-hidden hover:border-carbon-500 transition-colors duration-200 group flex flex-col h-full will-change-auto" style={{ transform: 'translateZ(0)' }}>
@@ -54,8 +57,8 @@ export function ProductCard({ product }: ProductCardProps) {
                 {/* Rating */}
                 <div className="flex items-center gap-1 mb-3">
                     <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
-                    <span className="text-sm font-medium text-gray-300">{product.rating}</span>
-                    <span className="text-xs text-gray-500">({product.reviewsCount})</span>
+                    <span className="text-sm font-medium text-gray-300">{avgRating}</span>
+                    <span className="text-xs text-gray-500">({reviewsCount})</span>
                 </div>
 
                 {/* Compatibility Badge */}

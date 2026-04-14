@@ -5,7 +5,8 @@ import { Button } from '@/components/ui/Button';
 import { useCart } from '@/context/CartContext';
 import { useVehicle } from '@/context/VehicleContext';
 import { checkCompatibility } from '@/lib/compatibility';
-import { Check, AlertTriangle, Plus, ShieldCheck, Truck } from 'lucide-react';
+import { getReviewStats } from '@/data/reviewsMock';
+import { Check, AlertTriangle, Plus, ShieldCheck, Truck, Star } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ProductGallery } from '@/components/product/ProductGallery';
 import { ProductReviews } from '@/components/product/ProductReviews';
@@ -25,6 +26,7 @@ export default function ProductDetail() {
 
     const status = checkCompatibility(product, currentVehicle);
     const isCompatible = status === 'EXACT_MATCH' || status === 'UNIVERSAL';
+    const { avgRating, count: reviewsCount } = getReviewStats(product.handle);
 
     // Variant Selection Logic
     // Default to the variant with the lowest price (usually "Sin instalación")
@@ -81,12 +83,17 @@ export default function ProductDetail() {
                         transition={{ delay: 0.3 }}
                     >
                         {/* ... (Header/Category kept same) ... */}
-                        <div className="flex items-center gap-4 mb-6">
+                        <div className="flex items-center gap-4 mb-6 flex-wrap">
                             {product.category && (
                                 <span className="px-3 py-1 rounded-full border border-white/20 text-xs font-bold uppercase tracking-wider">
                                     {product.category}
                                 </span>
                             )}
+                            <div className="flex items-center gap-1.5">
+                                <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
+                                <span className="text-sm font-semibold text-white">{avgRating}</span>
+                                <span className="text-xs text-gray-400">({reviewsCount})</span>
+                            </div>
                             {product.stock < 5 && (
                                 <span className="text-monza-red text-xs font-bold uppercase tracking-wider">
                                     Poco Stock

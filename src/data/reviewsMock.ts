@@ -152,3 +152,16 @@ export const FALLBACK_REVIEWS: Review[] = [
     { name: 'Lucía P.', avatar: 'https://i.pravatar.cc/150?img=47', rating: 4, comment: 'Buen producto, llegó bien y en tiempo.' },
     { name: 'Ale C.', avatar: 'https://i.pravatar.cc/150?img=33', rating: 5, comment: 'Todo perfecto, lo recomiendo.' }
 ];
+
+/**
+ * Returns the aggregated rating stats for a product based on its reviews.
+ * If no reviews exist for the handle, falls back to FALLBACK_REVIEWS.
+ */
+export function getReviewStats(productHandle: string): { avgRating: number; count: number } {
+    const reviews = PRODUCT_REVIEWS[productHandle] ?? FALLBACK_REVIEWS;
+    if (reviews.length === 0) return { avgRating: 0, count: 0 };
+    const sum = reviews.reduce((acc, r) => acc + r.rating, 0);
+    // Round to 1 decimal
+    const avg = Math.round((sum / reviews.length) * 10) / 10;
+    return { avgRating: avg, count: reviews.length };
+}
