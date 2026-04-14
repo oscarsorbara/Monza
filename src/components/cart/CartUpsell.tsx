@@ -1,6 +1,7 @@
 import { useMemo, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { Plus, Check, Sparkles, ChevronLeft, ChevronRight } from 'lucide-react';
+import { animate } from 'framer-motion';
 import { useCart } from '@/context/CartContext';
 import { useProduct } from '@/context/ProductContext';
 import { useVehicle } from '@/context/VehicleContext';
@@ -16,25 +17,24 @@ export function CartUpsell() {
     const { currentVehicle } = useVehicle();
     const scrollRef = useRef<HTMLDivElement>(null);
 
+    // Sub-pixel smooth lateral scroll using framer-motion animate()
     const scroll = useCallback((direction: 'left' | 'right') => {
         const container = scrollRef.current;
         if (!container) return;
         const firstCard = container.querySelector('article') as HTMLElement | null;
-        const gap = parseFloat(getComputedStyle(container).columnGap || '12') || 12;
+        const computedGap = getComputedStyle(container).columnGap;
+        const gap = parseFloat(computedGap) || 12;
         const stride = (firstCard?.offsetWidth ?? 200) + gap;
         const start = container.scrollLeft;
         const max = container.scrollWidth - container.clientWidth;
-        const end = Math.max(0, Math.min(max, start + (direction === 'left' ? -stride : stride)));
-        if (end === start) return;
-        const duration = 480;
-        const t0 = performance.now();
-        const ease = (t: number) => 1 - Math.pow(1 - t, 3);
-        const step = (now: number) => {
-            const p = Math.min(1, (now - t0) / duration);
-            container.scrollLeft = start + (end - start) * ease(p);
-            if (p < 1) requestAnimationFrame(step);
-        };
-        requestAnimationFrame(step);
+        const target = Math.max(0, Math.min(max, start + (direction === 'left' ? -stride : stride)));
+        if (Math.abs(target - start) < 1) return;
+
+        animate(start, target, {
+            duration: 0.7,
+            ease: [0.16, 1, 0.3, 1], // ease-out-quart
+            onUpdate: (v) => { container.scrollLeft = v; }
+        });
     }, []);
 
     const { suggestions, title } = useMemo(() => {
@@ -117,7 +117,8 @@ export function CartUpsell() {
 
             <div
                 ref={scrollRef}
-                className="flex gap-3 overflow-x-auto scrollbar-hide snap-x snap-mandatory -mx-5 md:-mx-6 px-5 md:px-6 pb-1"
+                data-lenis-prevent
+                className="flex gap-3 overflow-x-auto scrollbar-hide snap-x snap-proximity -mx-5 md:-mx-6 px-5 md:px-6 pb-1"
                 style={{ WebkitOverflowScrolling: 'touch', scrollPaddingLeft: '1.25rem' }}
             >
                 {suggestions.map(p => {
