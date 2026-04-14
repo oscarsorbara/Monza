@@ -1,6 +1,6 @@
-import { useMemo } from 'react';
+import { useMemo, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { Plus, Check } from 'lucide-react';
+import { Plus, Check, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useProduct } from '@/context/ProductContext';
 import { useVehicle } from '@/context/VehicleContext';
@@ -18,6 +18,28 @@ export function ProductPageUpsell({ currentProductId }: ProductPageUpsellProps) 
     const { addToCart } = useCart();
     const { products } = useProduct();
     const { currentVehicle } = useVehicle();
+    const scrollRef = useRef<HTMLDivElement>(null);
+
+    const scroll = useCallback((direction: 'left' | 'right') => {
+        const container = scrollRef.current;
+        if (!container) return;
+        const firstCard = container.querySelector('article') as HTMLElement | null;
+        const gap = parseFloat(getComputedStyle(container).columnGap || '12') || 12;
+        const stride = (firstCard?.offsetWidth ?? 240) + gap;
+        const start = container.scrollLeft;
+        const max = container.scrollWidth - container.clientWidth;
+        const end = Math.max(0, Math.min(max, start + (direction === 'left' ? -stride : stride)));
+        if (end === start) return;
+        const duration = 500;
+        const t0 = performance.now();
+        const ease = (t: number) => 1 - Math.pow(1 - t, 3);
+        const step = (now: number) => {
+            const p = Math.min(1, (now - t0) / duration);
+            container.scrollLeft = start + (end - start) * ease(p);
+            if (p < 1) requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
+    }, []);
 
     const suggestions = useMemo(() => {
         const eligible = products.filter(p => {
@@ -58,11 +80,30 @@ export function ProductPageUpsell({ currentProductId }: ProductPageUpsellProps) 
 
     return (
         <section className="mb-6 md:mb-8" aria-label="Otros productos compatibles">
-            <h3 className="text-xs md:text-sm font-bold uppercase tracking-widest text-gray-400 mb-3">
-                Otros usuarios también llevaron
-            </h3>
+            <div className="flex items-center justify-between gap-2 mb-3">
+                <h3 className="text-xs md:text-sm font-bold uppercase tracking-widest text-gray-400 truncate">
+                    Otros usuarios también llevaron
+                </h3>
+                <div className="flex items-center gap-1 shrink-0">
+                    <button
+                        onClick={() => scroll('left')}
+                        aria-label="Anterior"
+                        className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/70 hover:text-white hover:bg-white/10 transition-colors"
+                    >
+                        <ChevronLeft size={14} />
+                    </button>
+                    <button
+                        onClick={() => scroll('right')}
+                        aria-label="Siguiente"
+                        className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/70 hover:text-white hover:bg-white/10 transition-colors"
+                    >
+                        <ChevronRight size={14} />
+                    </button>
+                </div>
+            </div>
 
             <div
+                ref={scrollRef}
                 className="flex gap-3 overflow-x-auto scrollbar-hide snap-x snap-mandatory -mx-4 md:mx-0 px-4 md:px-0 pb-1"
                 style={{ WebkitOverflowScrolling: 'touch', scrollPaddingLeft: '1rem' }}
             >
