@@ -35,7 +35,7 @@ function AnimatedRoutes() {
   const location = useLocation();
 
   return (
-    <AnimatePresence mode="popLayout">
+    <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
         {/* Public Routes with Navbar */}
         <Route element={<PublicLayout />}>

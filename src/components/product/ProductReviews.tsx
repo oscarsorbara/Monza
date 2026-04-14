@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useCallback } from 'react';
 import { Star, ChevronLeft, ChevronRight } from 'lucide-react';
 import clsx from 'clsx';
 import { motion } from 'framer-motion';
@@ -12,14 +12,33 @@ export function ProductReviews({ productHandle }: ProductReviewsProps) {
     const scrollRef = useRef<HTMLDivElement>(null);
     const reviews = PRODUCT_REVIEWS[productHandle] ?? FALLBACK_REVIEWS;
 
-    const scroll = (direction: 'left' | 'right') => {
-        if (!scrollRef.current) return;
-        const amount = 320;
-        scrollRef.current.scrollBy({
-            left: direction === 'left' ? -amount : amount,
-            behavior: 'smooth'
-        });
-    };
+    // Smooth RAF-based horizontal scroll (premium cubic ease)
+    const scroll = useCallback((direction: 'left' | 'right') => {
+        const container = scrollRef.current;
+        if (!container) return;
+
+        // Align to card stride (card width + gap) for a clean snap feel
+        const firstCard = container.querySelector('article') as HTMLElement | null;
+        const gap = parseFloat(getComputedStyle(container).columnGap || '16') || 16;
+        const stride = (firstCard?.offsetWidth ?? 320) + gap;
+        const delta = direction === 'left' ? -stride : stride;
+
+        const start = container.scrollLeft;
+        const max = container.scrollWidth - container.clientWidth;
+        const end = Math.max(0, Math.min(max, start + delta));
+        if (end === start) return;
+
+        const duration = 520;
+        const t0 = performance.now();
+        const ease = (t: number) => 1 - Math.pow(1 - t, 3); // ease-out cubic
+
+        const step = (now: number) => {
+            const p = Math.min(1, (now - t0) / duration);
+            container.scrollLeft = start + (end - start) * ease(p);
+            if (p < 1) requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
+    }, []);
 
     // Aggregate rating
     const avgRating = reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length;
@@ -77,10 +96,14 @@ export function ProductReviews({ productHandle }: ProductReviewsProps) {
                 {reviews.map((review, i) => (
                     <motion.article
                         key={i}
-                        initial={{ opacity: 0, y: 8 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, amount: 0.2 }}
-                        transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1], delay: Math.min(i * 0.04, 0.2) }}
+                        initial={{ opacity: 0, y: 14, scale: 0.985 }}
+                        whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                        viewport={{ once: true, amount: 0.12 }}
+                        transition={{
+                            duration: 0.55,
+                            ease: [0.22, 1, 0.36, 1],
+                            delay: Math.min(i * 0.08, 0.4)
+                        }}
                         className="flex-shrink-0 w-[78vw] max-w-[300px] md:w-[320px] md:max-w-none bg-carbon-900 border border-white/5 rounded-2xl p-5 shadow-lg shadow-black/20 snap-start"
                     >
                         <div className="flex items-center gap-3 mb-3">
