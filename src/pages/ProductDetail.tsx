@@ -157,13 +157,13 @@ export default function ProductDetail() {
                         )}
                         */}
 
+                        {/* Inline Vehicle Selector (merged with compatibility banner) — compact, ABOVE the upsell */}
+                        <div className="mb-5 md:mb-6">
+                            <InlineVehicleSelector compatibilityStatus={status} compact />
+                        </div>
+
                         {/* Compatible Upsell — other users also bought */}
                         <ProductPageUpsell currentProductId={product.id} />
-
-                        {/* Inline Vehicle Selector (merged with compatibility banner) */}
-                        <div className="mb-6 md:mb-8">
-                            <InlineVehicleSelector compatibilityStatus={status} />
-                        </div>
 
                         <div className="mt-6 md:mt-8 mb-10 md:mb-12">
                             {/* Mobile specific bullet points */}

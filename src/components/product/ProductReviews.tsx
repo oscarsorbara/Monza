@@ -44,9 +44,14 @@ export function ProductReviews({ productHandle }: ProductReviewsProps) {
 
         if (Math.abs(target - start) < 2) return;
 
+        // Spring physics — organic, non-bouncy glide. Feels like swiping with
+        // momentum rather than a timed animation.
         animate(start, target, {
-            duration: 0.85,
-            ease: [0.19, 1, 0.22, 1], // ease-out-expo — floatier than quart
+            type: 'spring',
+            stiffness: 55,
+            damping: 20,
+            mass: 1,
+            restDelta: 0.5,
             onUpdate: (v) => { container.scrollLeft = v; }
         });
     }, []);

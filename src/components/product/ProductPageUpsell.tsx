@@ -1,7 +1,7 @@
 import { useMemo, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { Plus, Check, ChevronLeft, ChevronRight } from 'lucide-react';
-import { animate } from 'framer-motion';
+import { animate, motion } from 'framer-motion';
 import { useCart } from '@/context/CartContext';
 import { useProduct } from '@/context/ProductContext';
 import { useVehicle } from '@/context/VehicleContext';
@@ -44,8 +44,11 @@ export function ProductPageUpsell({ currentProductId }: ProductPageUpsellProps) 
         if (Math.abs(target - start) < 2) return;
 
         animate(start, target, {
-            duration: 0.85,
-            ease: [0.19, 1, 0.22, 1], // ease-out-expo
+            type: 'spring',
+            stiffness: 55,
+            damping: 20,
+            mass: 1,
+            restDelta: 0.5,
             onUpdate: (v) => { container.scrollLeft = v; }
         });
     }, []);
@@ -81,14 +84,25 @@ export function ProductPageUpsell({ currentProductId }: ProductPageUpsellProps) 
         return scored;
     }, [products, currentVehicle, currentProductId]);
 
-    if (suggestions.length === 0) return null;
-
     const handleAdd = (product: Product) => {
         addToCart(product, 1, currentVehicle?.id);
     };
 
+    // Keyed by vehicle id so the section re-mounts and re-animates when the user
+    // confirms or changes their vehicle — produces a fluid "arrival" instead of a pop.
+    const animKey = currentVehicle?.id ?? 'no-vehicle';
+
+    if (suggestions.length === 0) return null;
+
     return (
-        <section className="mb-6 md:mb-8" aria-label="Otros productos compatibles">
+        <motion.section
+            key={animKey}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+            className="mb-6 md:mb-8"
+            aria-label="Otros productos compatibles"
+        >
             <div className="flex items-center justify-between gap-2 mb-3">
                 <h3 className="text-xs md:text-sm font-bold uppercase tracking-widest text-gray-400 truncate">
                     Otros usuarios también llevaron
@@ -117,11 +131,18 @@ export function ProductPageUpsell({ currentProductId }: ProductPageUpsellProps) 
                 className="flex gap-3 overflow-x-auto scrollbar-hide snap-x snap-proximity -mx-4 md:mx-0 px-4 md:px-0 pb-1"
                 style={{ WebkitOverflowScrolling: 'touch', scrollPaddingLeft: '1rem' }}
             >
-                {suggestions.map(p => {
+                {suggestions.map((p, i) => {
                     const isUniversal = p.isUniversal === true;
                     return (
-                        <article
+                        <motion.article
                             key={p.id}
+                            initial={{ opacity: 0, y: 14, scale: 0.97 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            transition={{
+                                duration: 0.5,
+                                ease: [0.22, 1, 0.36, 1],
+                                delay: 0.1 + Math.min(i * 0.07, 0.35)
+                            }}
                             className="flex-shrink-0 w-[220px] md:w-[240px] bg-carbon-900 border border-white/5 rounded-xl overflow-hidden snap-start flex flex-col"
                         >
                             <Link
@@ -167,10 +188,10 @@ export function ProductPageUpsell({ currentProductId }: ProductPageUpsellProps) 
                                     </button>
                                 </div>
                             </div>
-                        </article>
+                        </motion.article>
                     );
                 })}
             </div>
-        </section>
+        </motion.section>
     );
 }

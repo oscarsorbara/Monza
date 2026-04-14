@@ -253,8 +253,30 @@ export function CartDrawer() {
                                         </AnimatePresence>
                                     </ul>
 
-                                    {/* No vehicle → prompt; vehicle set → compatible upsell */}
-                                    {currentVehicle ? <CartUpsell /> : <DrawerVehicleCheck />}
+                                    {/* No vehicle → prompt; vehicle set → compatible upsell. Swap is animated. */}
+                                    <AnimatePresence mode="wait" initial={false}>
+                                        {currentVehicle ? (
+                                            <motion.div
+                                                key="upsell"
+                                                initial={{ opacity: 0, y: 10 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                exit={{ opacity: 0, y: -6 }}
+                                                transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                                            >
+                                                <CartUpsell />
+                                            </motion.div>
+                                        ) : (
+                                            <motion.div
+                                                key="check"
+                                                initial={{ opacity: 0, y: 10 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                exit={{ opacity: 0, y: -6 }}
+                                                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                                            >
+                                                <DrawerVehicleCheck />
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
                                 </div>
 
                                 {/* Footer: totals + trust + CTA */}

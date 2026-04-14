@@ -1,7 +1,7 @@
 import { useMemo, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { Plus, Check, Sparkles, ChevronLeft, ChevronRight } from 'lucide-react';
-import { animate } from 'framer-motion';
+import { animate, motion } from 'framer-motion';
 import { useCart } from '@/context/CartContext';
 import { useProduct } from '@/context/ProductContext';
 import { useVehicle } from '@/context/VehicleContext';
@@ -40,8 +40,11 @@ export function CartUpsell() {
         if (Math.abs(target - start) < 2) return;
 
         animate(start, target, {
-            duration: 0.8,
-            ease: [0.19, 1, 0.22, 1], // ease-out-expo
+            type: 'spring',
+            stiffness: 55,
+            damping: 20,
+            mass: 1,
+            restDelta: 0.5,
             onUpdate: (v) => { container.scrollLeft = v; }
         });
     }, []);
@@ -130,11 +133,18 @@ export function CartUpsell() {
                 className="flex gap-3 overflow-x-auto scrollbar-hide snap-x snap-proximity -mx-5 md:-mx-6 px-5 md:px-6 pb-1"
                 style={{ WebkitOverflowScrolling: 'touch', scrollPaddingLeft: '1.25rem' }}
             >
-                {suggestions.map(p => {
+                {suggestions.map((p, i) => {
                     const isUniversal = p.isUniversal === true;
                     return (
-                        <article
+                        <motion.article
                             key={p.id}
+                            initial={{ opacity: 0, y: 12, scale: 0.97 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            transition={{
+                                duration: 0.5,
+                                ease: [0.22, 1, 0.36, 1],
+                                delay: Math.min(i * 0.06, 0.3)
+                            }}
                             className="flex-shrink-0 w-[185px] md:w-[210px] bg-carbon-900 border border-white/5 rounded-xl overflow-hidden snap-start flex flex-col"
                         >
                             <Link
@@ -182,7 +192,7 @@ export function CartUpsell() {
                                     </button>
                                 </div>
                             </div>
-                        </article>
+                        </motion.article>
                     );
                 })}
             </div>
