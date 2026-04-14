@@ -76,16 +76,16 @@ export default function ProductDetail() {
                 </div>
 
                 {/* Content Side (Scrollable) */}
-                <div className="px-4 py-8 md:px-6 md:py-12 lg:py-32 lg:px-20 max-w-2xl pb-32 md:pb-12">
+                <div className="px-4 pt-6 pb-28 md:px-6 md:py-12 lg:py-32 lg:px-20 max-w-2xl md:pb-12">
                     <motion.div
                         initial={{ y: 20, opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}
                         transition={{ delay: 0.3 }}
                     >
                         {/* ... (Header/Category kept same) ... */}
-                        <div className="flex items-center gap-4 mb-6 flex-wrap">
+                        <div className="flex items-center gap-3 md:gap-4 mb-4 md:mb-6 flex-wrap">
                             {product.category && (
-                                <span className="px-3 py-1 rounded-full border border-white/20 text-xs font-bold uppercase tracking-wider">
+                                <span className="px-3 py-1 rounded-full border border-white/20 text-[11px] md:text-xs font-bold uppercase tracking-wider">
                                     {product.category}
                                 </span>
                             )}
@@ -95,22 +95,22 @@ export default function ProductDetail() {
                                 <span className="text-xs text-gray-400">({reviewsCount})</span>
                             </div>
                             {product.stock < 5 && (
-                                <span className="text-monza-red text-xs font-bold uppercase tracking-wider">
+                                <span className="text-monza-red text-[11px] md:text-xs font-bold uppercase tracking-wider">
                                     Poco Stock
                                 </span>
                             )}
                         </div>
 
-                        <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-4 leading-none">
+                        <h1 className="text-[26px] sm:text-3xl md:text-4xl font-bold tracking-tight mb-4 leading-tight md:leading-none">
                             {product.name}
                         </h1>
 
                         <div className="mb-6 md:mb-4">
-                            <div className="flex items-center gap-4">
+                            <div className="flex items-center gap-3 md:gap-4 flex-wrap">
                                 {selectedVariant.compareAtPrice && selectedVariant.compareAtPrice > selectedVariant.price && (
                                     <>
                                         <div className="flex flex-col items-start">
-                                            <span className="text-xl md:text-2xl text-gray-400 line-through decoration-red-500/50 decoration-2">
+                                            <span className="text-lg md:text-2xl text-gray-400 line-through decoration-red-500/50 decoration-2">
                                                 ${formatPrice(selectedVariant.compareAtPrice)}
                                             </span>
                                             <span className="bg-monza-red text-white text-[10px] md:text-xs font-bold px-2 py-0.5 rounded">
@@ -119,7 +119,7 @@ export default function ProductDetail() {
                                         </div>
                                     </>
                                 )}
-                                <span className="text-5xl md:text-4xl text-white font-black tracking-tight">
+                                <span className="text-4xl md:text-4xl text-white font-black tracking-tight">
                                     ${formatPrice(selectedVariant.price)}
                                 </span>
                             </div>
@@ -158,7 +158,7 @@ export default function ProductDetail() {
                         */}
 
                         {/* Inline Vehicle Selector */}
-                        <div className="mb-8">
+                        <div className="mb-6 md:mb-8">
                             <InlineVehicleSelector />
                         </div>
 
@@ -192,9 +192,9 @@ export default function ProductDetail() {
                             )}
                         </AnimatePresence>
 
-                        <div className="mt-8 mb-12 md:mb-12">
+                        <div className="mt-6 md:mt-8 mb-10 md:mb-12">
                             {/* Mobile specific bullet points */}
-                            <ul className="mb-8 space-y-3 text-sm text-gray-300 md:hidden font-medium bg-white/5 p-4 rounded-xl border border-white/10">
+                            <ul className="mb-6 md:mb-8 space-y-3 text-[13px] md:text-sm text-gray-300 md:hidden font-medium bg-white/5 p-4 rounded-xl border border-white/10">
                                 <li className="flex items-center gap-3"><Check className="w-5 h-5 text-monza-red shrink-0" /> Envío a todo el país garantizado</li>
                                 <li className="flex items-center gap-3"><Check className="w-5 h-5 text-monza-red shrink-0" /> Calidad OEM Premium</li>
                                 <li className="flex items-center gap-3"><Check className="w-5 h-5 text-monza-red shrink-0" /> Asesoramiento especializado</li>

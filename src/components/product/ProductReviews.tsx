@@ -24,13 +24,13 @@ export function ProductReviews({ productHandle }: ProductReviewsProps) {
     const avgRating = reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length;
 
     return (
-        <section className="mt-12 mb-8">
-            <div className="flex items-center justify-between mb-6">
-                <div>
-                    <h3 className="text-2xl md:text-3xl font-bold italic uppercase tracking-tight text-white">
+        <section className="mt-10 md:mt-12 mb-8">
+            <div className="flex items-center justify-between mb-4 md:mb-6 gap-3">
+                <div className="min-w-0">
+                    <h3 className="text-xl md:text-3xl font-bold italic uppercase tracking-tight text-white">
                         Opiniones de clientes
                     </h3>
-                    <div className="flex items-center gap-2 mt-1">
+                    <div className="flex items-center gap-2 mt-1 flex-wrap">
                         <div className="flex items-center gap-0.5">
                             {Array.from({ length: 5 }).map((_, idx) => (
                                 <Star
@@ -44,7 +44,7 @@ export function ProductReviews({ productHandle }: ProductReviewsProps) {
                                 />
                             ))}
                         </div>
-                        <span className="text-sm text-gray-400">
+                        <span className="text-xs md:text-sm text-gray-400">
                             {avgRating.toFixed(1)} · {reviews.length} {reviews.length === 1 ? 'opinión' : 'opiniones'}
                         </span>
                     </div>
@@ -70,13 +70,13 @@ export function ProductReviews({ productHandle }: ProductReviewsProps) {
 
             <div
                 ref={scrollRef}
-                className="flex gap-4 overflow-x-auto scrollbar-hide snap-x snap-mandatory -mx-4 px-4 md:mx-0 md:px-0 pb-2"
-                style={{ WebkitOverflowScrolling: 'touch' }}
+                className="flex gap-3 md:gap-4 overflow-x-auto scrollbar-hide snap-x snap-mandatory -mx-4 px-4 md:mx-0 md:px-0 pb-3"
+                style={{ WebkitOverflowScrolling: 'touch', scrollPaddingLeft: '1rem' }}
             >
                 {reviews.map((review, i) => (
                     <article
                         key={i}
-                        className="flex-shrink-0 w-[280px] md:w-[320px] bg-carbon-900 border border-white/5 rounded-2xl p-5 shadow-lg shadow-black/20 snap-start"
+                        className="flex-shrink-0 w-[78vw] max-w-[300px] md:w-[320px] md:max-w-none bg-carbon-900 border border-white/5 rounded-2xl p-5 shadow-lg shadow-black/20 snap-start"
                     >
                         <div className="flex items-center gap-3 mb-3">
                             <img

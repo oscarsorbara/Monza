@@ -52,10 +52,10 @@ export function InlineVehicleSelector() {
     const showSelector = !currentVehicle || isAddingNew;
 
     return (
-        <div className="bg-carbon-900 border border-white/10 rounded-2xl p-6 mb-8">
-            <div className="flex items-center gap-3 mb-6">
-                <Car className="text-monza-red" size={24} />
-                <h3 className="text-xl font-bold text-white italic uppercase tracking-tighter">
+        <div className="bg-carbon-900 border border-white/10 rounded-2xl p-5 md:p-6 mb-6 md:mb-8">
+            <div className="flex items-center gap-3 mb-5 md:mb-6">
+                <Car className="text-monza-red shrink-0" size={22} />
+                <h3 className="text-lg md:text-xl font-bold text-white italic uppercase tracking-tighter leading-tight">
                     COMPATIBILIDAD CON TU AUTO
                 </h3>
             </div>

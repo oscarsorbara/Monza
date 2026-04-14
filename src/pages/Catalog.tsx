@@ -156,10 +156,10 @@ export default function Catalog() {
     );
 
     return (
-        <div className="min-h-screen pt-32 pb-20 px-4 md:px-8">
+        <div className="min-h-screen pt-24 md:pt-32 pb-20 px-4 md:px-8">
             <div className="container mx-auto">
-                <div className="mb-12">
-                    <h1 className="text-4xl md:text-6xl font-black italic tracking-tighter text-white mb-6">
+                <div className="mb-8 md:mb-12">
+                    <h1 className="text-4xl md:text-6xl font-black italic tracking-tighter text-white mb-4 md:mb-6">
                         CATÁLOGO <span className="text-monza-red">.</span>
                     </h1>
 
@@ -266,7 +266,7 @@ export default function Catalog() {
                         </div>
 
                         {filteredProducts.length > 0 ? (
-                            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 md:gap-6">
                                 {filteredProducts.map(product => (
                                     <ProductCard key={product.id} product={product} />
                                 ))}

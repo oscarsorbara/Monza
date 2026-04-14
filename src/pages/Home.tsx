@@ -123,26 +123,26 @@ function CategoryReel() {
     if (collections.length === 0) return null;
 
     return (
-        <section className="py-32 border-b border-white/5 relative z-10 overflow-hidden">
-            <div className="container mx-auto px-6 mb-12 flex justify-between items-end">
+        <section className="py-20 md:py-32 border-b border-white/5 relative z-10 overflow-hidden">
+            <div className="container mx-auto px-4 md:px-6 mb-8 md:mb-12 flex justify-between items-end gap-4">
                 <h2 className="text-4xl md:text-6xl font-bold italic tracking-tighter text-white">
                     COLECCIONES
                 </h2>
 
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-3 md:gap-4 shrink-0">
                     <button
                         onClick={() => scroll('left')}
-                        className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center text-white hover:bg-white hover:text-black transition-all"
+                        className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-white/20 flex items-center justify-center text-white hover:bg-white hover:text-black transition-all"
                         aria-label="Scroll left"
                     >
-                        <ArrowRight size={24} className="rotate-180" />
+                        <ArrowRight size={20} className="rotate-180 md:w-6 md:h-6" />
                     </button>
                     <button
                         onClick={() => scroll('right')}
-                        className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center text-white hover:bg-white hover:text-black transition-all"
+                        className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-white/20 flex items-center justify-center text-white hover:bg-white hover:text-black transition-all"
                         aria-label="Scroll right"
                     >
-                        <ArrowRight size={24} />
+                        <ArrowRight size={20} className="md:w-6 md:h-6" />
                     </button>
                 </div>
             </div>
@@ -150,7 +150,7 @@ function CategoryReel() {
             <div
                 ref={scrollContainerRef}
                 onScroll={handleScroll}
-                className="flex gap-8 px-6 overflow-x-auto scrollbar-hide"
+                className="flex gap-5 md:gap-8 px-4 md:px-6 overflow-x-auto scrollbar-hide"
                 style={{
                     WebkitOverflowScrolling: 'touch',
                     scrollBehavior: 'auto' // Use 'auto' for teleportation script to work instantly
@@ -160,7 +160,7 @@ function CategoryReel() {
                     <Link
                         key={`${cat.id}-${i}`}
                         to={`/catalog?category=${cat.id}`}
-                        className="group relative w-[280px] h-[400px] flex-shrink-0 rounded-xl overflow-hidden cursor-pointer snap-center"
+                        className="group relative w-[260px] md:w-[280px] h-[360px] md:h-[400px] flex-shrink-0 rounded-xl overflow-hidden cursor-pointer snap-center"
                     >
                         <div className="absolute inset-0 bg-carbon-800 transition-transform duration-300 group-hover:scale-95" />
 
@@ -177,8 +177,8 @@ function CategoryReel() {
 
                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80" />
 
-                        <div className="absolute bottom-0 left-0 p-8 w-full z-10">
-                            <h3 className="text-3xl font-bold italic text-white mb-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">{cat.name}</h3>
+                        <div className="absolute bottom-0 left-0 p-6 md:p-8 w-full z-10">
+                            <h3 className="text-2xl md:text-3xl font-bold italic text-white mb-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">{cat.name}</h3>
                             <p className="text-gray-400 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100 line-clamp-2">{cat.description}</p>
 
                             <div className="mt-4 pt-4 border-t border-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-200">
@@ -215,17 +215,17 @@ export default function Home() {
                     <CategoryReel />
                     <AppointmentSection />
 
-                    <section className="py-32 container mx-auto px-6">
-                        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-6">
+                    <section className="py-20 md:py-32 container mx-auto px-4 md:px-6">
+                        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 md:mb-16 gap-6">
                             <div>
-                                <span className="text-monza-red font-bold tracking-[0.2em] text-sm uppercase mb-4 block">Seleccionado Para Vos</span>
-                                <h2 className="text-4xl md:text-6xl font-bold italic tracking-tighter text-white">
+                                <span className="text-monza-red font-bold tracking-[0.2em] text-xs md:text-sm uppercase mb-3 md:mb-4 block">Seleccionado Para Vos</span>
+                                <h2 className="text-4xl md:text-6xl font-bold italic tracking-tighter text-white leading-[0.95] md:leading-none">
                                     COMPONENTES <br /> DESTACADOS
                                 </h2>
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-12">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-8 md:gap-y-12">
                             {featuredProducts.map(p => (
                                 <ProductCard key={p.id} product={p} />
                             ))}

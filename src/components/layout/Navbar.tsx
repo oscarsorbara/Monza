@@ -28,7 +28,7 @@ export function Navbar() {
         >
             <div
                 className={cn(
-                    "max-w-7xl mx-auto px-6 flex items-center justify-between transition-all duration-500",
+                    "max-w-7xl mx-auto px-4 md:px-6 flex items-center justify-between transition-all duration-500",
                     isScrolled ? "py-2 md:py-3" : "py-3 md:py-4"
                 )}
             >

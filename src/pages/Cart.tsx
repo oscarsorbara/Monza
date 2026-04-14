@@ -82,15 +82,15 @@ export default function Cart() {
     }
 
     return (
-        <div className="min-h-screen bg-carbon-950 pt-28 md:pt-32 pb-32 md:pb-20 px-4 md:px-6">
+        <div className="min-h-screen bg-carbon-950 pt-24 md:pt-32 pb-32 md:pb-20 px-4 md:px-6">
             <div className="container mx-auto max-w-6xl">
                 <div className="flex flex-col md:flex-row md:items-center gap-4 mb-4 md:mb-8">
-                    <h1 className="text-3xl font-black italic tracking-tighter">CARRITO ({items.length})</h1>
+                    <h1 className="text-3xl md:text-3xl font-black italic tracking-tighter">CARRITO ({items.length})</h1>
                 </div>
 
-                <div className="grid lg:grid-cols-3 gap-12 mt-12">
+                <div className="grid lg:grid-cols-3 gap-8 md:gap-12 mt-6 md:mt-12">
                     {/* Cart Items */}
-                    <div className="lg:col-span-2 space-y-6">
+                    <div className="lg:col-span-2 space-y-4 md:space-y-6">
                         <AnimatePresence>
                             {items.map((item) => (
                                 <motion.div

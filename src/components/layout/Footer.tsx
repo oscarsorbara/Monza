@@ -3,9 +3,9 @@ import { Instagram, Facebook, Twitter, Mail, MapPin, Phone } from 'lucide-react'
 
 export function Footer() {
     return (
-        <footer className="bg-carbon-950 border-t border-white/5 pt-20 pb-10 relative z-10">
-            <div className="container mx-auto px-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+        <footer className="bg-carbon-950 border-t border-white/5 pt-14 md:pt-20 pb-8 md:pb-10 relative z-10">
+            <div className="container mx-auto px-5 md:px-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-12 mb-10 md:mb-16">
                     {/* Brand Section */}
                     <div className="space-y-6">
                         <Link to="/" className="inline-block">
@@ -29,8 +29,8 @@ export function Footer() {
 
                     {/* Quick Links */}
                     <div>
-                        <h4 className="text-white font-bold uppercase tracking-widest text-sm mb-6 underline decoration-monza-red decoration-2 underline-offset-8">Explorar</h4>
-                        <ul className="space-y-4">
+                        <h4 className="text-white font-bold uppercase tracking-widest text-sm mb-4 md:mb-6 underline decoration-monza-red decoration-2 underline-offset-8">Explorar</h4>
+                        <ul className="space-y-3 md:space-y-4">
                             <li><Link to="/" className="text-gray-400 hover:text-white transition-colors text-sm">Inicio</Link></li>
                             <li><Link to="/catalog" className="text-gray-400 hover:text-white transition-colors text-sm">Catálogo</Link></li>
                             <li><Link to="/catalog?category=Escapes" className="text-gray-400 hover:text-white transition-colors text-sm">Escapes</Link></li>
@@ -40,8 +40,8 @@ export function Footer() {
 
                     {/* Contact Info */}
                     <div>
-                        <h4 className="text-white font-bold uppercase tracking-widest text-sm mb-6 underline decoration-monza-red decoration-2 underline-offset-8">Contacto</h4>
-                        <ul className="space-y-4">
+                        <h4 className="text-white font-bold uppercase tracking-widest text-sm mb-4 md:mb-6 underline decoration-monza-red decoration-2 underline-offset-8">Contacto</h4>
+                        <ul className="space-y-3 md:space-y-4">
                             <li className="flex items-start gap-3 text-gray-400 text-sm">
                                 <MapPin size={18} className="text-monza-red shrink-0" />
                                 <span>Av. Libertador 1234, <br />Buenos Aires, Argentina</span>
@@ -59,7 +59,7 @@ export function Footer() {
 
                     {/* Newsletter */}
                     <div>
-                        <h4 className="text-white font-bold uppercase tracking-widest text-sm mb-6 underline decoration-monza-red decoration-2 underline-offset-8">Newsletter</h4>
+                        <h4 className="text-white font-bold uppercase tracking-widest text-sm mb-4 md:mb-6 underline decoration-monza-red decoration-2 underline-offset-8">Newsletter</h4>
                         <p className="text-gray-400 text-sm mb-4">Suscribite para recibir novedades y ofertas exclusivas.</p>
                         <form className="flex gap-2">
                             <input

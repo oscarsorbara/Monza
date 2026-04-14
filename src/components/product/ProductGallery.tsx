@@ -86,17 +86,22 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
                         <ChevronRight size={20} strokeWidth={2.2} />
                     </button>
 
-                    {/* Dots Indicator */}
-                    <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 flex gap-2">
+                    {/* Dots Indicator — larger touch targets on mobile */}
+                    <div className="absolute bottom-4 md:bottom-6 left-1/2 -translate-x-1/2 z-30 flex gap-1 bg-black/25 backdrop-blur-sm rounded-full px-2 py-1.5">
                         {images.map((_, i) => (
                             <button
                                 key={i}
                                 onClick={() => setIndex(i)}
-                                className={clsx(
-                                    "w-2 h-2 rounded-full transition-all",
-                                    i === index ? "bg-white w-4" : "bg-white/30 hover:bg-white/50"
-                                )}
-                            />
+                                aria-label={`Ir a imagen ${i + 1}`}
+                                className="p-1.5 -m-1 flex items-center justify-center"
+                            >
+                                <span
+                                    className={clsx(
+                                        "block rounded-full transition-all h-2",
+                                        i === index ? "bg-white w-5" : "bg-white/40 hover:bg-white/70 w-2"
+                                    )}
+                                />
+                            </button>
                         ))}
                     </div>
                 </>
