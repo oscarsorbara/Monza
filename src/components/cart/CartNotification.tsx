@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/Button';
 import { formatPrice } from '@/lib/utils';
 
 export function CartNotification() {
-    const { lastAddedItem, showNotification, closeNotification, cartTotal, itemCount, openDrawer } = useCart();
+    const { lastAddedItem, showNotification, closeNotification, cartTotal, itemCount, openDrawer, isDrawerOpen } = useCart();
 
     // Auto close after 5 seconds
     useEffect(() => {
@@ -18,6 +18,15 @@ export function CartNotification() {
         }
     }, [showNotification, closeNotification]);
 
+    // If drawer is already open, suppress the popup — the item is already visible there.
+    // Also auto-dismiss any lingering notification to avoid it reappearing on drawer close.
+    useEffect(() => {
+        if (isDrawerOpen && showNotification) {
+            closeNotification();
+        }
+    }, [isDrawerOpen, showNotification, closeNotification]);
+
+    if (isDrawerOpen) return null;
     if (!lastAddedItem) return null;
 
     return (

@@ -173,7 +173,11 @@ export function CartDrawer() {
                                 </div>
 
                                 {/* Scrollable items + upsell */}
-                                <div className="flex-1 overflow-y-auto overscroll-contain px-5 md:px-6 py-4" style={{ WebkitOverflowScrolling: 'touch' }}>
+                                <div
+                                    className="flex-1 overflow-y-auto overscroll-contain px-5 md:px-6 pt-4 pb-6"
+                                    style={{ WebkitOverflowScrolling: 'touch' }}
+                                    data-lenis-prevent
+                                >
                                     <ul className="space-y-3">
                                         <AnimatePresence initial={false}>
                                             {items.map(item => (
@@ -189,7 +193,7 @@ export function CartDrawer() {
                                                     <Link
                                                         to={`/product/${item.handle}`}
                                                         onClick={closeDrawer}
-                                                        className="w-20 h-20 bg-carbon-800 rounded-xl overflow-hidden shrink-0"
+                                                        className="w-24 h-24 bg-carbon-800 rounded-xl overflow-hidden shrink-0"
                                                     >
                                                         <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
                                                     </Link>
@@ -200,7 +204,7 @@ export function CartDrawer() {
                                                             onClick={closeDrawer}
                                                             className="block"
                                                         >
-                                                            <h3 className="text-sm font-bold text-white leading-tight line-clamp-2 pr-6 hover:text-monza-red transition-colors">
+                                                            <h3 className="text-[14px] font-bold text-white leading-tight line-clamp-2 pr-6 hover:text-monza-red transition-colors">
                                                                 {item.name}
                                                             </h3>
                                                         </Link>
@@ -211,33 +215,33 @@ export function CartDrawer() {
                                                                     ${formatPrice(item.compareAtPrice)}
                                                                 </span>
                                                             )}
-                                                            <span className="text-sm font-bold text-white">${formatPrice(item.price)}</span>
+                                                            <span className="text-[15px] font-bold text-white">${formatPrice(item.price)}</span>
                                                         </div>
 
                                                         <div className="mt-auto pt-2 flex items-center justify-between">
-                                                            <div className="flex items-center gap-1 bg-carbon-950 rounded-full px-1.5 py-1 border border-white/10">
+                                                            <div className="flex items-center gap-1 bg-carbon-950 rounded-full px-2 py-1 border border-white/10">
                                                                 <button
                                                                     onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}
-                                                                    className="w-7 h-7 flex items-center justify-center hover:text-monza-red transition-colors"
+                                                                    className="w-8 h-8 flex items-center justify-center hover:text-monza-red transition-colors"
                                                                     aria-label="Disminuir"
                                                                 >
-                                                                    <Minus size={12} />
+                                                                    <Minus size={14} />
                                                                 </button>
-                                                                <span className="w-5 text-center text-xs font-bold">{item.quantity}</span>
+                                                                <span className="w-6 text-center text-sm font-bold">{item.quantity}</span>
                                                                 <button
                                                                     onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                                                                    className="w-7 h-7 flex items-center justify-center hover:text-monza-red transition-colors"
+                                                                    className="w-8 h-8 flex items-center justify-center hover:text-monza-red transition-colors"
                                                                     aria-label="Aumentar"
                                                                 >
-                                                                    <Plus size={12} />
+                                                                    <Plus size={14} />
                                                                 </button>
                                                             </div>
                                                             <button
                                                                 onClick={() => removeFromCart(item.id)}
-                                                                className="w-9 h-9 flex items-center justify-center text-gray-500 hover:text-red-500 hover:bg-red-500/10 rounded-full transition-colors"
+                                                                className="w-10 h-10 flex items-center justify-center text-gray-500 hover:text-red-500 hover:bg-red-500/10 rounded-full transition-colors"
                                                                 aria-label="Eliminar"
                                                             >
-                                                                <Trash2 size={15} />
+                                                                <Trash2 size={16} />
                                                             </button>
                                                         </div>
                                                     </div>

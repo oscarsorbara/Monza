@@ -54,9 +54,7 @@ export function CartUpsell() {
             .slice(0, MAX_UPSELL_ITEMS)
             .map(s => s.product);
 
-        const titleText = currentVehicle
-            ? 'Recomendados para tu vehículo'
-            : 'Complementos compatibles';
+        const titleText = 'Otros usuarios también llevaron';
 
         return { suggestions: scored, title: titleText };
     }, [items, products, currentVehicle]);
@@ -85,7 +83,7 @@ export function CartUpsell() {
                     return (
                         <article
                             key={p.id}
-                            className="flex-shrink-0 w-[170px] bg-carbon-900 border border-white/5 rounded-xl overflow-hidden snap-start flex flex-col"
+                            className="flex-shrink-0 w-[185px] bg-carbon-900 border border-white/5 rounded-xl overflow-hidden snap-start flex flex-col"
                         >
                             <div className="relative aspect-square bg-carbon-800 overflow-hidden">
                                 <img
@@ -101,8 +99,8 @@ export function CartUpsell() {
                                 </span>
                             </div>
 
-                            <div className="p-2.5 flex flex-col flex-1">
-                                <h5 className="text-xs font-bold text-white leading-tight line-clamp-2 mb-2 min-h-[32px]">
+                            <div className="p-3 flex flex-col flex-1">
+                                <h5 className="text-[13px] font-bold text-white leading-tight line-clamp-2 mb-2 min-h-[34px]">
                                     {p.name}
                                 </h5>
 
@@ -113,16 +111,16 @@ export function CartUpsell() {
                                                 ${formatPrice(p.compareAtPrice)}
                                             </div>
                                         )}
-                                        <div className="text-xs font-black text-white truncate">
+                                        <div className="text-sm font-black text-white truncate">
                                             ${formatPrice(p.price)}
                                         </div>
                                     </div>
                                     <button
                                         onClick={() => handleAdd(p)}
                                         aria-label={`Agregar ${p.name}`}
-                                        className="w-8 h-8 shrink-0 rounded-full bg-monza-red hover:bg-red-600 text-white flex items-center justify-center transition-colors active:scale-95"
+                                        className="w-9 h-9 shrink-0 rounded-full bg-monza-red hover:bg-red-600 text-white flex items-center justify-center transition-colors active:scale-95"
                                     >
-                                        <Plus className="w-4 h-4" />
+                                        <Plus className="w-[18px] h-[18px]" />
                                     </button>
                                 </div>
                             </div>
