@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { clsx } from 'clsx';
 
@@ -9,7 +9,7 @@ interface ProductGalleryProps {
 
 export function ProductGallery({ images, title }: ProductGalleryProps) {
     const [index, setIndex] = useState(0);
-    const [touchStart, setTouchStart] = useState<number | null>(null);
+    const touchStartRef = useRef<{ x: number; y: number } | null>(null);
 
     const nextImage = useCallback(() => {
         setIndex((prev) => (prev + 1) % images.length);
@@ -32,13 +32,23 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
     return (
         <div
             className="relative w-full h-full overflow-hidden bg-carbon-900"
-            onTouchStart={(e) => setTouchStart(e.touches[0].clientX)}
+            // pan-y lets the browser own vertical scroll; we only intercept horizontal swipes
+            style={{ touchAction: 'pan-y' }}
+            onTouchStart={(e) => {
+                const t = e.touches[0];
+                touchStartRef.current = { x: t.clientX, y: t.clientY };
+            }}
             onTouchEnd={(e) => {
-                if (touchStart === null) return;
-                const diff = e.changedTouches[0].clientX - touchStart;
-                if (diff < -50) nextImage();
-                else if (diff > 50) prevImage();
-                setTouchStart(null);
+                const start = touchStartRef.current;
+                if (!start) return;
+                const end = e.changedTouches[0];
+                const dx = end.clientX - start.x;
+                const dy = end.clientY - start.y;
+                touchStartRef.current = null;
+                // Only treat as swipe if horizontal move dominates and passes threshold
+                if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy)) return;
+                if (dx < 0) nextImage();
+                else prevImage();
             }}
         >
             {/* All images rendered, only active one visible */}
