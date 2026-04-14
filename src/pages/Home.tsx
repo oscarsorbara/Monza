@@ -7,6 +7,7 @@ import { useProduct } from '@/context/ProductContext';
 import { ProductCard } from '@/components/product/ProductCard';
 import { VehicleSelector } from '@/components/vehicle/VehicleSelector';
 import { AppointmentSection } from '@/components/service/AppointmentSection';
+import { FadeIn } from '@/components/ui/FadeIn';
 const heroBg = "/hero-audi.png";
 
 function HeroSection() {
@@ -124,7 +125,7 @@ function CategoryReel() {
 
     return (
         <section className="py-20 md:py-32 border-b border-white/5 relative z-10 overflow-hidden">
-            <div className="container mx-auto px-4 md:px-6 mb-8 md:mb-12 flex justify-between items-end gap-4">
+            <FadeIn className="container mx-auto px-4 md:px-6 mb-8 md:mb-12 flex justify-between items-end gap-4">
                 <h2 className="text-4xl md:text-6xl font-bold italic tracking-tighter text-white">
                     COLECCIONES
                 </h2>
@@ -145,7 +146,7 @@ function CategoryReel() {
                         <ArrowRight size={20} className="md:w-6 md:h-6" />
                     </button>
                 </div>
-            </div>
+            </FadeIn>
 
             <div
                 ref={scrollContainerRef}
@@ -216,18 +217,20 @@ export default function Home() {
                     <AppointmentSection />
 
                     <section className="py-20 md:py-32 container mx-auto px-4 md:px-6">
-                        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 md:mb-16 gap-6">
+                        <FadeIn className="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 md:mb-16 gap-6">
                             <div>
                                 <span className="text-monza-red font-bold tracking-[0.2em] text-xs md:text-sm uppercase mb-3 md:mb-4 block">Seleccionado Para Vos</span>
                                 <h2 className="text-4xl md:text-6xl font-bold italic tracking-tighter text-white leading-[0.95] md:leading-none">
                                     COMPONENTES <br /> DESTACADOS
                                 </h2>
                             </div>
-                        </div>
+                        </FadeIn>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-8 md:gap-y-12">
-                            {featuredProducts.map(p => (
-                                <ProductCard key={p.id} product={p} />
+                            {featuredProducts.map((p, i) => (
+                                <FadeIn key={p.id} delay={i * 0.06} y={8}>
+                                    <ProductCard product={p} />
+                                </FadeIn>
                             ))}
                         </div>
                     </section>

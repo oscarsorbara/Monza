@@ -9,6 +9,7 @@ import { useVehicle } from '@/context/VehicleContext';
 import { checkCompatibility } from '@/lib/compatibility';
 import { cn } from '@/lib/utils';
 import { AnimatePresence, motion } from 'framer-motion';
+import { FadeIn } from '@/components/ui/FadeIn';
 
 export default function Catalog() {
     const { products, collections } = useProduct();
@@ -267,8 +268,10 @@ export default function Catalog() {
 
                         {filteredProducts.length > 0 ? (
                             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 md:gap-6">
-                                {filteredProducts.map(product => (
-                                    <ProductCard key={product.id} product={product} />
+                                {filteredProducts.map((product, i) => (
+                                    <FadeIn key={product.id} delay={Math.min(i * 0.04, 0.25)} y={8} amount={0.05}>
+                                        <ProductCard product={product} />
+                                    </FadeIn>
                                 ))}
                             </div>
                         ) : (

@@ -78,9 +78,9 @@ export default function ProductDetail() {
                 {/* Content Side (Scrollable) */}
                 <div className="px-4 pt-6 pb-28 md:px-6 md:py-12 lg:py-32 lg:px-20 max-w-2xl md:pb-12">
                     <motion.div
-                        initial={{ y: 20, opacity: 0 }}
+                        initial={{ y: 8, opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}
-                        transition={{ delay: 0.3 }}
+                        transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
                     >
                         {/* ... (Header/Category kept same) ... */}
                         <div className="flex items-center gap-3 md:gap-4 mb-4 md:mb-6 flex-wrap">

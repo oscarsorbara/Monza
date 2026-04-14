@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import { Star, ChevronLeft, ChevronRight } from 'lucide-react';
 import clsx from 'clsx';
+import { motion } from 'framer-motion';
 import { PRODUCT_REVIEWS, FALLBACK_REVIEWS } from '@/data/reviewsMock';
 
 interface ProductReviewsProps {
@@ -74,8 +75,12 @@ export function ProductReviews({ productHandle }: ProductReviewsProps) {
                 style={{ WebkitOverflowScrolling: 'touch', scrollPaddingLeft: '1rem' }}
             >
                 {reviews.map((review, i) => (
-                    <article
+                    <motion.article
                         key={i}
+                        initial={{ opacity: 0, y: 8 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, amount: 0.2 }}
+                        transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1], delay: Math.min(i * 0.04, 0.2) }}
                         className="flex-shrink-0 w-[78vw] max-w-[300px] md:w-[320px] md:max-w-none bg-carbon-900 border border-white/5 rounded-2xl p-5 shadow-lg shadow-black/20 snap-start"
                     >
                         <div className="flex items-center gap-3 mb-3">
@@ -103,7 +108,7 @@ export function ProductReviews({ productHandle }: ProductReviewsProps) {
                             </div>
                         </div>
                         <p className="text-sm text-gray-300 leading-relaxed">{review.comment}</p>
-                    </article>
+                    </motion.article>
                 ))}
             </div>
         </section>

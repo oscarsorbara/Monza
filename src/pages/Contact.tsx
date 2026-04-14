@@ -45,9 +45,9 @@ export default function Contact() {
 
                 <div className="relative z-10 text-center px-6">
                     <motion.div
-                        initial={{ opacity: 0, y: 20 }}
+                        initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8 }}
+                        transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
                     >
                         <h1 className="text-5xl md:text-7xl font-black italic text-white mb-6 tracking-tighter">
                             CONTACTO
@@ -64,9 +64,10 @@ export default function Contact() {
 
                     {/* Contact Form */}
                     <motion.div
-                        initial={{ opacity: 0, x: -20 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
+                        initial={{ opacity: 0, y: 10 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, amount: 0.1 }}
+                        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                         className="bg-carbon-900/50 backdrop-blur-sm border border-white/10 p-8 md:p-12 rounded-3xl"
                     >
                         <div className="flex items-center gap-4 mb-8">
