@@ -128,7 +128,7 @@ export function ProductPageUpsell({ currentProductId }: ProductPageUpsellProps) 
             <div
                 ref={scrollRef}
                 data-lenis-prevent
-                className="flex gap-3 overflow-x-auto scrollbar-hide snap-x snap-proximity -mx-4 md:mx-0 px-4 md:px-0 pb-1"
+                className="flex gap-3 overflow-x-auto scrollbar-hide snap-x snap-proximity -mx-4 md:mx-0 px-4 pr-8 md:pl-0 md:pr-4 pb-1"
                 style={{ WebkitOverflowScrolling: 'touch', scrollPaddingLeft: '1rem' }}
             >
                 {suggestions.map((p, i) => {
@@ -143,7 +143,7 @@ export function ProductPageUpsell({ currentProductId }: ProductPageUpsellProps) 
                                 ease: [0.22, 1, 0.36, 1],
                                 delay: 0.1 + Math.min(i * 0.07, 0.35)
                             }}
-                            className="flex-shrink-0 w-[220px] md:w-[240px] bg-carbon-900 border border-white/5 rounded-xl overflow-hidden snap-start flex flex-col"
+                            className="flex-shrink-0 w-[210px] md:w-[228px] bg-carbon-900 border border-white/5 rounded-xl overflow-hidden snap-start flex flex-col"
                         >
                             <Link
                                 to={`/product/${p.handle}`}
