@@ -12,7 +12,7 @@ import { formatPrice } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Checkout() {
-    const { items, clearCart, cartTotal } = useCart();
+    const { items, clearCart, cartTotal, openDrawer } = useCart();
     const { user } = useAuth();
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
@@ -207,7 +207,7 @@ export default function Checkout() {
 
                 {/* Breadcrumbs */}
                 <nav className="flex items-center gap-3 text-sm font-medium mb-12">
-                    <span onClick={() => navigate('/cart')} className="text-monza-red cursor-pointer hover:underline">Carrito</span>
+                    <span onClick={() => { navigate('/'); openDrawer(); }} className="text-monza-red cursor-pointer hover:underline">Carrito</span>
                     <ChevronRight size={14} className="text-gray-600" />
                     <span className={clsx(currentStep === 'info' ? "text-white" : "text-monza-red cursor-pointer")} onClick={() => setCurrentStep('info')}>Información</span>
                     <ChevronRight size={14} className="text-gray-600" />

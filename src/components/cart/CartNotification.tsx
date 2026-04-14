@@ -2,12 +2,11 @@ import { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Check, X, ShoppingCart } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
-import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/Button';
 import { formatPrice } from '@/lib/utils';
 
 export function CartNotification() {
-    const { lastAddedItem, showNotification, closeNotification, cartTotal, itemCount } = useCart();
+    const { lastAddedItem, showNotification, closeNotification, cartTotal, itemCount, openDrawer } = useCart();
 
     // Auto close after 5 seconds
     useEffect(() => {
@@ -69,12 +68,13 @@ export function CartNotification() {
                                     <span className="text-white font-bold">${formatPrice(cartTotal)}</span>
                                 </div>
 
-                                <Link to="/cart" onClick={closeNotification}>
-                                    <Button className="w-full bg-white hover:bg-gray-200 text-black font-black uppercase tracking-wider flex items-center justify-center gap-2">
-                                        <ShoppingCart size={16} />
-                                        Ver Carrito
-                                    </Button>
-                                </Link>
+                                <Button
+                                    onClick={() => { closeNotification(); openDrawer(); }}
+                                    className="w-full bg-white hover:bg-gray-200 text-black font-black uppercase tracking-wider flex items-center justify-center gap-2"
+                                >
+                                    <ShoppingCart size={16} />
+                                    Ver Carrito
+                                </Button>
 
                                 <button
                                     onClick={closeNotification}

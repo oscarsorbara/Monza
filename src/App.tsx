@@ -6,7 +6,6 @@ import Home from '@/pages/Home';
 import Catalog from '@/pages/Catalog';
 import ProductDetail from '@/pages/ProductDetail';
 import Contact from '@/pages/Contact'; // Replaces Maintenance
-import Cart from '@/pages/Cart';
 import Checkout from '@/pages/Checkout';
 import OrderConfirmation from '@/pages/OrderConfirmation';
 import BookingSuccess from '@/pages/BookingSuccess';
@@ -23,7 +22,6 @@ function PublicLayout() {
     <>
       <Navbar />
       <CartNotification />
-      <CartDrawer />
       <FloatingWhatsApp />
       <div className="flex-grow">
         <Outlet />
@@ -45,7 +43,6 @@ function AnimatedRoutes() {
           <Route path="/catalog" element={<PageTransition><Catalog /></PageTransition>} />
           <Route path="/product/:id" element={<PageTransition><ProductDetail /></PageTransition>} />
           <Route path="/maintenance" element={<PageTransition><Contact /></PageTransition>} />
-          <Route path="/cart" element={<PageTransition><Cart /></PageTransition>} />
         </Route>
 
         {/* Checkout Routes (No Navbar usually, but keeping for continuity or different layout) */}
@@ -75,6 +72,8 @@ function App() {
 
         <div className="min-h-screen relative z-10 text-white flex flex-col font-sans selection:bg-monza-red selection:text-white">
           <AnimatedRoutes />
+          {/* Global cart drawer — available across all routes */}
+          <CartDrawer />
         </div>
       </SmoothScroll>
     </Router>
