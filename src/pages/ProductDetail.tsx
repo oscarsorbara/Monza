@@ -10,6 +10,7 @@ import { Check, AlertTriangle, Plus, ShieldCheck, Truck, Star } from 'lucide-rea
 import { motion, AnimatePresence } from 'framer-motion';
 import { ProductGallery } from '@/components/product/ProductGallery';
 import { ProductReviews } from '@/components/product/ProductReviews';
+import { ProductPageUpsell } from '@/components/product/ProductPageUpsell';
 import { Accordion } from '@/components/ui/Accordion';
 import { InlineVehicleSelector } from '@/components/vehicle/InlineVehicleSelector';
 import { formatPrice } from '@/lib/utils';
@@ -151,11 +152,14 @@ export default function ProductDetail() {
                         </div>
 
                         {/* Installation Option temporarily removed for launch */}
-                        {/* 
+                        {/*
                         {product.variants && product.variants.length > 1 && (
                             ...
-                        )} 
+                        )}
                         */}
+
+                        {/* Compatible Upsell — other users also bought */}
+                        <ProductPageUpsell currentProductId={product.id} />
 
                         {/* Inline Vehicle Selector */}
                         <div className="mb-6 md:mb-8">
