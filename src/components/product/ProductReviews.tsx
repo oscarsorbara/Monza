@@ -1,7 +1,7 @@
 import { useRef, useCallback } from 'react';
 import { Star, ChevronLeft, ChevronRight } from 'lucide-react';
 import clsx from 'clsx';
-import { motion } from 'framer-motion';
+import { motion, animate } from 'framer-motion';
 import { PRODUCT_REVIEWS, FALLBACK_REVIEWS } from '@/data/reviewsMock';
 
 interface ProductReviewsProps {
@@ -12,32 +12,28 @@ export function ProductReviews({ productHandle }: ProductReviewsProps) {
     const scrollRef = useRef<HTMLDivElement>(null);
     const reviews = PRODUCT_REVIEWS[productHandle] ?? FALLBACK_REVIEWS;
 
-    // Smooth RAF-based horizontal scroll (premium cubic ease)
+    // Smooth lateral scroll using framer-motion's animate() for sub-pixel precision
+    // and a quart ease-out that decelerates slowly at the end (premium feel).
     const scroll = useCallback((direction: 'left' | 'right') => {
         const container = scrollRef.current;
         if (!container) return;
 
-        // Align to card stride (card width + gap) for a clean snap feel
+        // Align to card stride (card width + gap) so each click lands cleanly.
         const firstCard = container.querySelector('article') as HTMLElement | null;
-        const gap = parseFloat(getComputedStyle(container).columnGap || '16') || 16;
+        const computedGap = getComputedStyle(container).columnGap;
+        const gap = parseFloat(computedGap) || 16;
         const stride = (firstCard?.offsetWidth ?? 320) + gap;
-        const delta = direction === 'left' ? -stride : stride;
 
         const start = container.scrollLeft;
         const max = container.scrollWidth - container.clientWidth;
-        const end = Math.max(0, Math.min(max, start + delta));
-        if (end === start) return;
+        const target = Math.max(0, Math.min(max, start + (direction === 'left' ? -stride : stride)));
+        if (Math.abs(target - start) < 1) return;
 
-        const duration = 520;
-        const t0 = performance.now();
-        const ease = (t: number) => 1 - Math.pow(1 - t, 3); // ease-out cubic
-
-        const step = (now: number) => {
-            const p = Math.min(1, (now - t0) / duration);
-            container.scrollLeft = start + (end - start) * ease(p);
-            if (p < 1) requestAnimationFrame(step);
-        };
-        requestAnimationFrame(step);
+        animate(start, target, {
+            duration: 0.75,
+            ease: [0.16, 1, 0.3, 1], // ease-out-quart (smoother tail than cubic)
+            onUpdate: (v) => { container.scrollLeft = v; }
+        });
     }, []);
 
     // Aggregate rating
@@ -90,19 +86,21 @@ export function ProductReviews({ productHandle }: ProductReviewsProps) {
 
             <div
                 ref={scrollRef}
-                className="flex gap-3 md:gap-4 overflow-x-auto scrollbar-hide snap-x snap-mandatory -mx-4 px-4 md:mx-0 md:px-0 pb-3"
+                data-lenis-prevent
+                className="flex gap-3 md:gap-4 overflow-x-auto scrollbar-hide snap-x snap-proximity -mx-4 px-4 md:mx-0 md:px-0 pb-3"
                 style={{ WebkitOverflowScrolling: 'touch', scrollPaddingLeft: '1rem' }}
             >
                 {reviews.map((review, i) => (
                     <motion.article
                         key={i}
-                        initial={{ opacity: 0, y: 14, scale: 0.985 }}
+                        initial={{ opacity: 0, y: 18, scale: 0.97 }}
                         whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                        viewport={{ once: true, amount: 0.12 }}
+                        viewport={{ once: true, amount: 0.05 }}
                         transition={{
-                            duration: 0.55,
-                            ease: [0.22, 1, 0.36, 1],
-                            delay: Math.min(i * 0.08, 0.4)
+                            // Spring physics feels more organic than timing-based easing
+                            opacity: { duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: Math.min(i * 0.1, 0.5) },
+                            y: { type: 'spring', stiffness: 85, damping: 20, mass: 0.9, delay: Math.min(i * 0.1, 0.5) },
+                            scale: { type: 'spring', stiffness: 85, damping: 20, mass: 0.9, delay: Math.min(i * 0.1, 0.5) }
                         }}
                         className="flex-shrink-0 w-[78vw] max-w-[300px] md:w-[320px] md:max-w-none bg-carbon-900 border border-white/5 rounded-2xl p-5 shadow-lg shadow-black/20 snap-start"
                     >
