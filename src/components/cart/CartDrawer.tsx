@@ -3,9 +3,11 @@ import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Minus, Plus, Trash2, ArrowRight, Clock, ShoppingBag, Truck, ShieldCheck, RotateCcw, Lock } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
+import { useVehicle } from '@/context/VehicleContext';
 import { Button } from '@/components/ui/Button';
 import { formatPrice } from '@/lib/utils';
 import { CartUpsell } from './CartUpsell';
+import { DrawerVehicleCheck } from './DrawerVehicleCheck';
 
 const FREE_SHIPPING_GOAL = 1_000_000;
 const FLAT_SHIPPING_COST = 15_000; // Tarifa plana nacional Argentina
@@ -18,6 +20,7 @@ export function CartDrawer() {
         isDrawerOpen,
         closeDrawer
     } = useCart();
+    const { currentVehicle } = useVehicle();
 
     const [isCheckingOut, setIsCheckingOut] = useState(false);
 
@@ -113,7 +116,7 @@ export function CartDrawer() {
                         role="dialog"
                         aria-modal="true"
                         aria-label="Carrito"
-                        className="fixed inset-y-0 right-0 w-full sm:w-[440px] md:w-[460px] bg-carbon-950 border-l border-white/10 z-[160] flex flex-col shadow-2xl"
+                        className="fixed inset-y-0 right-0 w-full sm:w-[460px] md:w-[500px] bg-carbon-950 border-l border-white/10 z-[160] flex flex-col shadow-2xl"
                     >
                         {/* Header */}
                         <header className="flex items-center justify-between px-5 md:px-6 py-4 md:py-5 border-b border-white/5 shrink-0">
@@ -193,7 +196,7 @@ export function CartDrawer() {
                                                     <Link
                                                         to={`/product/${item.handle}`}
                                                         onClick={closeDrawer}
-                                                        className="w-24 h-24 bg-carbon-800 rounded-xl overflow-hidden shrink-0"
+                                                        className="w-24 h-24 md:w-28 md:h-28 bg-carbon-800 rounded-xl overflow-hidden shrink-0"
                                                     >
                                                         <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
                                                     </Link>
@@ -204,18 +207,18 @@ export function CartDrawer() {
                                                             onClick={closeDrawer}
                                                             className="block"
                                                         >
-                                                            <h3 className="text-[14px] font-bold text-white leading-tight line-clamp-2 pr-6 hover:text-monza-red transition-colors">
+                                                            <h3 className="text-[14px] md:text-[15px] font-bold text-white leading-tight line-clamp-2 pr-6 hover:text-monza-red transition-colors">
                                                                 {item.name}
                                                             </h3>
                                                         </Link>
 
                                                         <div className="flex items-baseline gap-2 mt-1">
                                                             {item.compareAtPrice && item.compareAtPrice > item.price && (
-                                                                <span className="text-xs text-gray-500 line-through">
+                                                                <span className="text-xs md:text-[13px] text-gray-500 line-through">
                                                                     ${formatPrice(item.compareAtPrice)}
                                                                 </span>
                                                             )}
-                                                            <span className="text-[15px] font-bold text-white">${formatPrice(item.price)}</span>
+                                                            <span className="text-[15px] md:text-base font-bold text-white">${formatPrice(item.price)}</span>
                                                         </div>
 
                                                         <div className="mt-auto pt-2 flex items-center justify-between">
@@ -250,8 +253,8 @@ export function CartDrawer() {
                                         </AnimatePresence>
                                     </ul>
 
-                                    {/* Compatible upsell recommendations */}
-                                    <CartUpsell />
+                                    {/* No vehicle → prompt; vehicle set → compatible upsell */}
+                                    {currentVehicle ? <CartUpsell /> : <DrawerVehicleCheck />}
                                 </div>
 
                                 {/* Footer: totals + trust + CTA */}

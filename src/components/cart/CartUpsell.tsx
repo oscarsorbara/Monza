@@ -84,7 +84,7 @@ export function CartUpsell() {
                     return (
                         <article
                             key={p.id}
-                            className="flex-shrink-0 w-[185px] bg-carbon-900 border border-white/5 rounded-xl overflow-hidden snap-start flex flex-col"
+                            className="flex-shrink-0 w-[185px] md:w-[210px] bg-carbon-900 border border-white/5 rounded-xl overflow-hidden snap-start flex flex-col"
                         >
                             <Link
                                 to={`/product/${p.handle}`}
@@ -104,9 +104,9 @@ export function CartUpsell() {
                                 </span>
                             </Link>
 
-                            <div className="p-3 flex flex-col flex-1">
+                            <div className="p-3 md:p-3.5 flex flex-col flex-1">
                                 <Link to={`/product/${p.handle}`} onClick={closeDrawer}>
-                                    <h5 className="text-[13px] font-bold text-white leading-tight line-clamp-2 mb-2 min-h-[34px] hover:text-monza-red transition-colors">
+                                    <h5 className="text-[13px] md:text-sm font-bold text-white leading-tight line-clamp-2 mb-2 min-h-[34px] md:min-h-[36px] hover:text-monza-red transition-colors">
                                         {p.name}
                                     </h5>
                                 </Link>
@@ -114,20 +114,20 @@ export function CartUpsell() {
                                 <div className="mt-auto flex items-center justify-between gap-2">
                                     <div className="min-w-0">
                                         {p.compareAtPrice && p.compareAtPrice > p.price && (
-                                            <div className="text-[10px] text-gray-500 line-through leading-none">
+                                            <div className="text-[10px] md:text-[11px] text-gray-500 line-through leading-none">
                                                 ${formatPrice(p.compareAtPrice)}
                                             </div>
                                         )}
-                                        <div className="text-sm font-black text-white truncate">
+                                        <div className="text-sm md:text-[15px] font-black text-white truncate">
                                             ${formatPrice(p.price)}
                                         </div>
                                     </div>
                                     <button
                                         onClick={() => handleAdd(p)}
                                         aria-label={`Agregar ${p.name}`}
-                                        className="w-9 h-9 shrink-0 rounded-full bg-monza-red hover:bg-red-600 text-white flex items-center justify-center transition-colors active:scale-95"
+                                        className="w-9 h-9 md:w-10 md:h-10 shrink-0 rounded-full bg-monza-red hover:bg-red-600 text-white flex items-center justify-center transition-colors active:scale-95"
                                     >
-                                        <Plus className="w-[18px] h-[18px]" />
+                                        <Plus className="w-[18px] h-[18px] md:w-5 md:h-5" />
                                     </button>
                                 </div>
                             </div>
