@@ -21,22 +21,31 @@ export function ProductPageUpsell({ currentProductId }: ProductPageUpsellProps) 
     const { currentVehicle } = useVehicle();
     const scrollRef = useRef<HTMLDivElement>(null);
 
-    // Sub-pixel smooth lateral scroll using framer-motion animate()
+    // Ultra-smooth lateral scroll with direction-aware alignment (see ProductReviews)
     const scroll = useCallback((direction: 'left' | 'right') => {
         const container = scrollRef.current;
         if (!container) return;
         const firstCard = container.querySelector('article') as HTMLElement | null;
-        const computedGap = getComputedStyle(container).columnGap;
-        const gap = parseFloat(computedGap) || 12;
+        const gap = parseFloat(getComputedStyle(container).columnGap) || 12;
         const stride = (firstCard?.offsetWidth ?? 240) + gap;
+
         const start = container.scrollLeft;
         const max = container.scrollWidth - container.clientWidth;
-        const target = Math.max(0, Math.min(max, start + (direction === 'left' ? -stride : stride)));
-        if (Math.abs(target - start) < 1) return;
+
+        if (direction === 'right' && start >= max - 1) return;
+        if (direction === 'left' && start <= 1) return;
+
+        const alignedStart = direction === 'left'
+            ? Math.min(max, Math.ceil(start / stride) * stride)
+            : Math.max(0, Math.floor(start / stride) * stride);
+
+        let target = alignedStart + (direction === 'right' ? stride : -stride);
+        target = Math.max(0, Math.min(max, target));
+        if (Math.abs(target - start) < 2) return;
 
         animate(start, target, {
-            duration: 0.75,
-            ease: [0.16, 1, 0.3, 1], // ease-out-quart
+            duration: 0.85,
+            ease: [0.19, 1, 0.22, 1], // ease-out-expo
             onUpdate: (v) => { container.scrollLeft = v; }
         });
     }, []);

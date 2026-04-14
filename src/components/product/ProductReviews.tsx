@@ -12,26 +12,41 @@ export function ProductReviews({ productHandle }: ProductReviewsProps) {
     const scrollRef = useRef<HTMLDivElement>(null);
     const reviews = PRODUCT_REVIEWS[productHandle] ?? FALLBACK_REVIEWS;
 
-    // Smooth lateral scroll using framer-motion's animate() for sub-pixel precision
-    // and a quart ease-out that decelerates slowly at the end (premium feel).
+    // Ultra-smooth lateral scroll:
+    // 1. Direction-aware alignment — when left, round UP to nearest card edge first
+    //    (so stepping back from max lands on the last card, not two cards back).
+    // 2. Tight bounds check — no visible micro-nudges at the ends.
+    // 3. Ease-out-expo with 0.85s — luxurious, floating deceleration tail.
     const scroll = useCallback((direction: 'left' | 'right') => {
         const container = scrollRef.current;
         if (!container) return;
 
-        // Align to card stride (card width + gap) so each click lands cleanly.
         const firstCard = container.querySelector('article') as HTMLElement | null;
-        const computedGap = getComputedStyle(container).columnGap;
-        const gap = parseFloat(computedGap) || 16;
+        const gap = parseFloat(getComputedStyle(container).columnGap) || 16;
         const stride = (firstCard?.offsetWidth ?? 320) + gap;
 
         const start = container.scrollLeft;
         const max = container.scrollWidth - container.clientWidth;
-        const target = Math.max(0, Math.min(max, start + (direction === 'left' ? -stride : stride)));
-        if (Math.abs(target - start) < 1) return;
+
+        // Bail early at hard bounds to prevent asymmetric edge behavior
+        if (direction === 'right' && start >= max - 1) return;
+        if (direction === 'left' && start <= 1) return;
+
+        // Direction-aware snap of the current position before stepping.
+        // This guarantees that "one click = exactly one card of visible movement"
+        // regardless of whether the user swiped manually to an imperfect position.
+        const alignedStart = direction === 'left'
+            ? Math.min(max, Math.ceil(start / stride) * stride)
+            : Math.max(0, Math.floor(start / stride) * stride);
+
+        let target = alignedStart + (direction === 'right' ? stride : -stride);
+        target = Math.max(0, Math.min(max, target));
+
+        if (Math.abs(target - start) < 2) return;
 
         animate(start, target, {
-            duration: 0.75,
-            ease: [0.16, 1, 0.3, 1], // ease-out-quart (smoother tail than cubic)
+            duration: 0.85,
+            ease: [0.19, 1, 0.22, 1], // ease-out-expo — floatier than quart
             onUpdate: (v) => { container.scrollLeft = v; }
         });
     }, []);
