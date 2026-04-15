@@ -107,20 +107,18 @@ export function ProductReviews({ productHandle }: ProductReviewsProps) {
             <div
                 ref={scrollRef}
                 data-lenis-prevent
-                className="flex gap-3 md:gap-4 overflow-x-auto scrollbar-hide snap-x snap-proximity -mx-4 px-4 md:mx-0 md:px-0 pb-3"
+                className="flex gap-3 md:gap-4 overflow-x-auto scrollbar-hide snap-x snap-proximity -mx-4 px-4 pr-8 md:mx-0 md:pl-0 md:pr-4 pb-3"
                 style={{ WebkitOverflowScrolling: 'touch', scrollPaddingLeft: '1rem' }}
             >
                 {reviews.map((review, i) => (
                     <motion.article
                         key={i}
-                        initial={{ opacity: 0, y: 18, scale: 0.97 }}
-                        whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                        viewport={{ once: true, amount: 0.05 }}
+                        initial={{ opacity: 0, y: 14, scale: 0.97 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
                         transition={{
-                            // Spring physics feels more organic than timing-based easing
-                            opacity: { duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: Math.min(i * 0.1, 0.5) },
-                            y: { type: 'spring', stiffness: 85, damping: 20, mass: 0.9, delay: Math.min(i * 0.1, 0.5) },
-                            scale: { type: 'spring', stiffness: 85, damping: 20, mass: 0.9, delay: Math.min(i * 0.1, 0.5) }
+                            duration: 0.55,
+                            ease: [0.22, 1, 0.36, 1],
+                            delay: Math.min(i * 0.06, 0.3)
                         }}
                         className="flex-shrink-0 w-[78vw] max-w-[300px] md:w-[320px] md:max-w-none bg-carbon-900 border border-white/5 rounded-2xl p-5 shadow-lg shadow-black/20 snap-start"
                     >
