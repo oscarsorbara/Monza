@@ -1,7 +1,7 @@
-import { useMemo, useRef, useCallback } from 'react';
+import { useMemo, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { Plus, Check, Sparkles, ChevronLeft, ChevronRight } from 'lucide-react';
-import { animate, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useCart } from '@/context/CartContext';
 import { useProduct } from '@/context/ProductContext';
 import { useVehicle } from '@/context/VehicleContext';
@@ -15,65 +15,27 @@ export function CartUpsell() {
     const { items, addToCart, closeDrawer } = useCart();
     const { products } = useProduct();
     const { currentVehicle } = useVehicle();
-    const scrollRef = useRef<HTMLDivElement>(null);
 
-    // Ultra-smooth lateral scroll with direction-aware alignment (see ProductReviews)
-    const scroll = useCallback((direction: 'left' | 'right') => {
-        const container = scrollRef.current;
-        if (!container) return;
-        const firstCard = container.querySelector('article') as HTMLElement | null;
-        const gap = parseFloat(getComputedStyle(container).columnGap) || 12;
-        const stride = (firstCard?.offsetWidth ?? 200) + gap;
-
-        const start = container.scrollLeft;
-        const max = container.scrollWidth - container.clientWidth;
-
-        if (direction === 'right' && start >= max - 1) return;
-        if (direction === 'left' && start <= 1) return;
-
-        const alignedStart = direction === 'left'
-            ? Math.min(max, Math.ceil(start / stride) * stride)
-            : Math.max(0, Math.floor(start / stride) * stride);
-
-        let target = alignedStart + (direction === 'right' ? stride : -stride);
-        target = Math.max(0, Math.min(max, target));
-        if (Math.abs(target - start) < 2) return;
-
-        animate(start, target, {
-            type: 'spring',
-            stiffness: 55,
-            damping: 20,
-            mass: 1,
-            restDelta: 0.5,
-            onUpdate: (v) => { container.scrollLeft = v; }
-        });
-    }, []);
+    // activeIndex ±∞; offsetOf wraps cyclically (same mechanism as the 3D carousel
+    // but without 3D transforms — more restrained visuals for the drawer).
+    const [activeIndex, setActiveIndex] = useState(0);
 
     const { suggestions, title } = useMemo(() => {
         const inCartIds = new Set(items.map(i => i.id));
 
-        // Rule: prioritize compatibility. If uncertain → exclude.
         const eligible = products.filter(p => {
-            // Always skip items already in cart
             if (inCartIds.has(p.id)) return false;
-
-            // Must have stock
             if (p.stock <= 0) return false;
-
-            // Must have at least one image
             if (!p.image) return false;
 
             if (currentVehicle) {
                 const status = checkCompatibility(p, currentVehicle);
-                // Only exact matches for the vehicle or explicitly universal products
                 return status === 'EXACT_MATCH' || (p.isUniversal === true);
             } else {
-                // No vehicle selected: only universal products
                 return p.isUniversal === true;
             }
         });
 
-        // Sort: exact matches for vehicle first, then universal. Within each group: higher rated first.
         const scored = eligible
             .map(p => {
                 const isUniversal = p.isUniversal === true;
@@ -89,12 +51,22 @@ export function CartUpsell() {
             .slice(0, MAX_UPSELL_ITEMS)
             .map(s => s.product);
 
-        const titleText = 'Otros usuarios también llevaron';
-
-        return { suggestions: scored, title: titleText };
+        return { suggestions: scored, title: 'Otros usuarios también llevaron' };
     }, [items, products, currentVehicle]);
 
-    if (suggestions.length === 0) return null;
+    const total = suggestions.length;
+
+    const offsetOf = useCallback((i: number) => {
+        if (total === 0) return 0;
+        let o = ((i - activeIndex) % total + total) % total;
+        if (o > total / 2) o -= total;
+        return o;
+    }, [activeIndex, total]);
+
+    const next = useCallback(() => setActiveIndex(a => a + 1), []);
+    const prev = useCallback(() => setActiveIndex(a => a - 1), []);
+
+    if (total === 0) return null;
 
     const handleAdd = (product: Product) => {
         addToCart(product, 1, currentVehicle?.id);
@@ -102,7 +74,7 @@ export function CartUpsell() {
 
     return (
         <section className="mt-6 pt-5 border-t border-white/5" aria-label="Productos recomendados">
-            <div className="flex items-center justify-between gap-2 mb-3">
+            <div className="flex items-center justify-between gap-2 mb-4">
                 <div className="flex items-center gap-2 min-w-0">
                     <Sparkles className="w-4 h-4 text-monza-red shrink-0" />
                     <h4 className="text-sm md:text-base font-bold uppercase tracking-wider text-white truncate">
@@ -111,14 +83,14 @@ export function CartUpsell() {
                 </div>
                 <div className="flex items-center gap-1 shrink-0">
                     <button
-                        onClick={() => scroll('left')}
+                        onClick={prev}
                         aria-label="Anterior"
                         className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/70 hover:text-white hover:bg-white/10 transition-colors"
                     >
                         <ChevronLeft size={14} />
                     </button>
                     <button
-                        onClick={() => scroll('right')}
+                        onClick={next}
                         aria-label="Siguiente"
                         className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/70 hover:text-white hover:bg-white/10 transition-colors"
                     >
@@ -127,47 +99,63 @@ export function CartUpsell() {
                 </div>
             </div>
 
-            <div
-                ref={scrollRef}
-                data-lenis-prevent
-                className="flex gap-3 overflow-x-auto scrollbar-hide snap-x snap-proximity -mx-5 md:-mx-6 px-5 md:px-6 pb-1"
-                style={{ WebkitOverflowScrolling: 'touch', scrollPaddingLeft: '1.25rem' }}
-            >
+            {/* Calm carousel stage — infinite rotation, no 3D perspective, just subtle scale/opacity */}
+            <div className="relative h-[280px] md:h-[300px] overflow-hidden select-none">
                 {suggestions.map((p, i) => {
+                    const offset = offsetOf(i);
+                    const absOff = Math.abs(offset);
+                    const isHidden = absOff > 2;
                     const isUniversal = p.isUniversal === true;
+
+                    // Stride: how far apart adjacent cards sit. ~80% of card width so
+                    // neighbors peek but don't overlap heavily.
+                    const stride = 140;
+
                     return (
                         <motion.article
                             key={p.id}
-                            initial={{ opacity: 0, y: 12, scale: 0.97 }}
-                            animate={{ opacity: 1, y: 0, scale: 1 }}
-                            transition={{
-                                duration: 0.5,
-                                ease: [0.22, 1, 0.36, 1],
-                                delay: Math.min(i * 0.06, 0.3)
+                            className="absolute top-1/2 left-1/2 w-[170px] h-[260px] md:w-[185px] md:h-[280px] bg-carbon-900 border border-white/5 rounded-xl overflow-hidden flex flex-col shadow-xl shadow-black/30"
+                            style={{
+                                marginLeft: '-85px',
+                                marginTop: '-130px',
+                                willChange: 'transform, opacity',
+                                pointerEvents: isHidden || absOff > 1.2 ? 'none' : 'auto'
                             }}
-                            className="flex-shrink-0 w-[185px] md:w-[210px] bg-carbon-900 border border-white/5 rounded-xl overflow-hidden snap-start flex flex-col"
+                            animate={{
+                                x: offset * stride,
+                                scale: 1 - Math.min(absOff, 3) * 0.08,
+                                opacity: isHidden ? 0 : 1 - absOff * 0.28,
+                                zIndex: 10 - Math.round(absOff)
+                            }}
+                            transition={{
+                                type: 'spring',
+                                stiffness: 140,
+                                damping: 24,
+                                mass: 1
+                            }}
                         >
                             <Link
                                 to={`/product/${p.handle}`}
                                 onClick={closeDrawer}
                                 className="relative aspect-square bg-carbon-800 overflow-hidden block group"
+                                tabIndex={absOff > 1.2 ? -1 : 0}
                             >
                                 <img
                                     src={p.image}
                                     alt={p.name}
                                     loading="lazy"
+                                    draggable={false}
                                     className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                                 />
-                                {/* Compatibility tag */}
                                 <span className={`absolute top-2 left-2 inline-flex items-center gap-1 text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded ${isUniversal ? 'bg-white/10 text-gray-200 border border-white/10' : 'bg-green-500/15 text-green-400 border border-green-500/30'}`}>
                                     <Check className="w-2.5 h-2.5" />
                                     {isUniversal ? 'Universal' : 'Compatible'}
                                 </span>
                             </Link>
 
-                            <div className="p-3 md:p-3.5 flex flex-col flex-1">
-                                <Link to={`/product/${p.handle}`} onClick={closeDrawer}>
-                                    <h5 className="text-[13px] md:text-sm font-bold text-white leading-tight line-clamp-2 mb-2 min-h-[34px] md:min-h-[36px] hover:text-monza-red transition-colors">
+                            <div className="p-3 flex flex-col flex-1">
+                                <Link to={`/product/${p.handle}`} onClick={closeDrawer} tabIndex={absOff > 1.2 ? -1 : 0}>
+                                    <h5 className="text-[13px] font-bold text-white leading-tight line-clamp-2 mb-2 min-h-[34px] hover:text-monza-red transition-colors">
                                         {p.name}
                                     </h5>
                                 </Link>
@@ -175,20 +163,21 @@ export function CartUpsell() {
                                 <div className="mt-auto flex items-center justify-between gap-2">
                                     <div className="min-w-0">
                                         {p.compareAtPrice && p.compareAtPrice > p.price && (
-                                            <div className="text-[10px] md:text-[11px] text-gray-500 line-through leading-none">
+                                            <div className="text-[10px] text-gray-500 line-through leading-none">
                                                 ${formatPrice(p.compareAtPrice)}
                                             </div>
                                         )}
-                                        <div className="text-sm md:text-[15px] font-black text-white truncate">
+                                        <div className="text-sm font-black text-white truncate">
                                             ${formatPrice(p.price)}
                                         </div>
                                     </div>
                                     <button
                                         onClick={() => handleAdd(p)}
                                         aria-label={`Agregar ${p.name}`}
-                                        className="w-9 h-9 md:w-10 md:h-10 shrink-0 rounded-full bg-monza-red hover:bg-red-600 text-white flex items-center justify-center transition-colors active:scale-95"
+                                        tabIndex={absOff > 1.2 ? -1 : 0}
+                                        className="w-9 h-9 shrink-0 rounded-full bg-monza-red hover:bg-red-600 text-white flex items-center justify-center transition-colors active:scale-95"
                                     >
-                                        <Plus className="w-[18px] h-[18px] md:w-5 md:h-5" />
+                                        <Plus className="w-[18px] h-[18px]" />
                                     </button>
                                 </div>
                             </div>
