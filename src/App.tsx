@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, useLocation, Outlet } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { Navbar } from '@/components/layout/Navbar';
+import { AnnouncementBar } from '@/components/layout/AnnouncementBar';
 import { Footer } from '@/components/layout/Footer';
 import Home from '@/pages/Home';
 import Catalog from '@/pages/Catalog';
@@ -20,6 +21,7 @@ import { FloatingWhatsApp } from '@/components/layout/FloatingWhatsApp';
 function PublicLayout() {
   return (
     <>
+      <AnnouncementBar />
       <Navbar />
       <CartNotification />
       <FloatingWhatsApp />

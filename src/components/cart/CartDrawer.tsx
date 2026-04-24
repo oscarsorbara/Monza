@@ -6,10 +6,11 @@ import { useCart } from '@/context/CartContext';
 import { useVehicle } from '@/context/VehicleContext';
 import { Button } from '@/components/ui/Button';
 import { formatPrice } from '@/lib/utils';
+import { buildDeliveryRange, formatDeliveryRangeShort } from '@/lib/shipping';
 import { CartUpsell } from './CartUpsell';
 import { DrawerVehicleCheck } from './DrawerVehicleCheck';
 
-const FREE_SHIPPING_GOAL = 1_000_000;
+const FREE_SHIPPING_GOAL = 800_000;
 const FLAT_SHIPPING_COST = 15_000; // Tarifa plana nacional Argentina
 
 export function CartDrawer() {
@@ -40,6 +41,9 @@ export function CartDrawer() {
     // Shipping cost: free above threshold, flat rate otherwise
     const shippingCost = hasFreeShipping ? 0 : FLAT_SHIPPING_COST;
     const total = subtotal + shippingCost;
+
+    // Rango estimado de entrega (hoy+2 a hoy+3)
+    const deliveryLabelShort = formatDeliveryRangeShort(buildDeliveryRange());
 
     // Prevent body scroll while drawer is open
     useEffect(() => {
@@ -292,13 +296,18 @@ export function CartDrawer() {
                                                 <span>-${formatPrice(discount)}</span>
                                             </div>
                                         )}
-                                        <div className="flex justify-between text-gray-300">
-                                            <span>Envío <span className="text-gray-500 text-xs">(nacional)</span></span>
-                                            {hasFreeShipping ? (
-                                                <span className="text-green-400 font-semibold">Gratis</span>
-                                            ) : (
-                                                <span>${formatPrice(shippingCost)}</span>
-                                            )}
+                                        <div>
+                                            <div className="flex justify-between text-gray-300">
+                                                <span>Envío <span className="text-gray-500 text-xs">(nacional)</span></span>
+                                                {hasFreeShipping ? (
+                                                    <span className="text-green-400 font-semibold">Gratis</span>
+                                                ) : (
+                                                    <span>${formatPrice(shippingCost)}</span>
+                                                )}
+                                            </div>
+                                            <p className="text-[11px] text-gray-500 mt-0.5">
+                                                Llega entre <span className="text-gray-300">{deliveryLabelShort}</span>
+                                            </p>
                                         </div>
                                         <div className="flex justify-between items-baseline pt-2 border-t border-white/10">
                                             <span className="text-base font-bold text-white">Total</span>

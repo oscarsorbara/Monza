@@ -36,7 +36,8 @@ export interface Product {
     reviewsCount: number;
     compatibility: CompatibilityRule[];
     specs: Record<string, string>;
-    brand: string; // e.g. Brembo, Bosch
+    brand: string; // e.g. Brembo, Bosch — marca principal (deriva de la primera regla de compatibilidad; fallback al vendor de Shopify)
+    brands?: string[]; // Todas las marcas compatibles (derivadas de compatibility). Usado por el filtro de catálogo.
     isUniversal?: boolean;
     variantId?: string; // Shopify Variant ID for Checkout
     collections?: string[]; // List of collection handles

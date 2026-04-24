@@ -542,6 +542,25 @@ export function ProductProvider({ children }: { children: ReactNode }) {
                                 image: v.image
                             }));
 
+                            // Marcas del producto: se derivan de las reglas de compatibilidad (fuente de verdad del proyecto).
+                            // De esta manera el filtro "Marca" del catálogo funciona siempre que el producto tenga
+                            // MANUAL OVERRIDE o tags compat:XXX configurados, independientemente del vendor de Shopify.
+                            // Se normalizan para evitar duplicados por mayúsculas/minúsculas (ej. "MINI" vs "Mini").
+                            const brandMap = new Map<string, string>(); // key: lowercase, value: display name
+                            compatibility.forEach(rule => {
+                                if (rule.make && rule.make !== 'All') {
+                                    const key = rule.make.toLowerCase();
+                                    if (!brandMap.has(key)) brandMap.set(key, rule.make);
+                                }
+                            });
+                            const compatBrands = Array.from(brandMap.values());
+                            const vendor = (node.vendor || '').trim();
+                            // Fallback al vendor si no hay compatibility configurada (productos universales / sin override aún)
+                            const brands = compatBrands.length > 0
+                                ? compatBrands
+                                : (vendor ? [vendor] : []);
+                            const primaryBrand = brands[0] || 'Monza';
+
                             return {
                                 id: node.id,
                                 name: node.title,
@@ -558,7 +577,8 @@ export function ProductProvider({ children }: { children: ReactNode }) {
                                 stock: firstVariant?.availableForSale ? 10 : 0,
                                 rating: 5.0,
                                 reviewsCount: 0,
-                                brand: node.vendor || 'Monza',
+                                brand: primaryBrand,
+                                brands: brands,
                                 compatibility: compatibility,
                                 isUniversal: isUniversal || compatibility.length === 0,
                                 variantId: firstVariant?.id,

@@ -14,6 +14,7 @@ import { ProductPageUpsell } from '@/components/product/ProductPageUpsell';
 import { Accordion } from '@/components/ui/Accordion';
 import { InlineVehicleSelector } from '@/components/vehicle/InlineVehicleSelector';
 import { formatPrice } from '@/lib/utils';
+import { buildDeliveryRange, formatDeliveryRangeLong } from '@/lib/shipping';
 
 export default function ProductDetail() {
     const { id } = useParams();
@@ -27,6 +28,7 @@ export default function ProductDetail() {
 
     const status = checkCompatibility(product, currentVehicle);
     const { avgRating, count: reviewsCount } = getReviewStats(product.handle);
+    const deliveryLabel = formatDeliveryRangeLong(buildDeliveryRange());
 
     // Variant Selection Logic
     // Default to the variant with the lowest price (usually "Sin instalación")
@@ -114,7 +116,7 @@ export default function ProductDetail() {
                                                 ${formatPrice(selectedVariant.compareAtPrice)}
                                             </span>
                                             <span className="bg-monza-red text-white text-[10px] md:text-xs font-bold px-2 py-0.5 rounded">
-                                                OFFERTA {Math.round(((selectedVariant.compareAtPrice - selectedVariant.price) / selectedVariant.compareAtPrice) * 100)}% OFF
+                                                OFERTA {Math.round(((selectedVariant.compareAtPrice - selectedVariant.price) / selectedVariant.compareAtPrice) * 100)}% OFF
                                             </span>
                                         </div>
                                     </>
@@ -142,6 +144,14 @@ export default function ProductDetail() {
                                     {product.unitPriceMeasurement ? ` / ${product.unitPriceMeasurement.referenceUnit || 'unidad'}` : ' por unidad'}
                                 </div>
                             )}
+
+                            {/* Estimated delivery — visible en mobile y desktop, justo antes del CTA */}
+                            <div className="mt-4 md:mt-5 flex items-center gap-3 p-3 md:p-3.5 bg-white/5 border border-white/10 rounded-xl">
+                                <Truck className="w-5 h-5 text-monza-red shrink-0" />
+                                <p className="text-[13px] md:text-sm text-gray-300 leading-tight">
+                                    Llega entre el <span className="text-white font-semibold">{deliveryLabel}</span>
+                                </p>
+                            </div>
                         </div>
 
                         <div className="flex gap-4 items-center fixed bottom-0 left-0 w-full p-4 bg-carbon-950/95 backdrop-blur-md border-t border-white/10 z-[100] md:relative md:p-0 md:bg-transparent md:backdrop-blur-none md:border-t-0 md:z-auto md:mb-6">

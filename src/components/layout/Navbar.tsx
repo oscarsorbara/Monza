@@ -22,7 +22,9 @@ export function Navbar() {
     return (
         <nav
             className={cn(
-                "fixed top-0 left-0 w-full z-[var(--z-navbar)] text-white pointer-events-none transition-all duration-500",
+                // top-[28px] / md:top-[32px] deja lugar a la <AnnouncementBar /> (ver PublicLayout en App.tsx).
+                // Si se remueve la bar, volver a `top-0`.
+                "fixed top-[28px] md:top-[32px] left-0 w-full z-[var(--z-navbar)] text-white pointer-events-none transition-all duration-500",
                 isScrolled ? "bg-carbon-950/90 border-b border-white/5 shadow-md" : "bg-transparent"
             )}
         >

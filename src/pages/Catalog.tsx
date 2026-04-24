@@ -3,17 +3,25 @@ import { useState, useMemo, useEffect } from 'react';
 import { useProduct } from '@/context/ProductContext';
 import { ProductCard } from '@/components/product/ProductCard';
 import { Button } from '@/components/ui/Button';
-import { X, Car, Check, SlidersHorizontal } from 'lucide-react';
+import { CustomSelect } from '@/components/ui/CustomSelect';
+import { X, Car, Check, SlidersHorizontal, Search, Plus } from 'lucide-react';
 import { useSearchParams, useLocation } from 'react-router-dom';
 import { useVehicle } from '@/context/VehicleContext';
+import { useFilteredVehicles } from '@/hooks/useFilteredVehicles';
 import { checkCompatibility } from '@/lib/compatibility';
 import { cn } from '@/lib/utils';
 import { AnimatePresence, motion } from 'framer-motion';
 import { FadeIn } from '@/components/ui/FadeIn';
+import type { Vehicle } from '@/types';
+
+// Normaliza strings para búsqueda: minúsculas + sin tildes
+const normalizeForSearch = (str: string) =>
+    str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
 export default function Catalog() {
     const { products, collections } = useProduct();
-    const { currentVehicle } = useVehicle();
+    const { currentVehicle, selectVehicle, garage, removeVehicleFromGarage } = useVehicle();
+    const filteredDB = useFilteredVehicles();
     const [searchParams, setSearchParams] = useSearchParams();
     const location = useLocation();
 
@@ -26,17 +34,100 @@ export default function Catalog() {
     const collectionFilter = searchParams.get('collection');
 
     const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
+
+    // --- Vehicle Inline Selector (para agregar nuevo auto) ---
+    const [selMake, setSelMake] = useState('');
+    const [selModel, setSelModel] = useState('');
+    const [selYear, setSelYear] = useState('');
+    // Controla si se está agregando un auto adicional cuando ya hay autos en el garage
+    const [isAddingNew, setIsAddingNew] = useState(false);
+
+    const availableMakes = useMemo(() => Object.keys(filteredDB).sort(), [filteredDB]);
+    const availableModels = useMemo(() => {
+        if (!selMake || !filteredDB[selMake]) return [];
+        return Object.keys(filteredDB[selMake]).sort();
+    }, [selMake, filteredDB]);
+    const availableYears = useMemo(() => {
+        if (!selMake || !selModel || !filteredDB[selMake]?.[selModel]) return [];
+        return Object.keys(filteredDB[selMake][selModel]).sort((a, b) => Number(b) - Number(a));
+    }, [selMake, selModel, filteredDB]);
+
+    const canApplyVehicle = Boolean(selMake && selModel && selYear);
+
+    const handleApplyVehicle = () => {
+        if (!canApplyVehicle) return;
+        selectVehicle({
+            id: `${selMake}-${selModel}-${selYear}`,
+            make: selMake,
+            model: selModel,
+            year: parseInt(selYear),
+            engine: 'Base',
+            variant: 'Base',
+        });
+        setIsVehicleFilterActive(true);
+        setSelMake('');
+        setSelModel('');
+        setSelYear('');
+        setIsAddingNew(false);
+    };
+
+    // Switch entre autos del garage (no duplica, solo cambia el activo)
+    const handleSwitchVehicle = (vehicle: Vehicle) => {
+        if (currentVehicle?.id === vehicle.id) return;
+        selectVehicle(vehicle);
+        setIsVehicleFilterActive(true);
+    };
+
+    // Borra un auto específico del garage. Si era el activo, el useEffect de abajo re-asigna otro.
+    const handleRemoveVehicle = (id: string) => {
+        removeVehicleFromGarage(id);
+    };
+
+    // Borra todos los autos del garage (con confirmación implícita por ser un botón claro)
+    const handleClearAllVehicles = () => {
+        // Snapshot de IDs antes de mutar para evitar iterar un array cambiante
+        garage.map(v => v.id).forEach(id => removeVehicleFromGarage(id));
+        setIsVehicleFilterActive(false);
+        setIsAddingNew(false);
+    };
+
+    // Auto-select: si se borra el activo pero quedan otros autos, activar el primero automáticamente.
+    // Evita estado "garage lleno sin current" que confundiría al usuario.
+    useEffect(() => {
+        if (!currentVehicle && garage.length > 0) {
+            selectVehicle(garage[0]);
+        }
+    }, [currentVehicle, garage, selectVehicle]);
 
     // --- Derived Data ---
+    // Lista dinámica de marcas: se deriva de las marcas que realmente tienen productos cargados.
+    // Evita mostrar marcas sin stock en el sidebar y soporta productos futuros automáticamente.
     const carMakes = useMemo(() => {
-        return ['BMW', 'Audi', 'Mini', 'Volkswagen', 'Mercedes-Benz'];
-    }, []);
+        const brandMap = new Map<string, string>(); // key lowercase → display
+        products.forEach(p => {
+            const list = p.brands && p.brands.length > 0 ? p.brands : (p.brand ? [p.brand] : []);
+            list.forEach(b => {
+                const name = (b || '').trim();
+                if (!name || name.toLowerCase() === 'monza') return; // descartar fallback "Monza"
+                const key = name.toLowerCase();
+                if (!brandMap.has(key)) brandMap.set(key, name);
+            });
+        });
+        return Array.from(brandMap.values()).sort((a, b) => a.localeCompare(b));
+    }, [products]);
 
     useEffect(() => {
         if (!currentVehicle) setIsVehicleFilterActive(false);
     }, [currentVehicle]);
 
     // --- Filtering Logic ---
+    // Mapa handle → nombre humano de colección (para buscar por "Alerones" y no solo por handle)
+    const collectionNameByHandle = useMemo(
+        () => Object.fromEntries(collections.map(c => [c.handle, c.name])),
+        [collections]
+    );
+
     const filteredProducts = useMemo(() => {
         let result = [...products];
 
@@ -48,11 +139,33 @@ export default function Catalog() {
         }
 
         if (makeFilter) {
-            result = result.filter(p => p.brand === makeFilter);
+            // Case-insensitive match contra TODAS las marcas del producto (brands[]).
+            // Fallback a brand si brands no viene cargado.
+            const makeKey = makeFilter.toLowerCase();
+            result = result.filter(p => {
+                const list = p.brands && p.brands.length > 0 ? p.brands : (p.brand ? [p.brand] : []);
+                return list.some(b => (b || '').toLowerCase() === makeKey);
+            });
         }
 
         if (collectionFilter) {
             result = result.filter(p => p.collections?.includes(collectionFilter));
+        }
+
+        // Búsqueda por nombre: divide la query en tokens; todos deben aparecer en el haystack del producto
+        const trimmedQuery = searchQuery.trim();
+        if (trimmedQuery) {
+            const tokens = normalizeForSearch(trimmedQuery).split(/\s+/).filter(Boolean);
+            result = result.filter(p => {
+                const collectionNames = (p.collections ?? [])
+                    .map(h => collectionNameByHandle[h] ?? h)
+                    .join(' ');
+                const brandList = (p.brands && p.brands.length > 0 ? p.brands : [p.brand]).join(' ');
+                const haystack = normalizeForSearch(
+                    [p.name, brandList, p.category, collectionNames].filter(Boolean).join(' ')
+                );
+                return tokens.every(t => haystack.includes(t));
+            });
         }
 
         // Sort by Collection (order of collections array from Shopify)
@@ -64,7 +177,7 @@ export default function Catalog() {
         });
 
         return result;
-    }, [products, collections, currentVehicle, isVehicleFilterActive, makeFilter, collectionFilter]);
+    }, [products, collections, collectionNameByHandle, currentVehicle, isVehicleFilterActive, makeFilter, collectionFilter, searchQuery]);
 
     // --- Handlers ---
     const updateFilter = (key: 'make' | 'collection', value: string | null) => {
@@ -164,40 +277,237 @@ export default function Catalog() {
                         CATÁLOGO <span className="text-monza-red">.</span>
                     </h1>
 
-                    {currentVehicle && (
-                        <div className="flex flex-wrap items-center gap-4 p-4 bg-white/5 border border-white/10 rounded-2xl">
-                            <div className="flex items-center gap-3">
-                                <Car className={isVehicleFilterActive ? "text-monza-red" : "text-gray-400"} size={24} />
-                                <div>
-                                    <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">Tu Vehículo</p>
-                                    <p className="text-white font-bold text-lg leading-none">{currentVehicle.year} {currentVehicle.make} {currentVehicle.model}</p>
+                    {garage.length > 0 ? (
+                        <div className="p-4 md:p-5 bg-white/5 border border-white/10 rounded-2xl">
+                            {/* Header: título + contador + acciones */}
+                            <div className="flex items-center justify-between gap-3 mb-3 md:mb-4">
+                                <div className="flex items-center gap-3 min-w-0">
+                                    <Car className={isVehicleFilterActive ? "text-monza-red shrink-0" : "text-gray-400 shrink-0"} size={22} />
+                                    <p className="text-xs text-gray-400 font-bold uppercase tracking-wider truncate">
+                                        {garage.length > 1 ? `Tus Vehículos (${garage.length})` : 'Tu Vehículo'}
+                                    </p>
+                                </div>
+                                <div className="flex items-center gap-2 shrink-0">
+                                    {!isAddingNew && (
+                                        <button
+                                            type="button"
+                                            onClick={() => setIsAddingNew(true)}
+                                            className="flex items-center gap-1.5 text-[11px] md:text-xs font-bold uppercase tracking-wider text-gray-300 hover:text-white bg-white/5 hover:bg-white/10 px-2.5 md:px-3 py-1.5 rounded-full transition-colors"
+                                        >
+                                            <Plus size={12} /> Agregar
+                                        </button>
+                                    )}
+                                    {garage.length > 1 && (
+                                        <button
+                                            type="button"
+                                            onClick={handleClearAllVehicles}
+                                            className="text-[11px] md:text-xs font-bold uppercase tracking-wider text-gray-500 hover:text-monza-red transition-colors"
+                                        >
+                                            Borrar todos
+                                        </button>
+                                    )}
                                 </div>
                             </div>
-                            <div className="h-8 w-px bg-white/10 mx-2 hidden md:block" />
-                            {!isVehicleFilterActive ? (
-                                <Button
-                                    onClick={() => setIsVehicleFilterActive(true)}
-                                    size="sm"
-                                    className="bg-white text-black hover:bg-gray-200 text-xs font-bold uppercase tracking-wider"
-                                >
-                                    Buscar para mi auto
-                                </Button>
-                            ) : (
-                                <div className="flex items-center gap-2">
-                                    <span className="text-monza-red font-bold text-sm bg-monza-red/10 px-3 py-1.5 rounded-full border border-monza-red/20 animate-pulse">
-                                        Filtro Activo
-                                    </span>
+
+                            {/* Chips de vehículos — click switch activo, X borra */}
+                            <div className="flex flex-wrap gap-2 mb-3 md:mb-4">
+                                <AnimatePresence initial={false}>
+                                    {garage.map(vehicle => {
+                                        const isActive = currentVehicle?.id === vehicle.id;
+                                        return (
+                                            <motion.div
+                                                key={vehicle.id}
+                                                layout
+                                                initial={{ opacity: 0, scale: 0.9 }}
+                                                animate={{ opacity: 1, scale: 1 }}
+                                                exit={{ opacity: 0, scale: 0.9 }}
+                                                transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+                                                onClick={() => !isActive && handleSwitchVehicle(vehicle)}
+                                                onKeyDown={(e) => {
+                                                    if (!isActive && (e.key === 'Enter' || e.key === ' ')) {
+                                                        e.preventDefault();
+                                                        handleSwitchVehicle(vehicle);
+                                                    }
+                                                }}
+                                                role={isActive ? undefined : "button"}
+                                                tabIndex={isActive ? -1 : 0}
+                                                aria-pressed={isActive}
+                                                aria-label={`${isActive ? 'Vehículo activo' : 'Cambiar a'} ${vehicle.year} ${vehicle.make} ${vehicle.model}`}
+                                                className={cn(
+                                                    "group flex items-center gap-2 pl-3 pr-1 py-1.5 rounded-full border transition-colors select-none outline-none focus-visible:ring-2 focus-visible:ring-monza-red/60",
+                                                    isActive
+                                                        ? "bg-monza-red/15 border-monza-red/50 text-white cursor-default"
+                                                        : "bg-white/5 border-white/10 text-gray-300 hover:bg-white/10 hover:border-white/30 hover:text-white cursor-pointer"
+                                                )}
+                                            >
+                                                {isActive && (
+                                                    <span
+                                                        className="w-1.5 h-1.5 bg-monza-red rounded-full shrink-0"
+                                                        aria-hidden="true"
+                                                    />
+                                                )}
+                                                <span className="font-semibold text-[13px] md:text-sm whitespace-nowrap">
+                                                    {vehicle.year} {vehicle.make} {vehicle.model}
+                                                </span>
+                                                <button
+                                                    type="button"
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        handleRemoveVehicle(vehicle.id);
+                                                    }}
+                                                    aria-label={`Quitar ${vehicle.year} ${vehicle.make} ${vehicle.model}`}
+                                                    title="Quitar"
+                                                    className="shrink-0 p-1 rounded-full text-gray-400 hover:text-white hover:bg-monza-red/80 transition-colors"
+                                                >
+                                                    <X size={12} />
+                                                </button>
+                                            </motion.div>
+                                        );
+                                    })}
+                                </AnimatePresence>
+                            </div>
+
+                            {/* Botón filtro activo / ver todo */}
+                            <div className="flex items-center gap-2 flex-wrap">
+                                {!isVehicleFilterActive ? (
                                     <Button
-                                        onClick={() => setIsVehicleFilterActive(false)}
-                                        variant="ghost"
+                                        onClick={() => setIsVehicleFilterActive(true)}
                                         size="sm"
-                                        className="text-gray-400 hover:text-white"
+                                        className="bg-white text-black hover:bg-gray-200 text-xs font-bold uppercase tracking-wider"
                                     >
-                                        Ver todo
+                                        Buscar para mi auto
+                                    </Button>
+                                ) : (
+                                    <>
+                                        <span className="text-monza-red font-bold text-sm bg-monza-red/10 px-3 py-1.5 rounded-full border border-monza-red/20 animate-pulse">
+                                            Filtro Activo
+                                        </span>
+                                        <Button
+                                            onClick={() => setIsVehicleFilterActive(false)}
+                                            variant="ghost"
+                                            size="sm"
+                                            className="text-gray-400 hover:text-white"
+                                        >
+                                            Ver todo
+                                        </Button>
+                                    </>
+                                )}
+                            </div>
+
+                            {/* Selector inline — aparece al apretar "+ Agregar" */}
+                            <AnimatePresence initial={false}>
+                                {isAddingNew && availableMakes.length > 0 && (
+                                    <motion.div
+                                        key="add-new-selector"
+                                        initial={{ opacity: 0, height: 0, marginTop: 0 }}
+                                        animate={{ opacity: 1, height: 'auto', marginTop: 16 }}
+                                        exit={{ opacity: 0, height: 0, marginTop: 0 }}
+                                        transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+                                        className="overflow-hidden"
+                                    >
+                                        <div className="pt-4 border-t border-white/10">
+                                            <p className="text-xs text-gray-400 mb-3 font-bold uppercase tracking-wider">Agregar otro vehículo</p>
+                                            <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr_1fr_auto_auto] gap-2">
+                                                <CustomSelect
+                                                    size="compact"
+                                                    value={selMake}
+                                                    onChange={(val) => { setSelMake(val); setSelModel(''); setSelYear(''); }}
+                                                    options={availableMakes}
+                                                    placeholder="Marca"
+                                                />
+                                                <CustomSelect
+                                                    size="compact"
+                                                    value={selModel}
+                                                    onChange={(val) => { setSelModel(val); setSelYear(''); }}
+                                                    options={availableModels}
+                                                    placeholder="Modelo"
+                                                    disabled={!selMake}
+                                                    emptyText="Elegí una marca primero"
+                                                />
+                                                <CustomSelect
+                                                    size="compact"
+                                                    value={selYear}
+                                                    onChange={(val) => setSelYear(val)}
+                                                    options={availableYears}
+                                                    placeholder="Año"
+                                                    disabled={!selModel}
+                                                    emptyText="Elegí un modelo primero"
+                                                />
+                                                <Button
+                                                    onClick={handleApplyVehicle}
+                                                    disabled={!canApplyVehicle}
+                                                    size="sm"
+                                                    className="h-11 px-5 bg-monza-red hover:bg-red-700 text-white text-xs font-bold uppercase tracking-wider disabled:opacity-40 disabled:cursor-not-allowed shrink-0"
+                                                >
+                                                    Aplicar
+                                                </Button>
+                                                <Button
+                                                    onClick={() => {
+                                                        setIsAddingNew(false);
+                                                        setSelMake('');
+                                                        setSelModel('');
+                                                        setSelYear('');
+                                                    }}
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    className="h-11 px-3 text-xs text-gray-400 hover:text-white hover:bg-white/5"
+                                                >
+                                                    Cancelar
+                                                </Button>
+                                            </div>
+                                        </div>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </div>
+                    ) : (
+                        availableMakes.length > 0 && (
+                            <div className="p-4 md:p-5 bg-white/5 border border-white/10 rounded-2xl">
+                                <div className="flex items-center gap-3 mb-3">
+                                    <Car className="text-gray-400" size={20} />
+                                    <div>
+                                        <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">Tu vehículo</p>
+                                        <p className="text-white/90 text-sm leading-tight">Ingresá tu auto para ver compatibilidad</p>
+                                    </div>
+                                </div>
+                                {/* Selects con mismo look&feel que el selector del home (CustomSelect compact) */}
+                                <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr_1fr_auto] gap-2">
+                                    <CustomSelect
+                                        size="compact"
+                                        value={selMake}
+                                        onChange={(val) => { setSelMake(val); setSelModel(''); setSelYear(''); }}
+                                        options={availableMakes}
+                                        placeholder="Marca"
+                                    />
+                                    <CustomSelect
+                                        size="compact"
+                                        value={selModel}
+                                        onChange={(val) => { setSelModel(val); setSelYear(''); }}
+                                        options={availableModels}
+                                        placeholder="Modelo"
+                                        disabled={!selMake}
+                                        emptyText="Elegí una marca primero"
+                                    />
+                                    <CustomSelect
+                                        size="compact"
+                                        value={selYear}
+                                        onChange={(val) => setSelYear(val)}
+                                        options={availableYears}
+                                        placeholder="Año"
+                                        disabled={!selModel}
+                                        emptyText="Elegí un modelo primero"
+                                    />
+                                    <Button
+                                        onClick={handleApplyVehicle}
+                                        disabled={!canApplyVehicle}
+                                        size="sm"
+                                        className="h-11 px-5 bg-monza-red hover:bg-red-700 text-white text-xs font-bold uppercase tracking-wider disabled:opacity-40 disabled:cursor-not-allowed shrink-0"
+                                    >
+                                        Aplicar
                                     </Button>
                                 </div>
-                            )}
-                        </div>
+                            </div>
+                        )
                     )}
                 </div>
 
@@ -260,9 +570,38 @@ export default function Catalog() {
                     </div>
 
                     <div className="flex-1">
-                        <div className="mb-6 flex justify-between items-center">
-                            <p className="text-gray-400 text-sm">
+                        <div className="mb-6 flex flex-col md:flex-row md:justify-between md:items-center gap-3 md:gap-6">
+                            {/* Buscador: arriba en mobile, derecha en desktop */}
+                            <div className="relative w-full md:w-80 md:order-2">
+                                <Search
+                                    className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500"
+                                    size={16}
+                                />
+                                <input
+                                    type="text"
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    placeholder="Buscar producto..."
+                                    aria-label="Buscar producto por nombre"
+                                    className="w-full h-11 pl-10 pr-10 bg-white/5 border border-white/10 rounded-xl text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-white/25 focus:bg-white/[0.07] transition-colors"
+                                />
+                                {searchQuery && (
+                                    <button
+                                        type="button"
+                                        onClick={() => setSearchQuery('')}
+                                        className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1.5 rounded-full text-gray-500 hover:text-white hover:bg-white/10 transition-colors"
+                                        aria-label="Limpiar búsqueda"
+                                    >
+                                        <X size={14} />
+                                    </button>
+                                )}
+                            </div>
+
+                            <p className="text-gray-400 text-sm md:order-1">
                                 Mostrando <span className="text-white font-bold">{filteredProducts.length}</span> productos
+                                {searchQuery.trim() && (
+                                    <span className="text-gray-500"> para “<span className="text-white/80">{searchQuery.trim()}</span>”</span>
+                                )}
                             </p>
                         </div>
 
@@ -276,9 +615,18 @@ export default function Catalog() {
                             </div>
                         ) : (
                             <div className="py-20 text-center border border-white/5 rounded-2xl bg-white/5">
-                                <p className="text-xl text-white font-bold mb-2">No se encontraron resultados</p>
-                                <p className="text-gray-400 text-sm mb-6">Prueba combinando otros filtros o quitando las restricciones.</p>
-                                <Button onClick={clearAllFilters} variant="outline">
+                                <p className="text-xl text-white font-bold mb-2">
+                                    {searchQuery.trim() ? 'Sin resultados para tu búsqueda' : 'No se encontraron resultados'}
+                                </p>
+                                <p className="text-gray-400 text-sm mb-6">
+                                    {searchQuery.trim()
+                                        ? <>No hay productos que coincidan con “<span className="text-white/80">{searchQuery.trim()}</span>”. Probá con otra palabra o quitá los filtros.</>
+                                        : 'Prueba combinando otros filtros o quitando las restricciones.'}
+                                </p>
+                                <Button
+                                    onClick={() => { clearAllFilters(); setSearchQuery(''); }}
+                                    variant="outline"
+                                >
                                     Limpiar todos los filtros
                                 </Button>
                             </div>

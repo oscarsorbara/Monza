@@ -1,103 +1,15 @@
-import { useState, useMemo, useRef, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { Button } from '@/components/ui/Button';
+import { CustomSelect } from '@/components/ui/CustomSelect';
 import { useVehicle } from '@/context/VehicleContext';
 import { useFilteredVehicles } from '@/hooks/useFilteredVehicles';
 import clsx from 'clsx';
-import { X, Search, ChevronDown, Check } from 'lucide-react';
+import { X, Search } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 
 interface VehicleSelectorProps {
     className?: string;
-}
-
-// Custom Select Component for Premium Feel
-interface CustomSelectProps {
-    value: string;
-    onChange: (value: string) => void;
-    options: string[];
-    placeholder: string;
-    disabled?: boolean;
-    className?: string;
-}
-
-function CustomSelect({ value, onChange, options, placeholder, disabled, className }: CustomSelectProps) {
-    const [isOpen, setIsOpen] = useState(false);
-    const containerRef = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
-                setIsOpen(false);
-            }
-        };
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => document.removeEventListener('mousedown', handleClickOutside);
-    }, []);
-
-    const handleSelect = (option: string) => {
-        onChange(option);
-        setIsOpen(false);
-    };
-
-    return (
-        <div className={clsx("relative", className)} ref={containerRef}>
-            <button
-                type="button"
-                onClick={() => !disabled && setIsOpen(!isOpen)}
-                disabled={disabled}
-                className={clsx(
-                    "w-full h-14 md:h-16 px-6 bg-carbon-800 border rounded-xl text-left flex items-center justify-between transition-all duration-300",
-                    "focus:outline-none focus:ring-2 focus:ring-monza-red/50",
-                    isOpen ? "border-monza-red ring-1 ring-monza-red/50" : "border-white/10 hover:border-white/20",
-                    disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer hover:bg-carbon-700"
-                )}
-            >
-                <span className={clsx("text-lg font-medium truncate", value ? "text-white" : "text-gray-500")}>
-                    {value || placeholder}
-                </span>
-                <ChevronDown
-                    className={clsx("w-5 h-5 text-gray-400 transition-transform duration-300", isOpen && "rotate-180")}
-                />
-            </button>
-
-            <AnimatePresence>
-                {isOpen && !disabled && (
-                    <motion.div
-                        initial={{ opacity: 0, y: -10, scale: 0.95 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                        transition={{ duration: 0.15, ease: "easeOut" }}
-                        className="absolute top-full left-0 right-0 mt-2 z-50 max-h-80 overflow-y-auto bg-carbon-900 border border-white/10 rounded-xl shadow-2xl shadow-black/50 scrollbar-thin scrollbar-thumb-monza-red scrollbar-track-carbon-800/50"
-                        data-lenis-prevent
-                    >
-                        {options.length > 0 ? (
-                            <div className="py-2">
-                                {options.map((option) => (
-                                    <button
-                                        key={option}
-                                        onClick={() => handleSelect(option)}
-                                        className={clsx(
-                                            "w-full px-6 py-3 text-left transition-colors flex items-center justify-between group",
-                                            "hover:bg-monza-red hover:text-white",
-                                            value === option ? "bg-white/5 text-monza-red font-bold" : "text-gray-300"
-                                        )}
-                                    >
-                                        <span className="truncate">{option}</span>
-                                        {value === option && <Check className="w-4 h-4" />}
-                                    </button>
-                                ))}
-                            </div>
-                        ) : (
-                            <div className="px-6 py-4 text-center text-gray-500 text-sm italic">
-                                No hay opciones disponibles
-                            </div>
-                        )}
-                    </motion.div>
-                )}
-            </AnimatePresence>
-        </div>
-    );
 }
 
 export function VehicleSelector({ className }: VehicleSelectorProps) {
