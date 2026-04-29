@@ -6,16 +6,6 @@
   <link rel="icon" type="image/png" href="/monza-icon.png" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- Defensive security headers (via meta because GitHub Pages no permite headers HTTP custom).
-       Mínimo y conservador a propósito: NO restringe scripts/conexiones/imágenes para no romper
-       Shopify CDN, Storefront API, Supabase, Cal.com, ni el redirect a checkout.monzars.com.
-       Solo bloquea vectores clásicos de inyección que el sitio NO usa: object-src 'none' bloquea
-       Flash/Java embeds, base-uri 'self' previene <base> hijacking, upgrade-insecure-requests
-       sube cualquier http:// embebido a https://. -->
-  <meta http-equiv="Content-Security-Policy"
-    content="object-src 'none'; base-uri 'self'; upgrade-insecure-requests" />
-  <meta name="referrer" content="strict-origin-when-cross-origin" />
-
   <!-- Primary Meta Tags -->
   <title>Monza Racing Store | Edición 2026</title>
   <meta name="title" content="Monza Racing Store | Edición 2026" />
