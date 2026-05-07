@@ -41,8 +41,33 @@
   <meta property="twitter:description"
     content="Repuestos de competición premium para vehículos de alto rendimiento. Mejoras para Audi, BMW y Mercedes-Benz." />
   <meta property="twitter:image" content="https://monzarp.com/monza-icon.png" />
-  <script type="module" crossorigin src="/assets/index-Bf21N4_V.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-Fqh8vBjJ.css">
+
+  <!-- Meta Pixel Code — pixel ID 1224827552810048.
+       Carga el SDK de Facebook Events y dispara el primer PageView automáticamente
+       cuando el HTML llega al browser. Los PageViews de las navegaciones internas
+       (React Router) los dispara `<PixelTracker />` desde JS.
+       Los eventos custom del funnel (ViewContent, AddToCart, InitiateCheckout) viven
+       en `src/lib/pixel.ts`. La compra final (Purchase) la trackea Shopify del lado
+       de checkout.monzars.com — los pixels comparten cookie `_fbp` por estar bajo
+       el mismo dominio raíz monzars.com, así que el funnel se atribuye unificado. -->
+  <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1224827552810048');
+    fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1224827552810048&ev=PageView&noscript=1"
+    alt="" /></noscript>
+  <!-- End Meta Pixel Code -->
+  <script type="module" crossorigin src="/assets/index-C9ckP9EH.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-l5eJkzDU.css">
 </head>
 
 <body>
