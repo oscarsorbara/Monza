@@ -1,0 +1,7 @@
+# Monza Racing Store — instrucciones para bots de búsqueda (Google, Bing, etc.)
+
+User-agent: *
+Allow: /
+
+# Mapa de URLs (auto-generado en cada deploy desde el feed de productos de Shopify).
+Sitemap: https://monzars.com/sitemap.xml
