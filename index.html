@@ -3,32 +3,134 @@
 
 <head>
   <meta charset="UTF-8" />
-  <link rel="icon" type="image/png" href="/monza-icon.png" />
+
+  <!-- Favicon multi-tamaño. El antiguo /monza-icon.png era rectangular (940x196), por eso
+       se veía pixelado al ser escalado por el browser. Estos PNG son CUADRADOS y nítidos:
+       - 16/32: tabs y bookmarks (resoluciones estándar de browsers desktop).
+       - 192: Android Chrome / PWA.
+       - 512: Android home screen / splash.
+       - apple-touch-icon (180): iOS home screen "Add to Home Screen".
+       theme-color pinta la barra del browser en mobile (Chrome/Samsung/Edge) con el rojo Monza. -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/monza-favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/monza-favicon-16.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="/monza-favicon-192.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="/monza-favicon-512.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <meta name="theme-color" content="#dc2626" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- Primary Meta Tags -->
-  <title>Monza Racing Store | Edición 2026</title>
-  <meta name="title" content="Monza Racing Store | Edición 2026" />
+  <!-- Primary Meta Tags. Defaults para la home — las páginas internas (producto, catálogo,
+       políticas) los sobrescriben en runtime con react-helmet-async según el contenido. -->
+  <title>Monza Racing Store | Accesorios premium BMW, Audi, MINI y VW en Argentina</title>
+  <meta name="title" content="Monza Racing Store | Accesorios premium BMW, Audi, MINI y VW en Argentina" />
   <meta name="description"
-    content="Repuestos de competición premium para vehículos de alto rendimiento. Mejoras para Audi, BMW y Mercedes-Benz." />
+    content="Accesorios de competición premium para BMW, Audi, MINI y VW. Alerones de fibra de carbono, tableros digitales con CarPlay, ópticas LED, parrillas y más. Instalación gratuita en Devoto, CABA." />
+  <meta name="keywords"
+    content="alerones BMW, tableros digitales BMW, ópticas LED, parrillas fibra de carbono, accesorios BMW, accesorios Audi, accesorios MINI, accesorios VW, tuning Argentina, repuestos premium, fibra de carbono real, ducktail BMW, M4 spoiler, CarPlay BMW" />
+  <meta name="author" content="Monza Racing Store" />
+  <link rel="canonical" href="https://monzars.com/" />
 
-  <!-- Open Graph / Facebook / WhatsApp -->
+  <!-- Open Graph / Facebook / WhatsApp / Instagram -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://monzars.com/" />
-  <meta property="og:title" content="Monza Racing Store | Edición 2026" />
+  <meta property="og:site_name" content="Monza Racing Store" />
+  <meta property="og:locale" content="es_AR" />
+  <meta property="og:title" content="Monza Racing Store | Accesorios premium BMW, Audi, MINI y VW" />
   <meta property="og:description"
-    content="Repuestos de competición premium para vehículos de alto rendimiento. Mejoras para Audi, BMW y Mercedes-Benz." />
+    content="Accesorios premium para BMW, Audi, MINI y VW. Alerones, tableros digitales, ópticas LED, parrillas. Instalación gratuita en Devoto, CABA." />
   <meta property="og:image" content="https://monzars.com/monza-icon.png" />
+  <meta property="og:image:alt" content="Monza Racing Store — accesorios premium para autos" />
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image" />
-  <meta property="twitter:url" content="https://monzarp.com/" />
-  <meta property="twitter:title" content="Monza Racing Store | Edición 2026" />
+  <meta property="twitter:url" content="https://monzars.com/" />
+  <meta property="twitter:title" content="Monza Racing Store | Accesorios premium BMW, Audi, MINI y VW" />
   <meta property="twitter:description"
-    content="Repuestos de competición premium para vehículos de alto rendimiento. Mejoras para Audi, BMW y Mercedes-Benz." />
-  <meta property="twitter:image" content="https://monzarp.com/monza-icon.png" />
-  <script type="module" crossorigin src="/assets/index-BDN73XV2.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-Bpvt9ruS.css">
+    content="Accesorios premium para BMW, Audi, MINI y VW. Alerones, tableros digitales, ópticas LED. Instalación gratuita en Devoto, CABA." />
+  <meta property="twitter:image" content="https://monzars.com/monza-icon.png" />
+
+  <!-- JSON-LD: Schema.org "AutoPartsStore" — datos estructurados del negocio para Google.
+       Habilita aparición en búsquedas locales ("taller bmw devoto", "accesorios autos caba"),
+       el Knowledge Panel de Google con dirección/horario/teléfono, y mejora chances de
+       Google Maps + Google Shopping. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "AutoPartsStore",
+    "name": "Monza Racing Store",
+    "alternateName": "Monza RS",
+    "url": "https://monzars.com",
+    "logo": "https://monzars.com/monza-logo.png",
+    "image": "https://monzars.com/monza-icon.png",
+    "description": "Accesorios premium y repuestos de competición para BMW, Audi, MINI y VW. Alerones de fibra de carbono, tableros digitales, ópticas LED, parrillas. Instalación gratuita en Devoto, CABA.",
+    "telephone": "+5491139347949",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Nueva York 4965",
+      "addressLocality": "Villa Devoto",
+      "addressRegion": "CABA",
+      "addressCountry": "AR"
+    },
+    "openingHoursSpecification": [
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+        "opens": "09:00",
+        "closes": "18:00"
+      },
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": "Saturday",
+        "opens": "09:00",
+        "closes": "12:00"
+      }
+    ],
+    "sameAs": [
+      "https://www.instagram.com/monza.rs/"
+    ],
+    "areaServed": {
+      "@type": "Country",
+      "name": "Argentina"
+    },
+    "priceRange": "$$"
+  }
+  </script>
+
+  <!-- Meta Pixel Code — pixel ID 1224827552810048.
+       OPTIMIZACIÓN DE PERFORMANCE: el SDK de Facebook Events (~70KB de JS) NO se descarga
+       inmediatamente — se difiere hasta el evento `load` del documento, después de que el
+       HTML, CSS, JS de la app y las imágenes principales hayan cargado. Esto evita competir
+       por banda con los recursos críticos del sitio React y mejora el LCP/TBT en mobile.
+       El queue interno de fbq() ya está inicializado, así que las llamadas a fbq('init')
+       y fbq('track', 'PageView') se acumulan y se procesan cuando el SDK termina de cargar
+       — no se pierde ningún evento.
+       Los PageViews de las navegaciones internas los dispara `<PixelTracker />` desde JS.
+       Los eventos custom (ViewContent, AddToCart) viven en `src/lib/pixel.ts`. Purchase e
+       InitiateCheckout los trackea Shopify del lado de checkout.monzars.com — los pixels
+       comparten cookie `_fbp` por estar bajo el dominio raíz monzars.com. -->
+  <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];
+    function loadSdk(){t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}
+    if(b.readyState==='complete')loadSdk();
+    else window.addEventListener('load',loadSdk);
+    }(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1224827552810048');
+    fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1224827552810048&ev=PageView&noscript=1"
+    alt="" /></noscript>
+  <!-- End Meta Pixel Code -->
+  <script type="module" crossorigin src="/assets/index-BcDAVTwX.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-BDTwrnEM.css">
 </head>
 
 <body>
