@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Sport Cluster — recreación foto-real (tema Sport)</title>
+<style>
+  :root { color-scheme: dark; }
+  html,body { margin:0; height:100%; font-family:-apple-system,system-ui,sans-serif; }
+  body { display:flex; flex-direction:column; align-items:center; gap:16px; padding:22px; transition:background .25s; }
+  body.bg-dark   { background:#0b0d12; color:#eee; }
+  body.bg-light  { background:#e9edf2; color:#222; }
+  body.bg-checker{
+    background:
+      linear-gradient(45deg,#bbb 25%,transparent 25%),linear-gradient(-45deg,#bbb 25%,transparent 25%),
+      linear-gradient(45deg,transparent 75%,#bbb 75%),linear-gradient(-45deg,transparent 75%,#bbb 75%);
+    background-size:32px 32px; background-position:0 0,0 16px,16px -16px,-16px 0; background-color:#fff; color:#222; }
+  body.bg-photo  { background:#3a4a5a url('hero-portada.png') center/cover; color:#fff; }
+  .stage { width:min(94vw,1100px); }
+  canvas { width:100%; display:block; }
+  .bar { display:flex; gap:8px; flex-wrap:wrap; align-items:center; font-size:13px; }
+  button { font:inherit; padding:6px 12px; border-radius:9px; border:1px solid #8884; background:#ffffff14; color:inherit; cursor:pointer; }
+  button:hover { background:#ffffff28; }
+  input[type=range]{ vertical-align:middle; }
+  .hint{ opacity:.7; }
+</style>
+</head>
+<body class="bg-dark">
+  <div class="bar">
+    <span class="hint">Fondo:</span>
+    <button data-bg="bg-dark">Oscuro</button>
+    <button data-bg="bg-light">Claro</button>
+    <button data-bg="bg-checker">Damero</button>
+    <button data-bg="bg-photo">Foto</button>
+    <span class="hint">·</span>
+    <label>Efectos cámara: <input id="fx" type="range" min="0" max="1.6" step="0.05" value="1"></label>
+    <span class="hint">· alfa transparente real</span>
+  </div>
+  <div class="stage"><canvas id="cluster"></canvas></div>
+
+<script type="module">
+  import { drawSportCluster, BW, BH } from './cluster/draw-sport.mjs';
+  const canvas = document.getElementById('cluster');
+  const ctx = canvas.getContext('2d', { alpha:true });
+  const env = { makeCanvas:(w,h)=>{ const c=document.createElement('canvas'); c.width=w; c.height=h; return c; }, cache:{} };
+  let fx = 1;
+  document.getElementById('fx').addEventListener('input', e => fx = parseFloat(e.target.value));
+
+  function fit(){
+    const cssW = canvas.clientWidth, cssH = cssW*(BH/BW), dpr = Math.min(window.devicePixelRatio||1, 2.5);
+    canvas.style.height = cssH+'px'; canvas.width = Math.round(cssW*dpr); canvas.height = Math.round(cssH*dpr);
+  }
+  let t0=null;
+  function loop(now){
+    if(t0===null) t0=now;
+    const scale = canvas.width/BW;
+    ctx.setTransform(scale,0,0,scale,0,0);
+    drawSportCluster(ctx, (now-t0)/1000, env, { fx });
+    requestAnimationFrame(loop);
+  }
+  fit(); window.addEventListener('resize', fit); requestAnimationFrame(loop);
+  document.querySelectorAll('button[data-bg]').forEach(b=> b.addEventListener('click', ()=> document.body.className=b.dataset.bg));
+</script>
+</body>
+</html>

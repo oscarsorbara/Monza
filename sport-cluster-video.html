@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Sport Cluster — WebM alfa (video)</title>
+<style>
+  html,body{ margin:0; height:100%; font-family:-apple-system,system-ui,sans-serif; }
+  body{ display:flex; flex-direction:column; align-items:center; gap:16px; padding:22px; transition:background .25s; }
+  body.bg-dark{ background:#0b0d12; color:#eee; }
+  body.bg-light{ background:#eef1f5; color:#222; }
+  body.bg-checker{ background:
+      linear-gradient(45deg,#bbb 25%,transparent 25%),linear-gradient(-45deg,#bbb 25%,transparent 25%),
+      linear-gradient(45deg,transparent 75%,#bbb 75%),linear-gradient(-45deg,transparent 75%,#bbb 75%);
+      background-size:32px 32px; background-position:0 0,0 16px,16px -16px,-16px 0; background-color:#fff; color:#222; }
+  body.bg-photo{ background:#3a4a5a url('hero-portada.png') center/cover; color:#fff; }
+  .stage{ width:min(94vw,1100px); }
+  video{ width:100%; display:block; }
+  .bar{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; font-size:13px; }
+  button{ font:inherit; padding:6px 12px; border-radius:9px; border:1px solid #8884; background:#ffffff14; color:inherit; cursor:pointer; }
+  button:hover{ background:#ffffff28; } .hint{ opacity:.7; }
+</style>
+</head>
+<body class="bg-dark">
+  <div class="bar">
+    <span class="hint">Fondo:</span>
+    <button data-bg="bg-dark">Oscuro</button>
+    <button data-bg="bg-light">Claro</button>
+    <button data-bg="bg-checker">Damero</button>
+    <button data-bg="bg-photo">Foto</button>
+    <span class="hint">· WebM VP9 con canal alfa (loop)</span>
+  </div>
+  <div class="stage">
+    <video autoplay loop muted playsinline poster="sport-cluster-poster.png">
+      <source src="sport-cluster.webm" type="video/webm">
+      <source src="sport-cluster.mov" type="video/quicktime">
+    </video>
+  </div>
+  <script>
+    document.querySelectorAll('button[data-bg]').forEach(b=> b.addEventListener('click', ()=> document.body.className=b.dataset.bg));
+  </script>
+</body>
+</html>

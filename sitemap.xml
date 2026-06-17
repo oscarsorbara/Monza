@@ -2,163 +2,217 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://monzars.com/</loc>
-    <lastmod>2026-06-12</lastmod>
+    <lastmod>2026-06-17</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://monzars.com/catalog</loc>
-    <lastmod>2026-06-12</lastmod>
+    <lastmod>2026-06-17</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://monzars.com/maintenance</loc>
-    <lastmod>2026-06-12</lastmod>
+    <loc>https://monzars.com/tableros</loc>
+    <lastmod>2026-06-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://monzars.com/contact</loc>
+    <lastmod>2026-06-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://monzars.com/politicas</loc>
-    <lastmod>2026-06-12</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-  </url>
-  <url>
     <loc>https://monzars.com/product/opticas-bmw-f22-g-look-nuevo-serie-2</loc>
-    <lastmod>2026-05-27</lastmod>
+    <lastmod>2026-06-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://monzars.com/product/opticas-bmw-serie-2-f22-estilo-gts</loc>
-    <lastmod>2026-05-27</lastmod>
+    <lastmod>2026-06-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://monzars.com/product/aleron-cola-de-pato-bmw-serie-2-f22-fibra-de-carbono-real-ducktail</loc>
-    <lastmod>2026-06-05</lastmod>
+    <lastmod>2026-06-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://monzars.com/product/cachas-de-espejo-bmw</loc>
-    <lastmod>2026-06-02</lastmod>
+    <lastmod>2026-06-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://monzars.com/product/parrilla-carbono-doble-rejilla-bmw-look-sport-oem</loc>
-    <lastmod>2026-05-27</lastmod>
+    <lastmod>2026-06-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://monzars.com/product/aleron-estilo-m4-bmw-serie-2-f22-fibra-de-carbono-real-performance</loc>
-    <lastmod>2026-05-27</lastmod>
+    <lastmod>2026-06-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://monzars.com/product/difusor-trasero-bmw-serie-2-f22-fibra-de-carbono-real-performance</loc>
-    <lastmod>2026-05-27</lastmod>
+    <lastmod>2026-06-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://monzars.com/product/opticas-traseras-led-union-jack-mini-cooper-f55-f56-f57-look-jcw-premium</loc>
-    <lastmod>2026-06-10</lastmod>
+    <lastmod>2026-06-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://monzars.com/product/tablero-digital-vw-amarok-upgrade-cluster-con-carplay-integrado</loc>
-    <lastmod>2026-05-27</lastmod>
+    <lastmod>2026-06-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://monzars.com/product/opticas-traseras-led-union-jack-mini-cooper-r56-f57-f58-59-look-jcw-premium</loc>
-    <lastmod>2026-06-10</lastmod>
+    <lastmod>2026-06-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://monzars.com/product/parrilla-fibra-de-carbono-real-doble-rejilla-bmw-serie-3-f20-look-sport-oem</loc>
-    <lastmod>2026-05-27</lastmod>
+    <lastmod>2026-06-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://monzars.com/product/parrilla-fibra-de-carbono-real-doble-rejilla-bmw-serie-2-f22-look-sport-oem</loc>
-    <lastmod>2026-05-27</lastmod>
+    <lastmod>2026-06-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://monzars.com/product/aleron-estilo-m4-bmw-serie-3-fibra-de-carbono-real-performance</loc>
-    <lastmod>2026-05-27</lastmod>
+    <lastmod>2026-06-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://monzars.com/product/aleron-cola-de-pato-bmw-serie-3-fibra-de-carbono-real-ducktail</loc>
-    <lastmod>2026-05-27</lastmod>
+    <lastmod>2026-06-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://monzars.com/product/tablero-digital-bmw-serie-1-e81-e82-e87-e88-2006-2011</loc>
-    <lastmod>2026-06-12</lastmod>
+    <lastmod>2026-06-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://monzars.com/product/tablero-digital-bmw-serie-3-e90-e91-e92-2005-2012</loc>
-    <lastmod>2026-06-12</lastmod>
+    <lastmod>2026-06-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://monzars.com/product/tablero-digital-bmw-serie-1-f20-f52-serie-2-f22-x1-f48-x2-f39-2013-2025</loc>
-    <lastmod>2026-06-12</lastmod>
+    <lastmod>2026-06-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://monzars.com/product/tablero-digital-bmw-x3-f25-x5-f15-serie-5-f07-f10-serie-6-f06-serie-7-f01-2009-2018</loc>
-    <lastmod>2026-06-12</lastmod>
+    <lastmod>2026-06-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://monzars.com/product/tablero-digital-audi-a3-8p-2008-2013</loc>
-    <lastmod>2026-06-12</lastmod>
+    <lastmod>2026-06-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://monzars.com/product/tablero-digital-audi-a3-8v-2014-2019</loc>
-    <lastmod>2026-06-12</lastmod>
+    <lastmod>2026-06-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://monzars.com/product/tablero-digital-audi-a1-2010-2018</loc>
-    <lastmod>2026-06-12</lastmod>
+    <lastmod>2026-06-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://monzars.com/product/tablero-digital-audi-a4-2013-2016</loc>
-    <lastmod>2026-06-12</lastmod>
+    <lastmod>2026-06-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://monzars.com/product/tablero-digital-audi-q3-2011-2018</loc>
+    <lastmod>2026-06-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://monzars.com/product/tablero-digital-audi-a4-2008-2012</loc>
-    <lastmod>2026-06-12</lastmod>
+    <lastmod>2026-06-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://monzars.com/product/tablero-digital-audi-a6-a7-2012-2018</loc>
+    <lastmod>2026-06-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://monzars.com/product/tablero-digital-audi-a5-2008-2016</loc>
+    <lastmod>2026-06-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://monzars.com/product/tablero-digital-volkswagen-jetta-2006-2011</loc>
+    <lastmod>2026-06-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://monzars.com/product/tablero-digital-volkswagen-jetta-2012-2014</loc>
+    <lastmod>2026-06-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://monzars.com/product/tablero-digital-volkswagen-jetta-2015-2018</loc>
+    <lastmod>2026-06-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://monzars.com/product/tablero-digital-volkswagen-golf-7-7-5-2013-2020</loc>
+    <lastmod>2026-06-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://monzars.com/product/tablero-digital-mercedes-benz-clase-c-w205-glc-x253-2015-2018</loc>
+    <lastmod>2026-06-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://monzars.com/product/lip-delantero-fibra-de-carbono-real-bmw-serie-2-g42-look-sport-oem</loc>
+    <lastmod>2026-06-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
